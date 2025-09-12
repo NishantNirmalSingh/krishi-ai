@@ -35,7 +35,7 @@ export default function MarketPricesPage() {
             </TableHeader>
             <TableBody>
               {marketData.map((item) => {
-                 const trend = item.currentPrice > item.historicalPrice ? 'up' : item.currentPrice &lt; item.historicalPrice ? 'down' : 'stable';
+                 const trend = item.currentPrice > item.historicalPrice ? 'up' : item.currentPrice < item.historicalPrice ? 'down' : 'stable';
                  return(
                   <TableRow key={`${item.crop}-${item.market}`}>
                     <TableCell className="font-medium">{item.crop}</TableCell>
