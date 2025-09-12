@@ -142,6 +142,7 @@ export function CropAdvisoryClient() {
   };
   
   const playAudio = (audioDataUri: string) => {
+    if (isMuted) return;
     const audio = new Audio(audioDataUri);
     audio.play();
   };
@@ -163,7 +164,7 @@ export function CropAdvisoryClient() {
       const result = await handleCropAdvisory(data);
       const botMessage: Message = { role: 'bot', content: result.recommendation, audio: result.audio };
       setMessages(prev => [...prev, botMessage]);
-      if(result.audio && !isMuted){
+      if(result.audio){
         playAudio(result.audio);
       }
       form.resetField('question');
@@ -266,7 +267,7 @@ export function CropAdvisoryClient() {
                 )}
               />
             </div>
-            <div className="flex items-start gap-2">
+            <div className="flex items-end gap-2">
               <FormField
                 control={form.control}
                 name="question"
@@ -276,7 +277,7 @@ export function CropAdvisoryClient() {
                       <Textarea placeholder="Ask your question here..." {...field} disabled={isLoading} className="min-h-[40px] resize-none" onKeyDown={(e) => {
                           if (e.key === "Enter" && !e.shiftKey) {
                               e.preventDefault();
-                              form.handleSubmit(onSubmit)();
+                              if (!isLoading) form.handleSubmit(onSubmit)();
                           }
                       }}/>
                     </FormControl>
@@ -284,20 +285,24 @@ export function CropAdvisoryClient() {
                   </FormItem>
                 )}
               />
-              <Button type="button" size="icon" variant="outline" onClick={() => setIsMuted(prev => !prev)} className="shrink-0">
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-              </Button>
-              {isSpeechSupported && (
-                <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading || !form.watch('language')} className="shrink-0">
-                  {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+               <div className="flex items-center gap-2">
+                {isSpeechSupported && (
+                  <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading || !form.watch('language')} className="shrink-0">
+                    {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                  </Button>
+                )}
+                <Button type="submit" size="icon" disabled={isLoading} className="shrink-0">
+                  <Send className="h-4 w-4" />
                 </Button>
-              )}
-              <Button type="submit" size="icon" disabled={isLoading} className="shrink-0">
-                <Send className="h-4 w-4" />
-              </Button>
+              </div>
             </div>
           </form>
         </Form>
+        <div className="mt-2 flex justify-end">
+            <Button type="button" size="icon" variant="outline" onClick={() => setIsMuted(prev => !prev)} className="shrink-0">
+                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            </Button>
+        </div>
       </div>
     </Card>
   );
