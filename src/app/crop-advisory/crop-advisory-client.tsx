@@ -49,7 +49,7 @@ export function CropAdvisoryClient() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
@@ -70,36 +70,35 @@ export function CropAdvisoryClient() {
     const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       setIsSpeechSupported(true);
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.maxAlternatives = 1;
 
-      recognition.onresult = (event: any) => {
+      recognitionRef.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         const currentQuestion = form.getValues('question');
         form.setValue('question', currentQuestion ? `${currentQuestion} ${transcript}`: transcript);
       };
 
-      recognition.onerror = (event: any) => {
+      recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         toast({
           variant: 'destructive',
           title: 'Speech Recognition Error',
           description: `An error occurred: ${event.error}. Please ensure microphone access is allowed.`,
         });
-      };
-
-      recognition.onend = () => {
         setIsRecording(false);
       };
 
-      recognitionRef.current = recognition;
+      recognitionRef.current.onend = () => {
+        setIsRecording(false);
+      };
     } else {
       setIsSpeechSupported(false);
       console.warn("Speech recognition not supported in this browser.");
     }
-  }, []);
+  }, [form, toast]);
 
   useEffect(() => {
     if(recognitionRef.current){
@@ -108,30 +107,39 @@ export function CropAdvisoryClient() {
   }, [selectedLanguageCode]);
   
   useEffect(() => {
-    if (scrollViewportRef.current) {
-      scrollViewportRef.current.scrollTo({
-        top: scrollViewportRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
+    if (scrollAreaRef.current) {
+      const viewport = scrollAreaRef.current.querySelector('div');
+      if (viewport) {
+        viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+      }
     }
   }, [messages]);
 
   const toggleRecording = () => {
-    if (!isSpeechSupported) {
+    if (!isSpeechSupported || !recognitionRef.current) {
       toast({
         variant: 'destructive',
         title: 'Unsupported Feature',
-        description: 'Speech recognition is not supported in your browser.',
+        description: 'Speech recognition is not supported in your browser or has failed to initialize.',
       });
       return;
     }
 
     if (isRecording) {
-      recognitionRef.current?.stop();
+      recognitionRef.current.stop();
     } else {
-      recognitionRef.current?.start();
+      try {
+        recognitionRef.current.start();
+        setIsRecording(true);
+      } catch (e) {
+        console.error("Could not start recording:", e);
+        toast({
+          variant: 'destructive',
+          title: 'Recording Error',
+          description: 'Could not start voice recording. Please check microphone permissions.',
+        });
+      }
     }
-    setIsRecording(!isRecording);
   };
   
   const playAudio = (audioDataUri: string) => {
@@ -176,8 +184,8 @@ export function CropAdvisoryClient() {
 
   return (
     <Card className="flex flex-1 flex-col">
-      <ScrollArea className="flex-grow p-6">
-        <div className="space-y-6" ref={scrollViewportRef}>
+      <ScrollArea className="flex-grow p-6" ref={scrollAreaRef}>
+        <div className="space-y-6">
           {messages.length === 0 && (
             <div className="py-12 text-center text-muted-foreground">
               <Bot className="mx-auto mb-4 h-12 w-12" />
