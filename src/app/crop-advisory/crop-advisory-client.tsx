@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, User, Bot, Send, Volume2, Mic, MicOff, VolumeX, Play } from 'lucide-react';
+import { Loader2, User, Bot, Send, Volume2, Mic, MicOff, VolumeX, Play, Pause } from 'lucide-react';
 import { handleCropAdvisory } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -55,6 +55,7 @@ export function CropAdvisoryClient() {
   const recognitionRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,8 +67,9 @@ export function CropAdvisoryClient() {
   });
 
   useEffect(() => {
-    // Initialize Audio object
     audioRef.current = new Audio();
+    audioRef.current.onended = () => setPlayingAudio(null);
+    audioRef.current.onpause = () => setPlayingAudio(null);
 
     const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
@@ -75,7 +77,7 @@ export function CropAdvisoryClient() {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;
-      recognitionRef.current.maxAlternatives = 1;
+      recognitionRef.current.lang = 'en-US';
 
       recognitionRef.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
@@ -104,6 +106,12 @@ export function CropAdvisoryClient() {
       setIsSpeechSupported(false);
       console.warn("Speech recognition not supported in this browser.");
     }
+    
+    return () => {
+        if(audioRef.current) {
+            audioRef.current.pause();
+        }
+    }
   }, []);
   
   useEffect(() => {
@@ -125,10 +133,17 @@ export function CropAdvisoryClient() {
 
     if (isRecording) {
       recognitionRef.current.stop();
-      setIsRecording(false);
     } else {
       try {
-        const selectedLanguageCode = languages.find(l => l.value === form.getValues('language'))?.code || 'en-US';
+        const selectedLanguageCode = languages.find(l => l.value === form.getValues('language'))?.code;
+        if (!selectedLanguageCode) {
+            toast({
+                variant: 'destructive',
+                title: 'Language Not Selected',
+                description: 'Please select a language before starting voice input.',
+            });
+            return;
+        }
         recognitionRef.current.lang = selectedLanguageCode;
         recognitionRef.current.start();
         setIsRecording(true);
@@ -144,12 +159,19 @@ export function CropAdvisoryClient() {
     }
   };
   
-  const playAudio = (audioDataUri: string) => {
-    if (audioRef.current) {
-      if (audioRef.current.src !== audioDataUri) {
-          audioRef.current.src = audioDataUri;
-      }
-      audioRef.current.play();
+  const toggleAudio = (audioDataUri: string) => {
+    if (!audioRef.current) return;
+    
+    if (playingAudio === audioDataUri) {
+        audioRef.current.pause();
+        setPlayingAudio(null);
+    } else {
+        if(playingAudio) {
+            audioRef.current.pause();
+        }
+        audioRef.current.src = audioDataUri;
+        audioRef.current.play();
+        setPlayingAudio(audioDataUri);
     }
   };
 
@@ -171,7 +193,7 @@ export function CropAdvisoryClient() {
       const botMessage: Message = { role: 'bot', content: result.recommendation, audio: result.audio };
       setMessages(prev => [...prev, botMessage]);
       if(result.audio && !isMuted){
-        playAudio(result.audio);
+        toggleAudio(result.audio);
       }
       form.resetField('question');
     } catch (e) {
@@ -211,8 +233,8 @@ export function CropAdvisoryClient() {
               )}>
                 <div className="whitespace-pre-wrap text-sm">{message.content}</div>
                 {message.audio && (
-                   <Button variant="ghost" size="icon" className="mt-2 h-8 w-8" onClick={() => playAudio(message.audio!)}>
-                    <Play className="h-5 w-5" />
+                   <Button variant="ghost" size="icon" className="mt-2 h-8 w-8" onClick={() => toggleAudio(message.audio!)}>
+                     {playingAudio === message.audio ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
                    </Button>
                 )}
               </div>
@@ -293,7 +315,7 @@ export function CropAdvisoryClient() {
               />
                <div className="flex items-center gap-2">
                 {isSpeechSupported && (
-                  <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading || !form.watch('language')} className="shrink-0">
+                  <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading} className="shrink-0">
                     {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                   </Button>
                 )}
