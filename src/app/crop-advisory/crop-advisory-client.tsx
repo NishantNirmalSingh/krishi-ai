@@ -14,7 +14,7 @@ import { Loader2, User, Bot, Send, Volume2 } from 'lucide-react';
 import { handleCropAdvisory } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
 const languages = [
@@ -50,7 +50,7 @@ export function CropAdvisoryClient() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,9 +63,9 @@ export function CropAdvisoryClient() {
   });
   
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
+    if (scrollViewportRef.current) {
+      scrollViewportRef.current.scrollTo({
+        top: scrollViewportRef.current.scrollHeight,
         behavior: 'smooth',
       });
     }
@@ -113,8 +113,8 @@ export function CropAdvisoryClient() {
 
   return (
     <Card className="flex flex-1 flex-col">
-      <ScrollArea className="flex-grow p-6" viewportRef={scrollAreaRef}>
-        <div className="space-y-6">
+      <ScrollArea className="flex-grow p-6">
+        <div className="space-y-6" ref={scrollViewportRef}>
           {messages.length === 0 && (
             <div className="py-12 text-center text-muted-foreground">
               <Bot className="mx-auto mb-4 h-12 w-12" />
