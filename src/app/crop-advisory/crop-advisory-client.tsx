@@ -83,10 +83,14 @@ export function CropAdvisoryClient() {
 
       recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
+        let description = `An error occurred: ${event.error}. Please ensure microphone access is allowed.`;
+        if (event.error === 'network') {
+          description = 'A network error occurred. Please check your internet connection and try again.';
+        }
         toast({
           variant: 'destructive',
           title: 'Speech Recognition Error',
-          description: `An error occurred: ${event.error}. Please ensure microphone access is allowed.`,
+          description: description,
         });
         setIsRecording(false);
       };
@@ -107,11 +111,9 @@ export function CropAdvisoryClient() {
   }, [selectedLanguageCode]);
   
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      const viewport = scrollAreaRef.current.querySelector('div');
-      if (viewport) {
+    const viewport = scrollAreaRef.current?.querySelector('div[data-radix-scroll-area-viewport]');
+    if (viewport) {
         viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
-      }
     }
   }, [messages]);
 
@@ -153,7 +155,7 @@ export function CropAdvisoryClient() {
       <div>
         <p className="text-sm">{data.question}</p>
         <p className="mt-2 text-xs text-primary-foreground/70">
-          Context: {data.location}, {data.language}
+          Context: {data.location}
         </p>
       </div>
     );
