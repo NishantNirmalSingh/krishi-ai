@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, User, Bot, Send, Volume2 } from 'lucide-react';
+import { Loader2, User, Bot, Send, Volume2, Mic, MicOff } from 'lucide-react';
 import { handleCropAdvisory } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -18,19 +18,19 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
 const languages = [
-  { value: 'Assamese', label: 'অসমীয়া (Assamese)' },
-  { value: 'Bengali', label: 'বাংলা (Bengali)' },
-  { value: 'English', label: 'English' },
-  { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)' },
-  { value: 'Hindi', label: 'हिंदी (Hindi)' },
-  { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)' },
-  { value: 'Malayalam', label: 'മലയാളം (Malayalam)' },
-  { value: 'Marathi', label: 'मराठी (Marathi)' },
-  { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)' },
-  { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)' },
-  { value: 'Tamil', label: 'தமிழ் (Tamil)' },
-  { value: 'Telugu', label: 'తెలుగు (Telugu)' },
-  { value: 'Urdu', label: 'اردو (Urdu)' },
+  { value: 'Assamese', label: 'অসমীয়া (Assamese)', code: 'as-IN' },
+  { value: 'Bengali', label: 'বাংলা (Bengali)', code: 'bn-IN' },
+  { value: 'English', label: 'English', code: 'en-US' },
+  { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)', code: 'gu-IN' },
+  { value: 'Hindi', label: 'हिंदी (Hindi)', code: 'hi-IN' },
+  { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)', code: 'kn-IN' },
+  { value: 'Malayalam', label: 'മലയാളം (Malayalam)', code: 'ml-IN' },
+  { value: 'Marathi', label: 'मराठी (Marathi)', code: 'mr-IN' },
+  { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)', code: 'or-IN' },
+  { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)', code: 'pa-IN' },
+  { value: 'Tamil', label: 'தமிழ் (Tamil)', code: 'ta-IN' },
+  { value: 'Telugu', label: 'తెలుగు (Telugu)', code: 'te-IN' },
+  { value: 'Urdu', label: 'اردو (Urdu)', code: 'ur-IN' },
 ];
 
 const formSchema = z.object({
@@ -50,6 +50,10 @@ export function CropAdvisoryClient() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeechSupported, setIsSpeechSupported] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,6 +63,49 @@ export function CropAdvisoryClient() {
       question: '',
     },
   });
+
+  const selectedLanguageCode = languages.find(l => l.value === form.watch('language'))?.code || 'en-US';
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setIsSpeechSupported(true);
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        const currentQuestion = form.getValues('question');
+        form.setValue('question', currentQuestion ? `${currentQuestion} ${transcript}`: transcript);
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        toast({
+          variant: 'destructive',
+          title: 'Speech Recognition Error',
+          description: `An error occurred: ${event.error}. Please ensure microphone access is allowed.`,
+        });
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+      };
+
+      recognitionRef.current = recognition;
+    } else {
+      setIsSpeechSupported(false);
+      console.warn("Speech recognition not supported in this browser.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if(recognitionRef.current){
+        recognitionRef.current.lang = selectedLanguageCode;
+    }
+  }, [selectedLanguageCode]);
   
   useEffect(() => {
     if (scrollViewportRef.current) {
@@ -68,6 +115,24 @@ export function CropAdvisoryClient() {
       });
     }
   }, [messages]);
+
+  const toggleRecording = () => {
+    if (!isSpeechSupported) {
+      toast({
+        variant: 'destructive',
+        title: 'Unsupported Feature',
+        description: 'Speech recognition is not supported in your browser.',
+      });
+      return;
+    }
+
+    if (isRecording) {
+      recognitionRef.current?.stop();
+    } else {
+      recognitionRef.current?.start();
+    }
+    setIsRecording(!isRecording);
+  };
   
   const playAudio = (audioDataUri: string) => {
     const audio = new Audio(audioDataUri);
@@ -111,7 +176,7 @@ export function CropAdvisoryClient() {
 
   return (
     <Card className="flex flex-1 flex-col">
-      <ScrollArea className="flex-grow p-6" ref={scrollViewportRef}>
+      <ScrollArea className="flex-grow p-6" viewportRef={scrollViewportRef}>
         <div className="space-y-6">
           {messages.length === 0 && (
             <div className="py-12 text-center text-muted-foreground">
@@ -212,6 +277,11 @@ export function CropAdvisoryClient() {
                   </FormItem>
                 )}
               />
+              {isSpeechSupported && (
+                <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading || !form.watch('language')} className="shrink-0">
+                  {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
+              )}
               <Button type="submit" size="icon" disabled={isLoading} className="shrink-0">
                 <Send className="h-4 w-4" />
               </Button>
