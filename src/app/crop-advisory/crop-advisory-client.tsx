@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, User, Bot, Send, Volume2, Mic, MicOff, VolumeX } from 'lucide-react';
+import { Loader2, User, Bot, Send, Volume2, Mic, MicOff, VolumeX, Play } from 'lucide-react';
 import { handleCropAdvisory } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -54,7 +54,7 @@ export function CropAdvisoryClient() {
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(false);
-
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,6 +66,9 @@ export function CropAdvisoryClient() {
   });
 
   useEffect(() => {
+    // Initialize Audio object
+    audioRef.current = new Audio();
+
     const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       setIsSpeechSupported(true);
@@ -101,7 +104,7 @@ export function CropAdvisoryClient() {
       setIsSpeechSupported(false);
       console.warn("Speech recognition not supported in this browser.");
     }
-  }, [form, toast]);
+  }, []);
   
   useEffect(() => {
     const viewport = scrollAreaRef.current?.querySelector('div[data-radix-scroll-area-viewport]');
@@ -142,9 +145,12 @@ export function CropAdvisoryClient() {
   };
   
   const playAudio = (audioDataUri: string) => {
-    if (isMuted) return;
-    const audio = new Audio(audioDataUri);
-    audio.play();
+    if (audioRef.current) {
+      if (audioRef.current.src !== audioDataUri) {
+          audioRef.current.src = audioDataUri;
+      }
+      audioRef.current.play();
+    }
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -164,7 +170,7 @@ export function CropAdvisoryClient() {
       const result = await handleCropAdvisory(data);
       const botMessage: Message = { role: 'bot', content: result.recommendation, audio: result.audio };
       setMessages(prev => [...prev, botMessage]);
-      if(result.audio){
+      if(result.audio && !isMuted){
         playAudio(result.audio);
       }
       form.resetField('question');
@@ -206,7 +212,7 @@ export function CropAdvisoryClient() {
                 <div className="whitespace-pre-wrap text-sm">{message.content}</div>
                 {message.audio && (
                    <Button variant="ghost" size="icon" className="mt-2 h-8 w-8" onClick={() => playAudio(message.audio!)}>
-                    <Volume2 className="h-5 w-5" />
+                    <Play className="h-5 w-5" />
                    </Button>
                 )}
               </div>
