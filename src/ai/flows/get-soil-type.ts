@@ -27,6 +27,6 @@ export const getSoilType = ai.defineTool(
       prompt: `What is the most common soil type in the following location in India: ${location}? Respond with only the soil type name (e.g., "Alluvial Soil", "Black Cotton Soil").`,
       model: 'googleai/gemini-2.5-flash',
     });
-    return output as string;
+    return output || '';
   }
 );
