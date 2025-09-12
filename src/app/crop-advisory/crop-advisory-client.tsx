@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, User, Bot, Send, Volume2, Mic, MicOff } from 'lucide-react';
+import { Loader2, User, Bot, Send, Volume2, Mic, MicOff, VolumeX } from 'lucide-react';
 import { handleCropAdvisory } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -53,6 +53,7 @@ export function CropAdvisoryClient() {
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const [isMuted, setIsMuted] = useState(false);
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -162,7 +163,7 @@ export function CropAdvisoryClient() {
       const result = await handleCropAdvisory(data);
       const botMessage: Message = { role: 'bot', content: result.recommendation, audio: result.audio };
       setMessages(prev => [...prev, botMessage]);
-      if(result.audio){
+      if(result.audio && !isMuted){
         playAudio(result.audio);
       }
       form.resetField('question');
@@ -283,6 +284,9 @@ export function CropAdvisoryClient() {
                   </FormItem>
                 )}
               />
+              <Button type="button" size="icon" variant="outline" onClick={() => setIsMuted(prev => !prev)} className="shrink-0">
+                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              </Button>
               {isSpeechSupported && (
                 <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading || !form.watch('language')} className="shrink-0">
                   {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
