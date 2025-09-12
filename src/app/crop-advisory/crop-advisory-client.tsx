@@ -64,8 +64,6 @@ export function CropAdvisoryClient() {
     },
   });
 
-  const selectedLanguageCode = languages.find(l => l.value === form.watch('language'))?.code || 'en-US';
-
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
@@ -103,12 +101,6 @@ export function CropAdvisoryClient() {
       console.warn("Speech recognition not supported in this browser.");
     }
   }, [form, toast]);
-
-  useEffect(() => {
-    if(recognitionRef.current){
-        recognitionRef.current.lang = selectedLanguageCode;
-    }
-  }, [selectedLanguageCode]);
   
   useEffect(() => {
     const viewport = scrollAreaRef.current?.querySelector('div[data-radix-scroll-area-viewport]');
@@ -129,8 +121,11 @@ export function CropAdvisoryClient() {
 
     if (isRecording) {
       recognitionRef.current.stop();
+      setIsRecording(false);
     } else {
       try {
+        const selectedLanguageCode = languages.find(l => l.value === form.getValues('language'))?.code || 'en-US';
+        recognitionRef.current.lang = selectedLanguageCode;
         recognitionRef.current.start();
         setIsRecording(true);
       } catch (e) {
@@ -140,6 +135,7 @@ export function CropAdvisoryClient() {
           title: 'Recording Error',
           description: 'Could not start voice recording. Please check microphone permissions.',
         });
+        setIsRecording(false);
       }
     }
   };
