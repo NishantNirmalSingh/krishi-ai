@@ -24,17 +24,18 @@ export function MainNav() {
     <SidebarMenu>
       {links.map((link) => (
         <SidebarMenuItem key={link.href}>
-          <Link href={link.href} passHref legacyBehavior>
             <SidebarMenuButton
+              asChild
               isActive={pathname === link.href}
               tooltip={link.label}
             >
-              <link.icon className="h-5 w-5" />
-              <span className="group-data-[collapsible=icon]:hidden">
-                {link.label}
-              </span>
+              <Link href={link.href}>
+                <link.icon className="h-5 w-5" />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  {link.label}
+                </span>
+              </Link>
             </SidebarMenuButton>
-          </Link>
         </SidebarMenuItem>
       ))}
     </SidebarMenu>
