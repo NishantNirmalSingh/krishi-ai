@@ -14,7 +14,7 @@ import { Loader2, User, Bot, Send, Volume2 } from 'lucide-react';
 import { handleCropAdvisory } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
 const languages = [
@@ -36,7 +36,6 @@ const languages = [
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
   location: z.string().min(2, 'Location is required.'),
-  soilType: z.string().min(2, 'Soil type is required.'),
   question: z.string().min(10, 'Please ask a detailed question.'),
 });
 
@@ -57,7 +56,6 @@ export function CropAdvisoryClient() {
     defaultValues: {
       language: '',
       location: '',
-      soilType: '',
       question: '',
     },
   });
@@ -82,7 +80,7 @@ export function CropAdvisoryClient() {
       <div>
         <p className="text-sm">{data.question}</p>
         <p className="mt-2 text-xs text-primary-foreground/70">
-          Context: {data.location}, {data.soilType}, {data.language}
+          Context: {data.location}, {data.language}
         </p>
       </div>
     );
@@ -113,8 +111,8 @@ export function CropAdvisoryClient() {
 
   return (
     <Card className="flex flex-1 flex-col">
-      <ScrollArea className="flex-grow p-6">
-        <div className="space-y-6" ref={scrollViewportRef}>
+      <ScrollArea className="flex-grow p-6" ref={scrollViewportRef}>
+        <div className="space-y-6">
           {messages.length === 0 && (
             <div className="py-12 text-center text-muted-foreground">
               <Bot className="mx-auto mb-4 h-12 w-12" />
@@ -161,7 +159,7 @@ export function CropAdvisoryClient() {
       <div className="border-t bg-background/95 p-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="language"
@@ -190,19 +188,6 @@ export function CropAdvisoryClient() {
                     <FormLabel>Location</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., Rampur Village" {...field} disabled={isLoading} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="soilType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Soil Type</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Black Cotton Soil" {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -11,6 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {textToSpeech, TextToSpeechInput} from './text-to-speech';
+import {getSoilType} from './get-soil-type';
 
 const CropAdvisoryInputSchema = z.object({
   language: z
@@ -19,7 +20,12 @@ const CropAdvisoryInputSchema = z.object({
       'The language in which the farmer will ask their question, and in which the response should be provided.'
     ),
   location: z.string().describe("The farmer's location (village/taluka)."),
-  soilType: z.string().describe('The type of soil in the farmer’s field.'),
+  soilType: z
+    .string()
+    .optional()
+    .describe(
+      'The type of soil in the farmer’s field. If not provided, the AI will determine it.'
+    ),
   question: z
     .string()
     .describe(
@@ -54,7 +60,10 @@ const cropAdvisoryPrompt = ai.definePrompt({
       .string()
       .describe('The AI’s recommendation on what to plant, in the farmer’s language.'),
   })},
+  tools: [getSoilType],
   prompt: `You are a helpful agricultural advisor assisting farmers in India. You must respond in the same language the farmer used in their question.
+
+  If the user has not provided the soil type, use the getSoilType tool to determine it from their location.
 
   Here are the details:
   Language: {{{language}}}
