@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, User, Bot, Send } from 'lucide-react';
+import { Loader2, User, Bot, Send, Volume2 } from 'lucide-react';
 import { handleCropAdvisory } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -18,12 +18,19 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
 const languages = [
-  { value: "Hindi", label: "हिंदी (Hindi)" },
-  { value: "Bengali", label: "বাংলা (Bengali)" },
-  { value: "Telugu", label: "తెలుగు (Telugu)" },
-  { value: "Marathi", label: "मराठी (Marathi)" },
-  { value: "Tamil", label: "தமிழ் (Tamil)" },
-  { value: "English", label: "English" },
+  { value: 'Assamese', label: 'অসমীয়া (Assamese)' },
+  { value: 'Bengali', label: 'বাংলা (Bengali)' },
+  { value: 'English', label: 'English' },
+  { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)' },
+  { value: 'Hindi', label: 'हिंदी (Hindi)' },
+  { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)' },
+  { value: 'Malayalam', label: 'മലയാളം (Malayalam)' },
+  { value: 'Marathi', label: 'मराठी (Marathi)' },
+  { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)' },
+  { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)' },
+  { value: 'Tamil', label: 'தமிழ் (Tamil)' },
+  { value: 'Telugu', label: 'తెలుగు (Telugu)' },
+  { value: 'Urdu', label: 'اردو (Urdu)' },
 ];
 
 const formSchema = z.object({
@@ -36,6 +43,7 @@ const formSchema = z.object({
 type Message = {
   role: 'user' | 'bot';
   content: React.ReactNode;
+  audio?: string;
 };
 
 export function CropAdvisoryClient() {
@@ -62,6 +70,11 @@ export function CropAdvisoryClient() {
       });
     }
   }, [messages]);
+  
+  const playAudio = (audioDataUri: string) => {
+    const audio = new Audio(audioDataUri);
+    audio.play();
+  };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
@@ -78,8 +91,11 @@ export function CropAdvisoryClient() {
 
     try {
       const result = await handleCropAdvisory(data);
-      const botMessage: Message = { role: 'bot', content: result.recommendation };
+      const botMessage: Message = { role: 'bot', content: result.recommendation, audio: result.audio };
       setMessages(prev => [...prev, botMessage]);
+      if(result.audio){
+        playAudio(result.audio);
+      }
       form.resetField('question');
     } catch (e) {
       toast({
@@ -117,6 +133,11 @@ export function CropAdvisoryClient() {
                 message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
               )}>
                 <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                {message.audio && (
+                   <Button variant="ghost" size="icon" className="mt-2 h-8 w-8" onClick={() => playAudio(message.audio!)}>
+                    <Volume2 className="h-5 w-5" />
+                   </Button>
+                )}
               </div>
               {message.role === 'user' && (
                 <Avatar className="border">

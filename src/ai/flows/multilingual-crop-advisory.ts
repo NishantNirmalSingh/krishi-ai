@@ -1,5 +1,3 @@
-// This file is machine-generated - edit at your own risk.
-
 'use server';
 
 /**
@@ -12,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {textToSpeech, TextToSpeechInput} from './text-to-speech';
 
 const CropAdvisoryInputSchema = z.object({
   language: z
@@ -33,6 +32,11 @@ const CropAdvisoryOutputSchema = z.object({
   recommendation: z
     .string()
     .describe('The AI’s recommendation on what to plant, in the farmer’s language.'),
+  audio: z
+    .string()
+    .describe(
+      'A data URI of the audio of the recommendation in WAV format.'
+    ),
 });
 export type CropAdvisoryOutput = z.infer<typeof CropAdvisoryOutputSchema>;
 
@@ -45,7 +49,11 @@ export async function getCropAdvisory(
 const cropAdvisoryPrompt = ai.definePrompt({
   name: 'cropAdvisoryPrompt',
   input: {schema: CropAdvisoryInputSchema},
-  output: {schema: CropAdvisoryOutputSchema},
+  output: {schema: z.object({
+    recommendation: z
+      .string()
+      .describe('The AI’s recommendation on what to plant, in the farmer’s language.'),
+  })},
   prompt: `You are a helpful agricultural advisor assisting farmers in India. You must respond in the same language the farmer used in their question.
 
   Here are the details:
@@ -66,6 +74,17 @@ const cropAdvisoryFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await cropAdvisoryPrompt(input);
-    return output!;
+    const recommendation = output!.recommendation;
+    
+    const ttsInput: TextToSpeechInput = {
+      text: recommendation,
+      language: input.language,
+    };
+    const audioData = await textToSpeech(ttsInput);
+    
+    return {
+      recommendation,
+      audio: audioData,
+    };
   }
 );
