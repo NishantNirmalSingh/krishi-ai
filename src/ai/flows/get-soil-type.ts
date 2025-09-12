@@ -23,10 +23,10 @@ export const getSoilType = ai.defineTool(
     // In a real application, you would use a database or an external API
     // to get accurate soil type data. For this example, we'll use a
     // simplified lookup with a Genkit prompt.
-    const {output} = await ai.generate({
+    const {text} = await ai.generate({
       prompt: `What is the most common soil type in the following location in India: ${location}? Respond with only the soil type name (e.g., "Alluvial Soil", "Black Cotton Soil").`,
       model: 'googleai/gemini-2.5-flash',
     });
-    return output || '';
+    return text;
   }
 );
