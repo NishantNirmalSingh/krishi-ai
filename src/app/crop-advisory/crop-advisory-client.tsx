@@ -176,8 +176,8 @@ export function CropAdvisoryClient() {
 
   return (
     <Card className="flex flex-1 flex-col">
-      <ScrollArea className="flex-grow p-6" viewportRef={scrollViewportRef}>
-        <div className="space-y-6">
+      <ScrollArea className="flex-grow p-6">
+        <div className="space-y-6" ref={scrollViewportRef}>
           {messages.length === 0 && (
             <div className="py-12 text-center text-muted-foreground">
               <Bot className="mx-auto mb-4 h-12 w-12" />
