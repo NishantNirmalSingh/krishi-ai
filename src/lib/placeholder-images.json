@@ -1,3 +1,16 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-farmer",
+      "description": "A compelling hero image showing a farmer using a smartphone in a field.",
+      "imageUrl": "https://picsum.photos/seed/hero-farmer/1200/400",
+      "imageHint": "farmer smartphone field"
+    },
+    {
+      "id": "user-avatar",
+      "description": "Avatar for the user navigation.",
+      "imageUrl": "https://picsum.photos/seed/user-avatar/40/40",
+      "imageHint": "person portrait"
+    }
+  ]
 }
