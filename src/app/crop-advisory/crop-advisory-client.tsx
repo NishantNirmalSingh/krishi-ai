@@ -326,11 +326,6 @@ export function CropAdvisoryClient() {
             </div>
           </form>
         </Form>
-        <div className="mt-2 flex justify-end">
-            <Button type="button" size="icon" variant="outline" onClick={() => setIsMuted(prev => !prev)} className="shrink-0">
-                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-            </Button>
-        </div>
       </div>
     </Card>
   );
