@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,13 +8,31 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Image from 'next/image';
-import { Loader2, Upload } from 'lucide-react';
+import { Loader2, Upload, Play, Pause } from 'lucide-react';
 import { handlePestDetection } from '@/app/actions';
 import type { DetectPestDiseaseOutput } from '@/ai/flows/pest-disease-detection';
 import { useToast } from '@/hooks/use-toast';
 
+const languages = [
+  { value: 'Assamese', label: 'অসমীয়া (Assamese)' },
+  { value: 'Bengali', label: 'বাংলা (Bengali)' },
+  { value: 'English', label: 'English' },
+  { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)' },
+  { value: 'Hindi', label: 'हिंदी (Hindi)' },
+  { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)' },
+  { value: 'Malayalam', label: 'മലയാളം (Malayalam)' },
+  { value: 'Marathi', label: 'मराठी (Marathi)' },
+  { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)' },
+  { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)' },
+  { value: 'Tamil', label: 'தமிழ் (Tamil)' },
+  { value: 'Telugu', label: 'తెలుగు (Telugu)' },
+  { value: 'Urdu', label: 'اردو (Urdu)' },
+];
+
 const formSchema = z.object({
+  language: z.string().min(1, 'Please select a language.'),
   plantImage: z.any()
     .refine((files) => files?.length == 1, 'Image is required.')
     .refine((files) => files?.[0]?.size <= 5000000, `Max file size is 5MB.`)
@@ -29,16 +47,38 @@ export function PestDetectionClient() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      language: 'English',
+      plantImage: undefined,
+    }
   });
+  
+  useEffect(() => {
+    audioRef.current = new Audio();
+    audioRef.current.onended = () => setPlayingAudio(null);
+    audioRef.current.onpause = () => setPlayingAudio(null);
+    
+    return () => {
+        if(audioRef.current) {
+            audioRef.current.pause();
+        }
+    }
+  }, []);
 
   const fileRef = form.register('plantImage');
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setResult(null);
+    if(playingAudio) {
+      audioRef.current?.pause();
+      setPlayingAudio(null);
+    }
 
     const file = data.plantImage[0];
     const reader = new FileReader();
@@ -46,7 +86,10 @@ export function PestDetectionClient() {
     reader.onload = async () => {
       const dataUri = reader.result as string;
       try {
-        const detectionResult = await handlePestDetection({ photoDataUri: dataUri });
+        const detectionResult = await handlePestDetection({ 
+          photoDataUri: dataUri,
+          language: data.language
+        });
         setResult(detectionResult);
       } catch (e) {
         toast({
@@ -80,6 +123,27 @@ export function PestDetectionClient() {
     } else {
       setImagePreview(null);
     }
+    setResult(null);
+    if(playingAudio) {
+      audioRef.current?.pause();
+      setPlayingAudio(null);
+    }
+  };
+
+  const toggleAudio = (audioDataUri: string) => {
+    if (!audioRef.current) return;
+    
+    if (playingAudio === audioDataUri) {
+        audioRef.current.pause();
+        setPlayingAudio(null);
+    } else {
+        if(playingAudio) {
+            audioRef.current.pause();
+        }
+        audioRef.current.src = audioDataUri;
+        audioRef.current.play();
+        setPlayingAudio(audioDataUri);
+    }
   };
 
   return (
@@ -87,11 +151,31 @@ export function PestDetectionClient() {
       <Card>
         <CardHeader>
           <CardTitle>Upload Plant Image</CardTitle>
-          <CardDescription>Select a clear photo of the affected plant part.</CardDescription>
+          <CardDescription>Select a language and a clear photo of the affected plant part.</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="language"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Language</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a language" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {languages.map(lang => <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="plantImage"
@@ -153,9 +237,16 @@ export function PestDetectionClient() {
           )}
           {result && !isLoading && (
             <div className="space-y-4 w-full">
-              <div>
-                <h3 className="font-semibold text-muted-foreground">Identified Issue</h3>
-                <p className="text-2xl font-bold text-primary">{result.disease}</p>
+               <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-muted-foreground">Identified Issue</h3>
+                  <p className="text-2xl font-bold text-primary">{result.disease}</p>
+                </div>
+                {result.audio && (
+                   <Button variant="ghost" size="icon" className="h-10 w-10" onClick={() => toggleAudio(result.audio!)}>
+                     {playingAudio === result.audio ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                   </Button>
+                )}
               </div>
               <div>
                 <h3 className="font-semibold text-muted-foreground">Confidence Level</h3>
