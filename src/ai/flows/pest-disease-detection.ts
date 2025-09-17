@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -47,9 +48,11 @@ const prompt = ai.definePrompt({
       treatmentOptions: z.string().describe('Recommended treatment options for the identified pest or disease.'),
     })
   },
-  prompt: `You are an expert plant pathologist. A farmer has uploaded a photo of a plant. You must identify the pest or disease affecting the plant, provide a confidence level, and suggest treatment options. 
+  prompt: `You are an expert plant pathologist. A farmer has uploaded a photo of a plant. You must identify the pest or disease, provide a confidence level, and suggest treatment options.
 
-  Respond in the language specified: {{{language}}}. Your response must be easily understandable to a non-expert farmer.
+  Language: {{{language}}}
+  
+  You MUST respond fully in the requested language. All text fields in your output, including 'disease' and 'treatmentOptions', must be in the specified language. Your response must be easily understandable to a non-expert farmer.
 
   Analyze the following image and provide your diagnosis:
 
@@ -83,3 +86,4 @@ const detectPestDiseaseFlow = ai.defineFlow(
     };
   }
 );
+
