@@ -557,6 +557,10 @@ body {
   margin-top: 1.5rem;
 }
 
+.ml-2 {
+  margin-left: .5rem;
+}
+
 .block {
   display: block;
 }
@@ -1441,6 +1445,10 @@ body {
 
 .pl-10 {
   padding-left: 2.5rem;
+}
+
+.pr-20 {
+  padding-right: 5rem;
 }
 
 .text-left {
@@ -2631,6 +2639,14 @@ body {
 }
 
 @media (width >= 768px) {
+  .md\:col-span-1 {
+    grid-column: span 1 / span 1;
+  }
+
+  .md\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+
   .md\:block {
     display: block;
   }
@@ -2653,6 +2669,10 @@ body {
 
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .md\:p-12 {
@@ -2709,6 +2729,10 @@ body {
 @media (width >= 1024px) {
   .lg\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .lg\:inline {
+    display: inline;
   }
 
   .lg\:grid-cols-3 {

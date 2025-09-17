@@ -8,11 +8,13 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {textToSpeech, TextToSpeechInput} from './text-to-speech';
 
 const MarketPriceInputSchema = z.object({
   crop: z
     .string()
     .describe('The name of the crop, fruit, or vegetable to search for.'),
+  language: z.string().describe('The language for the market data summary.'),
 });
 export type MarketPriceInput = z.infer<typeof MarketPriceInputSchema>;
 
@@ -47,6 +49,14 @@ const MarketPriceOutputSchema = z.object({
     .describe(
       'Suggestions for offline channels (local co-ops, buyers, etc.) to sell the crop.'
     ),
+  summary: z
+    .string()
+    .describe('A brief summary of the market data in the requested language.'),
+  audio: z
+    .string()
+    .describe(
+      'A data URI of the audio of the market summary in WAV format.'
+    ),
 });
 export type MarketPriceOutput = z.infer<typeof MarketPriceOutputSchema>;
 
@@ -59,13 +69,17 @@ export async function getMarketPrice(
 const getMarketPricePrompt = ai.definePrompt({
   name: 'getMarketPricePrompt',
   input: {schema: MarketPriceInputSchema},
-  output: {schema: MarketPriceOutputSchema},
-  prompt: `You are a market data analyst and advisor for Indian agriculture. For the given crop, provide the following information:
+  output: {
+    schema: MarketPriceOutputSchema.omit({audio: true}),
+  },
+  prompt: `You are a market data analyst and advisor for Indian agriculture. You must respond in the language specified. For the given crop, provide the following information:
 
   Crop: {{{crop}}}
+  Language: {{{language}}}
 
   1.  **Market Data**: Find a major agricultural market (mandi) in India relevant to this crop. Provide a realistic current price in INR per quintal. Provide a recent historical price to show a trend. The unit must be "Quintal".
   2.  **Selling Platforms**: Suggest 2-3 online platforms (like agri-tech marketplaces, B2B portals) and 2-3 offline options (like farmer co-operatives, local food processors). For each suggestion, provide a brief, helpful detail that includes actionable advice on how the farmer can connect with or reach out to them. For example, for an online platform, mention if they have a mobile app or a website registration. For an offline buyer, suggest how a farmer might find their local representative.
+  3.  **Summary**: Provide a brief, one-sentence summary of the key market information (crop name, current price, and trend) in the requested language.
   `,
 });
 
@@ -77,6 +91,19 @@ const getMarketPriceFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await getMarketPricePrompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('Failed to get market data from the AI model.');
+    }
+
+    const ttsInput: TextToSpeechInput = {
+      text: output.summary,
+      language: input.language,
+    };
+    const audioData = await textToSpeech(ttsInput);
+
+    return {
+      ...output,
+      audio: audioData,
+    };
   }
 );
