@@ -112,7 +112,7 @@ export default function DashboardPage() {
             className="flex h-full flex-col transition-shadow duration-300 hover:shadow-subtle-lg"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-lg font-medium">
+              <CardTitle className="text-xl font-bold">
                 {action.title}
               </CardTitle>
               <action.icon className="h-6 w-6 text-muted-foreground" />
