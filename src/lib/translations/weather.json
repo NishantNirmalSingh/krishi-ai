@@ -1,0 +1,53 @@
+{
+    "English": {
+        "languageLabel": "Language",
+        "languagePlaceholder": "Select language",
+        "locationLabel": "Location",
+        "locationPlaceholder": "e.g., Your Village, Taluka, or District",
+        "searchButton": "Search",
+        "initialTitle": "Search for a Location",
+        "initialMessage": "Enter a location to get the hyper-local weather forecast.",
+        "loadingTitle": "Fetching Forecast...",
+        "loadingMessage": "Finding weather data for \"{{location}}\"...",
+        "currentConditions": "Current Conditions",
+        "lastUpdated": "Last updated: {{time}}",
+        "wind": "Wind",
+        "humidity": "Humidity",
+        "predictiveAlerts": "Predictive Alerts",
+        "noAlerts": "No critical alerts for your location right now."
+    },
+    "Hindi": {
+        "languageLabel": "भाषा",
+        "languagePlaceholder": "भाषा चुनें",
+        "locationLabel": "स्थान",
+        "locationPlaceholder": "जैसे, आपका गाँव, तालुका, या जिला",
+        "searchButton": "खोजें",
+        "initialTitle": "स्थान खोजें",
+        "initialMessage": "स्थानीय मौसम पूर्वानुमान प्राप्त करने के लिए एक स्थान दर्ज करें।",
+        "loadingTitle": "पूर्वानुमान प्राप्त हो रहा है...",
+        "loadingMessage": "\"{{location}}\" के लिए मौसम डेटा ढूँढा जा रहा है...",
+        "currentConditions": "वर्तमान स्थितियाँ",
+        "lastUpdated": "अंतिम अपडेट: {{time}}",
+        "wind": "हवा",
+        "humidity": "नमी",
+        "predictiveAlerts": "भविष्यवाणी संबंधी अलर्ट",
+        "noAlerts": "अभी आपके स्थान के लिए कोई महत्वपूर्ण अलर्ट नहीं है।"
+    },
+    "Marathi": {
+        "languageLabel": "भाषा",
+        "languagePlaceholder": "भाषा निवडा",
+        "locationLabel": "स्थान",
+        "locationPlaceholder": "उदा., तुमचे गाव, तालुका, किंवा जिल्हा",
+        "searchButton": "शोधा",
+        "initialTitle": "स्थानासाठी शोधा",
+        "initialMessage": "स्थानिक हवामान अंदाज मिळविण्यासाठी स्थान प्रविष्ट करा.",
+        "loadingTitle": "अंदाज आणत आहे...",
+        "loadingMessage": "\"{{location}}\" साठी हवामान डेटा शोधत आहे...",
+        "currentConditions": "सध्याची परिस्थिती",
+        "lastUpdated": "अखेरचे अद्यतनः {{time}}",
+        "wind": "वारा",
+        "humidity": "आर्द्रता",
+        "predictiveAlerts": "भविष्यसूचक सूचना",
+        "noAlerts": "सध्या तुमच्या स्थानासाठी कोणत्याही गंभीर सूचना नाहीत."
+    }
+}

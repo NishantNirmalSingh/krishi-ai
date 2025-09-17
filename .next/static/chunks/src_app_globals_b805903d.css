@@ -1391,6 +1391,11 @@ body {
   padding-bottom: 1rem;
 }
 
+.py-20 {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
 .pb-2 {
   padding-bottom: .5rem;
 }
@@ -2729,6 +2734,10 @@ body {
 @media (width >= 1024px) {
   .lg\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .lg\:col-span-3 {
+    grid-column: span 3 / span 3;
   }
 
   .lg\:inline {

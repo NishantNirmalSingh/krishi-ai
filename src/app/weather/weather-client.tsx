@@ -1,0 +1,283 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Loader2,
+  Search,
+  Cloud,
+  CloudDrizzle,
+  CloudLightning,
+  CloudRain,
+  CloudSun,
+  Sun,
+  Wind,
+  Waves,
+  BellRing,
+} from "lucide-react";
+import { handleWeatherForecast } from "../actions";
+import type { WeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
+import { languages } from "@/lib/languages";
+import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "@/hooks/use-translation";
+import weatherTranslations from "@/lib/translations/weather.json";
+
+const formSchema = z.object({
+  language: z.string().min(1, "Please select a language."),
+  location: z.string().min(2, "Location is required."),
+});
+
+const iconMap: { [key: string]: React.ComponentType<any> } = {
+  Sun,
+  CloudSun,
+  Cloud,
+  CloudRain,
+  CloudDrizzle,
+  CloudLightning,
+};
+
+export function WeatherClient() {
+  const [result, setResult] = useState<WeatherForecastOutput | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const [currentLang, setCurrentLang] = useState("English");
+  const t = useTranslation(currentLang, weatherTranslations);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      language: "English",
+      location: "",
+    },
+  });
+
+  const handleLanguageChange = (langValue: string) => {
+    form.setValue("language", langValue);
+    setCurrentLang(langValue);
+  };
+  
+  const handleSearch = async (data: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    setResult(null);
+
+    try {
+      const searchResult = await handleWeatherForecast(data);
+      setResult(searchResult);
+    } catch (error: any) {
+      console.error("Failed to fetch weather forecast:", error);
+      let description =
+        "Could not fetch weather data. Please try again.";
+      if (error.message && error.message.includes("503")) {
+        description =
+          "The AI model is currently overloaded. Please try again in a few moments.";
+      }
+      toast({
+        title: "Search Failed",
+        description: description,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const renderInitialState = () => (
+    <Card className="lg:col-span-3">
+        <CardHeader>
+            <CardTitle>{t.initialTitle}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-20 text-muted-foreground">
+            <p>{t.initialMessage}</p>
+        </CardContent>
+    </Card>
+  );
+
+  const renderLoadingState = () => (
+     <Card className="lg:col-span-3">
+        <CardHeader>
+            <CardTitle>{t.loadingTitle}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-20 text-muted-foreground">
+            <div className="flex items-center gap-2">
+                <Loader2 className="h-6 w-6 animate-spin"/>
+                <p>{t.loadingMessage(form.getValues('location'))}</p>
+            </div>
+        </CardContent>
+    </Card>
+  );
+
+  return (
+    <div className="flex flex-1 flex-col gap-6">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSearch)} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <FormField
+              control={form.control}
+              name="language"
+              render={({ field }) => (
+                <FormItem className="md:col-span-1">
+                  <FormLabel>{t.languageLabel}</FormLabel>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      handleLanguageChange(value);
+                    }}
+                    value={field.value}
+                    disabled={isLoading}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t.languagePlaceholder} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {languages.map((lang) => (
+                        <SelectItem key={lang.value} value={lang.value}>
+                          {lang.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="crop"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel>{t.locationLabel}</FormLabel>
+                  <div className="relative flex-grow">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <FormControl>
+                      <Input
+                        {...form.register("location")}
+                        placeholder={t.locationPlaceholder}
+                        className="pl-10 pr-20"
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                      <Button type="submit" size="sm" disabled={isLoading}>
+                        {isLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Search className="h-4 w-4" />
+                        )}
+                        <span className="hidden lg:inline ml-2">{t.searchButton}</span>
+                      </Button>
+                    </div>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </form>
+      </Form>
+      
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {isLoading && renderLoadingState()}
+        {!isLoading && !result && renderInitialState()}
+        {result && !isLoading && (
+            <>
+                <Card className="lg:col-span-2">
+                    <CardHeader>
+                        <CardTitle>{t.currentConditions}</CardTitle>
+                        <CardDescription>{t.lastUpdated(result.lastUpdated)}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
+                        <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-6xl font-bold">{result.currentConditions.temperature}</p>
+                            <p className="text-muted-foreground">{result.currentConditions.condition}</p>
+                        </div>
+                        {React.createElement(iconMap[result.currentConditions.icon] || CloudSun, { className: "h-24 w-24 text-muted-foreground"})}
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                        <div className="flex items-center gap-2 text-sm">
+                            <Wind className="h-5 w-5 text-muted-foreground" />
+                            <span className="font-medium">{t.wind}:</span>
+                            <span>{result.currentConditions.wind}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                            <Waves className="h-5 w-5 text-muted-foreground" />
+                            <span className="font-medium">{t.humidity}:</span>
+                            <span>{result.currentConditions.humidity}</span>
+                        </div>
+                        </div>
+                        <div className="flex justify-between rounded-lg border bg-muted/50 p-4">
+                        {result.weeklyForecast.map(({ day, icon, temp }) => {
+                          const IconComponent = iconMap[icon] || Cloud;
+                          return (
+                            <div key={day} className="flex flex-col items-center space-y-2">
+                                <span className="text-sm text-muted-foreground">{day}</span>
+                                <IconComponent className="h-8 w-8 text-primary" />
+                                <span className="font-semibold">{temp}</span>
+                            </div>
+                          )
+                        })}
+                        </div>
+                    </CardContent>
+                </Card>
+                 <div className="space-y-6">
+                    <Card>
+                        <CardHeader>
+                        <CardTitle>{t.predictiveAlerts}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {result.predictiveAlerts.length > 0 ? (
+                                result.predictiveAlerts.map((alert, index) => (
+                                    <Alert key={index} className="border-accent bg-accent/20 text-accent-foreground">
+                                        <BellRing className="h-4 w-4" />
+                                        <AlertTitle className="font-headline">{alert.title}</AlertTitle>
+                                        <AlertDescription>
+                                            {alert.description}
+                                        </AlertDescription>
+                                    </Alert>
+                                ))
+                            ) : (
+                                <p className="text-sm text-muted-foreground">{t.noAlerts}</p>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+            </>
+        )}
+      </div>
+
+    </div>
+  );
+}
