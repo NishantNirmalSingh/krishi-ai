@@ -11,28 +11,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, User, Bot, Send, Volume2, Mic, MicOff, VolumeX, Play, Pause } from 'lucide-react';
+import { Loader2, User, Bot, Send, Mic, MicOff, Play, Pause } from 'lucide-react';
 import { handleCropAdvisory } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-
-const languages = [
-  { value: 'Assamese', label: 'অসমীয়া (Assamese)', code: 'as-IN' },
-  { value: 'Bengali', label: 'বাংলা (Bengali)', code: 'bn-IN' },
-  { value: 'English', label: 'English', code: 'en-US' },
-  { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)', code: 'gu-IN' },
-  { value: 'Hindi', label: 'हिंदी (Hindi)', code: 'hi-IN' },
-  { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)', code: 'kn-IN' },
-  { value: 'Malayalam', label: 'മലയാളം (Malayalam)', code: 'ml-IN' },
-  { value: 'Marathi', label: 'मराठी (Marathi)', code: 'mr-IN' },
-  { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)', code: 'or-IN' },
-  { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)', code: 'pa-IN' },
-  { value: 'Tamil', label: 'தமிழ் (Tamil)', code: 'ta-IN' },
-  { value: 'Telugu', label: 'తెలుగు (Telugu)', code: 'te-IN' },
-  { value: 'Urdu', label: 'اردو (Urdu)', code: 'ur-IN' },
-];
+import { languages } from '@/lib/languages';
+import { useTranslation } from '@/hooks/use-translation';
+import { cropAdvisoryTranslations } from '@/lib/translations/crop-advisory';
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
@@ -56,15 +43,22 @@ export function CropAdvisoryClient() {
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const [currentLang, setCurrentLang] = useState('English');
+  const t = useTranslation(currentLang, cropAdvisoryTranslations);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      language: '',
+      language: 'English',
       location: '',
       question: '',
     },
   });
+  
+  const handleLanguageChange = (langValue: string) => {
+    form.setValue('language', langValue);
+    setCurrentLang(langValue);
+  };
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -217,7 +211,7 @@ export function CropAdvisoryClient() {
           {messages.length === 0 && (
             <div className="py-12 text-center text-muted-foreground">
               <Bot className="mx-auto mb-4 h-12 w-12" />
-              <p>Your conversation will appear here. <br/> Fill out the form below to start.</p>
+              <p>{t.initialMessage1} <br/> {t.initialMessage2}</p>
             </div>
           )}
           {messages.map((message, index) => (
@@ -266,11 +260,11 @@ export function CropAdvisoryClient() {
                 name="language"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Language</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
+                    <FormLabel>{t.languageLabel}</FormLabel>
+                    <Select onValueChange={handleLanguageChange} value={field.value} disabled={isLoading}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a language" />
+                          <SelectValue placeholder={t.languagePlaceholder} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -286,9 +280,9 @@ export function CropAdvisoryClient() {
                 name="location"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Location</FormLabel>
+                    <FormLabel>{t.locationLabel}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Rampur Village" {...field} disabled={isLoading} />
+                      <Input placeholder={t.locationPlaceholder} {...field} disabled={isLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -302,7 +296,7 @@ export function CropAdvisoryClient() {
                 render={({ field }) => (
                   <FormItem className="flex-grow">
                     <FormControl>
-                      <Textarea placeholder="Ask your question here..." {...field} disabled={isLoading} className="min-h-[40px] resize-none" onKeyDown={(e) => {
+                      <Textarea placeholder={t.questionPlaceholder} {...field} disabled={isLoading} className="min-h-[40px] resize-none" onKeyDown={(e) => {
                           if (e.key === "Enter" && !e.shiftKey) {
                               e.preventDefault();
                               if (!isLoading) form.handleSubmit(onSubmit)();

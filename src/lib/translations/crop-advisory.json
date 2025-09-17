@@ -1,0 +1,32 @@
+
+{
+  "English": {
+    "initialMessage1": "Your conversation will appear here.",
+    "initialMessage2": "Fill out the form below to start.",
+    "languageLabel": "Language",
+    "languagePlaceholder": "Select a language",
+    "locationLabel": "Location",
+    "locationPlaceholder": "e.g., Rampur Village",
+    "questionPlaceholder": "Ask your question here..."
+  },
+  "Hindi": {
+    "initialMessage1": "आपकी बातचीत यहां दिखाई देगी।",
+    "initialMessage2": "शुरू करने के लिए नीचे दिया गया फ़ॉर्म भरें।",
+    "languageLabel": "भाषा",
+    "languagePlaceholder": "एक भाषा चुनें",
+    "locationLabel": "स्थान",
+    "locationPlaceholder": "जैसे, रामपुर गांव",
+    "questionPlaceholder": "अपना प्रश्न यहां पूछें..."
+  },
+  "Marathi": {
+    "initialMessage1": "तुमचे संभाषण येथे दिसेल.",
+    "initialMessage2": "सुरू करण्यासाठी खालील फॉर्म भरा.",
+    "languageLabel": "भाषा",
+    "languagePlaceholder": "एक भाषा निवडा",
+    "locationLabel": "स्थान",
+    "locationPlaceholder": "उदा. रामपूर गाव",
+    "questionPlaceholder": "तुमचा प्रश्न येथे विचारा..."
+  }
+}
+
+    
