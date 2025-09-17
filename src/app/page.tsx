@@ -61,11 +61,11 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="relative overflow-hidden rounded-xl shadow-lg">
+      <div className="relative overflow-hidden rounded-xl shadow-subtle-lg">
         <div className="absolute right-4 top-4 z-10">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="secondary" size="sm" className="gap-2 bg-background/80 hover:bg-background">
                   <Globe className="h-4 w-4"/>
                   <span>{selectedLanguageLabel}</span>
                 </Button>
@@ -88,7 +88,7 @@ export default function DashboardPage() {
           data-ai-hint="farmer smartphone field"
           priority
         />
-        <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-r from-black/70 to-black/20 p-8 md:p-12">
+        <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-r from-black/80 to-black/10 p-8 md:p-12">
           <h1 className="max-w-2xl font-headline text-3xl font-bold text-white md:text-5xl">
             {t.heroTitle}
           </h1>
@@ -98,7 +98,7 @@ export default function DashboardPage() {
           <Button
             asChild
             size="lg"
-            className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90"
+            className="mt-6 bg-accent text-accent-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent/90"
           >
             <Link href="/crop-advisory">{t.getStartedButton}</Link>
           </Button>
@@ -109,7 +109,7 @@ export default function DashboardPage() {
         {quickActions.map((action) => (
           <Card
             key={action.title}
-            className="flex h-full flex-col transition-shadow duration-300 hover:shadow-lg"
+            className="flex h-full flex-col transition-shadow duration-300 hover:shadow-subtle-lg"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-lg font-medium">

@@ -5,6 +5,19 @@ import { Toaster } from "@/components/ui/toaster";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { LanguageProvider } from "@/context/language-context";
+import { PT_Sans, Roboto_Slab } from 'next/font/google';
+
+const ptSans = PT_Sans({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-pt-sans',
+});
+
+const robotoSlab = Roboto_Slab({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-roboto-slab',
+});
 
 export const metadata: Metadata = {
   title: "KrishiAI",
@@ -17,19 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" suppressHydrationWarning className={`${ptSans.variable} ${robotoSlab.variable}`}>
+      <head/>
       <body className="font-body antialiased">
         <LanguageProvider>
           <SidebarProvider>
