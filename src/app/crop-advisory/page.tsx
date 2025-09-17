@@ -1,3 +1,6 @@
+
+"use client";
+
 import { CropAdvisoryClient } from './crop-advisory-client';
 import { PageHeader } from '@/components/page-header';
 import { useTranslation } from '@/hooks/use-translation';
