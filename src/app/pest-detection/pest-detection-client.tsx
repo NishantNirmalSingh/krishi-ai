@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -91,11 +92,15 @@ export function PestDetectionClient() {
           language: data.language
         });
         setResult(detectionResult);
-      } catch (e) {
+      } catch (e: any) {
+        let description = 'An error occurred while analyzing the image. Please try again.';
+        if (e.message && e.message.includes('503')) {
+          description = 'The AI model is currently overloaded. Please try again in a few moments.';
+        }
         toast({
           variant: 'destructive',
           title: 'Analysis Failed',
-          description: 'An error occurred while analyzing the image. Please try again.',
+          description,
         });
         console.error(e);
       } finally {
@@ -268,3 +273,5 @@ export function PestDetectionClient() {
     </div>
   );
 }
+
+    
