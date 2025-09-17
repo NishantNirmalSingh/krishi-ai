@@ -6,9 +6,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Bot, Image as ImageIcon, LineChart, CloudSun } from "lucide-react";
+import { Bot, Image as ImageIcon, LineChart, CloudSun, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const quickActions = [
   {
@@ -37,10 +43,35 @@ const quickActions = [
   },
 ];
 
+const languages = [
+    { value: 'en', label: 'English' },
+    { value: 'hi', label: 'हिंदी (Hindi)' },
+    { value: 'mr', label: 'मराठी (Marathi)' },
+    { value: 'ta', label: 'தமிழ் (Tamil)' },
+];
+
+
 export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="relative overflow-hidden rounded-xl shadow-lg">
+        <div className="absolute right-4 top-4 z-10">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Globe className="h-4 w-4"/>
+                  <span>English</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {languages.map((lang) => (
+                    <DropdownMenuItem key={lang.value}>
+                        {lang.label}
+                    </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
         <Image
           src="https://picsum.photos/seed/hero-farmer/1200/400"
           width={1200}
