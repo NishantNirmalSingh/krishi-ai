@@ -312,7 +312,7 @@ export function WeatherClient() {
                         <CardContent className="space-y-4">
                             {result.predictiveAlerts.length > 0 ? (
                                 result.predictiveAlerts.map((alert, index) => (
-                                    <Alert key={index} className="border-accent bg-accent/20 text-accent-foreground">
+                                    <Alert key={index} className="bg-accent text-accent-foreground border-accent/50">
                                         <div className="flex justify-between items-center">
                                             <BellRing className="h-4 w-4" />
                                             <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 text-accent-foreground/80 hover:text-accent-foreground" onClick={() => toggleAudio(alert.audio)}>
