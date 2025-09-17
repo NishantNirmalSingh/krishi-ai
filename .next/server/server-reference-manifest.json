@@ -1,5 +1,50 @@
 {
-  "node": {},
+  "node": {
+    "40465ffaf0ceb7ed620650054949fef9abd49dc6e9": {
+      "workers": {
+        "app/crop-advisory/page": {
+          "moduleId": "[project]/.next-internal/server/app/crop-advisory/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/crop-advisory/page": "action-browser"
+      }
+    },
+    "408b55a9708df9dfe94e5778991efaa929b929236c": {
+      "workers": {
+        "app/pest-detection/page": {
+          "moduleId": "[project]/.next-internal/server/app/pest-detection/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/pest-detection/page": "action-browser"
+      }
+    },
+    "406eb18c12b407082a80eff135d5328c4f592cb0d1": {
+      "workers": {
+        "app/market-prices/page": {
+          "moduleId": "[project]/.next-internal/server/app/market-prices/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/market-prices/page": "action-browser"
+      }
+    },
+    "40389c252f64ce55d6e40024abef3447ad1380b167": {
+      "workers": {
+        "app/weather/page": {
+          "moduleId": "[project]/.next-internal/server/app/weather/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/weather/page": "action-browser"
+      }
+    }
+  },
   "edge": {},
   "encryptionKey": "V3vPAtsXsMHJdcfs9dmKw8uYQ2PBDnw3aXleweNDyvM="
 }
