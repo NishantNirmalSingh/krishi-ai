@@ -3,47 +3,75 @@
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUp, ArrowDown, Minus, Search } from "lucide-react";
+import { ArrowUp, ArrowDown, Minus, Search, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/page-header";
 import { Input } from "@/components/ui/input";
-
-const marketData = [
-  { crop: "Wheat", market: "Kanpur Mandi", currentPrice: 2250, historicalPrice: 2200, unit: "Quintal" },
-  { crop: "Paddy (Rice)", market: "Ludhiana Mandi", currentPrice: 3100, historicalPrice: 3150, unit: "Quintal" },
-  { crop: "Maize", market: "Gulbarga Mandi", currentPrice: 1950, historicalPrice: 1950, unit: "Quintal" },
-  { crop: "Soybean", market: "Indore Mandi", currentPrice: 4500, historicalPrice: 4400, unit: "Quintal" },
-  { crop: "Cotton", market: "Adilabad Mandi", currentPrice: 7200, historicalPrice: 7350, unit: "Quintal" },
-  { crop: "Tomato", market: "Nashik Mandi", currentPrice: 1500, historicalPrice: 1200, unit: "Quintal" },
-  { crop: "Onion", market: "Lasalgaon Mandi", currentPrice: 1800, historicalPrice: 2100, unit: "Quintal" },
-  { crop: "Potato", market: "Agra Mandi", currentPrice: 1400, historicalPrice: 1400, unit: "Quintal" },
-  { crop: "Mustard", market: "Alwar Mandi", currentPrice: 5500, historicalPrice: 5600, unit: "Quintal" },
-  { crop: "Gram (Chana)", market: "Bikaner Mandi", currentPrice: 4800, historicalPrice: 4750, unit: "Quintal" },
-];
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { handleMarketPriceSearch } from "../actions";
+import type { MarketPriceOutput } from "@/ai/flows/get-market-price";
 
 export default function MarketPricesPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState<MarketPriceOutput[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const filteredMarketData = marketData.filter(item =>
-    item.crop.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchTerm.trim()) {
+      toast({
+        title: "Search term required",
+        description: "Please enter a crop to search for.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsLoading(true);
+    setResults([]);
+    try {
+      const result = await handleMarketPriceSearch({ crop: searchTerm });
+      setResults([result]);
+    } catch (error) {
+      console.error("Failed to fetch market price:", error);
+      toast({
+        title: "Search Failed",
+        description: "Could not fetch market price data. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
         title="Market Price Dashboard"
-        description="Current and historical mandi prices for key crops in nearby markets."
+        description="Search for current mandi prices for any crop, fruit, or vegetable."
       />
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search for a crop..."
-          className="pl-10"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+      <form onSubmit={handleSearch} className="flex w-full items-center space-x-2">
+        <div className="relative flex-grow">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search for a crop, e.g., 'Tomato' or 'Onion'"
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            disabled={isLoading}
+          />
+        </div>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Search className="h-4 w-4 md:hidden" />
+          )}
+          <span className="hidden md:inline">Search</span>
+        </Button>
+      </form>
       <Card>
         <CardContent className="p-0">
           <Table>
@@ -51,12 +79,22 @@ export default function MarketPricesPage() {
               <TableRow>
                 <TableHead>Crop</TableHead>
                 <TableHead>Market</TableHead>
-                <TableHead className="text-right">Current Price (per {marketData[0].unit})</TableHead>
+                <TableHead className="text-right">Current Price (per Quintal)</TableHead>
                 <TableHead className="text-right">Price Trend</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredMarketData.length > 0 ? filteredMarketData.map((item) => {
+              {isLoading && (
+                 <TableRow>
+                    <TableCell colSpan={4} className="h-24 text-center">
+                      <div className="flex justify-center items-center gap-2 text-muted-foreground">
+                        <Loader2 className="h-5 w-5 animate-spin"/>
+                        <span>Fetching market data for "{searchTerm}"...</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+              )}
+              {!isLoading && results.length > 0 && results.map((item) => {
                  const trend = item.currentPrice > item.historicalPrice ? 'up' : item.currentPrice < item.historicalPrice ? 'down' : 'stable';
                  return(
                   <TableRow key={`${item.crop}-${item.market}`}>
@@ -73,10 +111,11 @@ export default function MarketPricesPage() {
                     </TableCell>
                   </TableRow>
                  )
-              }) : (
+              })}
+              {!isLoading && results.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={4} className="h-24 text-center">
-                    No results found for "{searchTerm}".
+                    {searchTerm ? `No results found for "${searchTerm}".` : "Your search results will appear here."}
                   </TableCell>
                 </TableRow>
               )}
