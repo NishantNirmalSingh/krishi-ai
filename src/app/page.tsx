@@ -89,10 +89,10 @@ export default function DashboardPage() {
           priority
         />
         <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-r from-black/80 to-black/10 p-8 md:p-12">
-          <h1 className="max-w-2xl font-headline text-3xl font-bold text-white md:text-5xl">
+          <h1 className="max-w-2xl font-headline text-4xl font-bold text-white md:text-5xl">
             {t.heroTitle}
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/90 md:text-xl">
+          <p className="mt-4 max-w-2xl text-base text-white/90 md:text-lg">
             {t.heroSubtitle}
           </p>
           <Button
