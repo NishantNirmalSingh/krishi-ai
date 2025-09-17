@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -103,7 +104,7 @@ export function WeatherClient() {
           "The AI model is currently overloaded. Please try again in a few moments.";
       }
       toast({
-        title: "Search Failed",
+        title: t('searchFailedTitle') || "Search Failed",
         description: description,
         variant: "destructive",
       });
@@ -111,6 +112,17 @@ export function WeatherClient() {
       setIsLoading(false);
     }
   };
+  
+  const getLoadingMessage = () => {
+    const message = t.loadingMessage || 'Finding weather data for "{{location}}"...';
+    return message.replace('{{location}}', form.getValues('location'));
+  }
+  
+  const getLastUpdatedMessage = () => {
+      if (!result?.lastUpdated) return '';
+      const message = t.lastUpdated || 'Last updated: {{time}}';
+      return message.replace('{{time}}', result.lastUpdated);
+  }
 
   const renderInitialState = () => (
     <Card className="lg:col-span-3">
@@ -131,7 +143,7 @@ export function WeatherClient() {
         <CardContent className="flex items-center justify-center py-20 text-muted-foreground">
             <div className="flex items-center gap-2">
                 <Loader2 className="h-6 w-6 animate-spin"/>
-                <p>{t.loadingMessage(form.getValues('location'))}</p>
+                <p>{getLoadingMessage()}</p>
             </div>
         </CardContent>
     </Card>
@@ -175,7 +187,7 @@ export function WeatherClient() {
             />
             <FormField
               control={form.control}
-              name="crop"
+              name="location"
               render={({ field }) => (
                 <FormItem className="md:col-span-2">
                   <FormLabel>{t.locationLabel}</FormLabel>
@@ -183,7 +195,7 @@ export function WeatherClient() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <FormControl>
                       <Input
-                        {...form.register("location")}
+                        {...field}
                         placeholder={t.locationPlaceholder}
                         className="pl-10 pr-20"
                         disabled={isLoading}
@@ -216,7 +228,7 @@ export function WeatherClient() {
                 <Card className="lg:col-span-2">
                     <CardHeader>
                         <CardTitle>{t.currentConditions}</CardTitle>
-                        <CardDescription>{t.lastUpdated(result.lastUpdated)}</CardDescription>
+                        <CardDescription>{getLastUpdatedMessage()}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8">
                         <div className="flex items-center justify-between">
@@ -263,6 +275,7 @@ export function WeatherClient() {
                                     <Alert key={index} className="border-accent bg-accent/20 text-accent-foreground">
                                         <BellRing className="h-4 w-4" />
                                         <AlertTitle className="font-headline">{alert.title}</AlertTitle>
+
                                         <AlertDescription>
                                             {alert.description}
                                         </AlertDescription>
@@ -281,3 +294,5 @@ export function WeatherClient() {
     </div>
   );
 }
+
+    
