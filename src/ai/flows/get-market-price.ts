@@ -21,7 +21,7 @@ const PlatformSchema = z.object({
   details: z
     .string()
     .describe(
-      'A brief description of the platform and why it is a good option.'
+      'A brief description of the platform and actionable advice on how a farmer can connect with them.'
     ),
 });
 
@@ -65,7 +65,7 @@ const getMarketPricePrompt = ai.definePrompt({
   Crop: {{{crop}}}
 
   1.  **Market Data**: Find a major agricultural market (mandi) in India relevant to this crop. Provide a realistic current price in INR per quintal. Provide a recent historical price to show a trend. The unit must be "Quintal".
-  2.  **Selling Platforms**: Suggest 2-3 online platforms (like agri-tech marketplaces, B2B portals) and 2-3 offline options (like farmer co-operatives, local food processors, or direct-to-consumer models) where the farmer could potentially get a good price for this crop. For each suggestion, provide a brief, helpful detail.
+  2.  **Selling Platforms**: Suggest 2-3 online platforms (like agri-tech marketplaces, B2B portals) and 2-3 offline options (like farmer co-operatives, local food processors). For each suggestion, provide a brief, helpful detail that includes actionable advice on how the farmer can connect with or reach out to them. For example, for an online platform, mention if they have a mobile app or a website registration. For an offline buyer, suggest how a farmer might find their local representative.
   `,
 });
 
