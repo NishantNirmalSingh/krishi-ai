@@ -1,8 +1,10 @@
+
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { LanguageProvider } from "@/context/language-context";
 
 export const metadata: Metadata = {
   title: "KrishiAI",
@@ -29,12 +31,14 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <main className="flex-1 p-4 sm:p-6">{children}</main>
-          </SidebarInset>
-        </SidebarProvider>
+        <LanguageProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <main className="flex-1 p-4 sm:p-6">{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
+        </LanguageProvider>
         <Toaster />
       </body>
     </html>

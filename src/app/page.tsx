@@ -1,3 +1,7 @@
+
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,6 +19,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLanguage } from "@/context/language-context";
+import { useTranslation } from "@/hooks/use-translation";
+import homeTranslations from "@/lib/translations/home.json";
+import { languages } from "@/lib/languages";
 
 const quickActions = [
   {
@@ -43,24 +51,12 @@ const quickActions = [
   },
 ];
 
-const languages = [
-    { value: 'Assamese', label: 'অসমীয়া (Assamese)' },
-    { value: 'Bengali', label: 'বাংলা (Bengali)' },
-    { value: 'English', label: 'English' },
-    { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)' },
-    { value: 'Hindi', label: 'हिंदी (Hindi)' },
-    { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)' },
-    { value: 'Malayalam', label: 'മലയാളം (Malayalam)' },
-    { value: 'Marathi', label: 'मराठी (Marathi)' },
-    { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)' },
-    { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)' },
-    { value: 'Tamil', label: 'தமிழ் (Tamil)' },
-    { value: 'Telugu', label: 'తెలుగు (Telugu)' },
-    { value: 'Urdu', label: 'اردو (Urdu)' },
-];
-
-
 export default function DashboardPage() {
+  const { language, setLanguage } = useLanguage();
+  const t = useTranslation(language, homeTranslations);
+
+  const selectedLanguageLabel = languages.find(l => l.value === language)?.label || 'English';
+
   return (
     <div className="flex flex-col gap-8">
       <div className="relative overflow-hidden rounded-xl shadow-lg">
@@ -69,12 +65,12 @@ export default function DashboardPage() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
                   <Globe className="h-4 w-4"/>
-                  <span>English</span>
+                  <span>{selectedLanguageLabel}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {languages.map((lang) => (
-                    <DropdownMenuItem key={lang.value}>
+                    <DropdownMenuItem key={lang.value} onSelect={() => setLanguage(lang.value)}>
                         {lang.label}
                     </DropdownMenuItem>
                 ))}
@@ -92,18 +88,17 @@ export default function DashboardPage() {
         />
         <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-r from-black/70 to-black/20 p-8 md:p-12">
           <h1 className="max-w-2xl font-headline text-3xl font-bold text-white md:text-5xl">
-            Your Personal AI Agri-Scientist, Always in Your Pocket.
+            {t.heroTitle}
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-white/90 md:text-xl">
-            Get personalized crop advice, pest control, and market prices in
-            your own language, just by speaking.
+            {t.heroSubtitle}
           </p>
           <Button
             asChild
             size="lg"
             className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90"
           >
-            <Link href="/crop-advisory">Get Started</Link>
+            <Link href="/crop-advisory">{t.getStartedButton}</Link>
           </Button>
         </div>
       </div>
@@ -134,5 +129,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

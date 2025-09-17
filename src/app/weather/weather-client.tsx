@@ -53,6 +53,7 @@ import { languages } from "@/lib/languages";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "@/hooks/use-translation";
 import weatherTranslations from "@/lib/translations/weather.json";
+import { useLanguage } from "@/context/language-context";
 
 const formSchema = z.object({
   language: z.string().min(1, "Please select a language."),
@@ -72,20 +73,23 @@ export function WeatherClient() {
   const [result, setResult] = useState<WeatherForecastOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const [currentLang, setCurrentLang] = useState("English");
-  const t = useTranslation(currentLang, weatherTranslations);
+  const { language, setLanguage } = useLanguage();
+  const t = useTranslation(language, weatherTranslations);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      language: "English",
+      language: language,
       location: "",
     },
   });
+  
+  useEffect(() => {
+    form.setValue('language', language);
+  }, [language, form]);
 
   const handleLanguageChange = (langValue: string) => {
-    form.setValue("language", langValue);
-    setCurrentLang(langValue);
+    setLanguage(langValue);
   };
   
   const handleSearch = async (data: z.infer<typeof formSchema>) => {
@@ -294,5 +298,3 @@ export function WeatherClient() {
     </div>
   );
 }
-
-    

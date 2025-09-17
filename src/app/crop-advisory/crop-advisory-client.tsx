@@ -20,6 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { languages } from '@/lib/languages';
 import { useTranslation } from '@/hooks/use-translation';
 import cropAdvisoryTranslations from '@/lib/translations/crop-advisory.json';
+import { useLanguage } from '@/context/language-context';
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
@@ -43,21 +44,24 @@ export function CropAdvisoryClient() {
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
-  const [currentLang, setCurrentLang] = useState('English');
-  const t = useTranslation(currentLang, cropAdvisoryTranslations);
+  const { language, setLanguage } = useLanguage();
+  const t = useTranslation(language, cropAdvisoryTranslations);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      language: 'English',
+      language: language,
       location: '',
       question: '',
     },
   });
+
+  useEffect(() => {
+    form.setValue('language', language);
+  }, [language, form]);
   
   const handleLanguageChange = (langValue: string) => {
-    form.setValue('language', langValue);
-    setCurrentLang(langValue);
+    setLanguage(langValue);
   };
 
   useEffect(() => {

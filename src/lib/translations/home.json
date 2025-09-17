@@ -1,0 +1,18 @@
+
+{
+  "English": {
+    "heroTitle": "Your Personal AI Agri-Scientist, Always in Your Pocket.",
+    "heroSubtitle": "Get personalized crop advice, pest control, and market prices in your own language, just by speaking.",
+    "getStartedButton": "Get Started"
+  },
+  "Hindi": {
+    "heroTitle": "आपका व्यक्तिगत AI कृषि-वैज्ञानिक, हमेशा आपकी जेब में।",
+    "heroSubtitle": "केवल बोलकर अपनी भाषा में व्यक्तिगत फसल सलाह, कीट नियंत्रण और बाजार मूल्य प्राप्त करें।",
+    "getStartedButton": "शुरू करें"
+  },
+  "Marathi": {
+    "heroTitle": "तुमचा वैयक्तिक AI कृषी-शास्त्रज्ञ, नेहमी तुमच्या खिशात.",
+    "heroSubtitle": "फक्त बोलून तुमच्या स्वतःच्या भाषेत वैयक्तिकृत पीक सल्ला, कीड नियंत्रण आणि बाजारभाव मिळवा.",
+    "getStartedButton": "सुरुवात करा"
+  }
+}
