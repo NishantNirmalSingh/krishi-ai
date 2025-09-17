@@ -21,6 +21,17 @@
       "layer": {
         "app/market-prices/page": "action-browser"
       }
+    },
+    "40465ffaf0ceb7ed620650054949fef9abd49dc6e9": {
+      "workers": {
+        "app/crop-advisory/page": {
+          "moduleId": "[project]/.next-internal/server/app/crop-advisory/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/crop-advisory/page": "action-browser"
+      }
     }
   },
   "edge": {},

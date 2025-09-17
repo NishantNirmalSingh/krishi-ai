@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -53,7 +54,6 @@ export function CropAdvisoryClient() {
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
-  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
 
@@ -192,7 +192,7 @@ export function CropAdvisoryClient() {
       const result = await handleCropAdvisory(data);
       const botMessage: Message = { role: 'bot', content: result.recommendation, audio: result.audio };
       setMessages(prev => [...prev, botMessage]);
-      if(result.audio && !isMuted){
+      if(result.audio){
         toggleAudio(result.audio);
       }
       form.resetField('question');
@@ -330,3 +330,5 @@ export function CropAdvisoryClient() {
     </Card>
   );
 }
+
+    

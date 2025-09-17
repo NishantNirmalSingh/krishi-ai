@@ -44,10 +44,19 @@ const quickActions = [
 ];
 
 const languages = [
-    { value: 'en', label: 'English' },
-    { value: 'hi', label: 'हिंदी (Hindi)' },
-    { value: 'mr', label: 'मराठी (Marathi)' },
-    { value: 'ta', label: 'தமிழ் (Tamil)' },
+    { value: 'Assamese', label: 'অসমীয়া (Assamese)' },
+    { value: 'Bengali', label: 'বাংলা (Bengali)' },
+    { value: 'English', label: 'English' },
+    { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)' },
+    { value: 'Hindi', label: 'हिंदी (Hindi)' },
+    { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)' },
+    { value: 'Malayalam', label: 'മലയാളം (Malayalam)' },
+    { value: 'Marathi', label: 'मराठी (Marathi)' },
+    { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)' },
+    { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)' },
+    { value: 'Tamil', label: 'தமிழ் (Tamil)' },
+    { value: 'Telugu', label: 'తెలుగు (Telugu)' },
+    { value: 'Urdu', label: 'اردو (Urdu)' },
 ];
 
 
@@ -125,3 +134,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
