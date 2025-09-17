@@ -9,6 +9,7 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { textToSpeech, TextToSpeechInput } from './text-to-speech';
 
 const WeatherForecastInputSchema = z.object({
   location: z
@@ -27,6 +28,12 @@ const iconEnum = z.enum([
   'CloudLightning',
 ]);
 
+const PredictiveAlertSchema = z.object({
+      title: z.string().describe('A short, catchy title for the alert, in the requested language.'),
+      description: z.string().describe('The detailed alert message for the farmer, in the requested language.'),
+      audio: z.string().describe('A data URI of the audio of the alert in WAV format.'),
+    })
+
 const WeatherForecastOutputSchema = z.object({
   lastUpdated: z.string().describe("How long ago the weather was updated, e.g., 'just now', '5 minutes ago', in the requested language."),
   currentConditions: z.object({
@@ -43,10 +50,7 @@ const WeatherForecastOutputSchema = z.object({
     }))
     .length(7)
     .describe('A 7-day weather forecast.'),
-  predictiveAlerts: z.array(z.object({
-      title: z.string().describe('A short, catchy title for the alert, in the requested language.'),
-      description: z.string().describe('The detailed alert message for the farmer, in the requested language.'),
-    }))
+  predictiveAlerts: z.array(PredictiveAlertSchema)
     .describe('Any critical weather alerts for the next 48-72 hours.'),
 });
 export type WeatherForecastOutput = z.infer<typeof WeatherForecastOutputSchema>;
@@ -62,14 +66,16 @@ const getWeatherForecastPrompt = ai.definePrompt({
   name: 'getWeatherForecastPrompt',
   input: {schema: WeatherForecastInputSchema},
   output: {
-    schema: WeatherForecastOutputSchema,
+    schema: WeatherForecastOutputSchema.extend({
+      predictiveAlerts: z.array(PredictiveAlertSchema.omit({ audio: true }))
+    }),
   },
   prompt: `You are a hyper-local weather expert for Indian agriculture. For the given location, provide a realistic and detailed weather forecast.
 
   Location: {{{location}}}
   Language: {{{language}}}
 
-  You MUST provide all text-based output, including conditions, day names, and alert details, strictly in the requested language.
+  You MUST provide all text-based output, including conditions, day names, and alert details, strictly in the requested language. The title and description for predictive alerts must also be in the requested language.
 
   Provide the following information:
   1.  **Current Conditions**: Generate a realistic temperature, condition (in the requested language), wind speed, and humidity. Select an appropriate icon.
@@ -89,6 +95,25 @@ const getWeatherForecastFlow = ai.defineFlow(
     if (!output) {
       throw new Error('Failed to get weather data from the AI model.');
     }
-    return output;
+
+    // Generate audio for each predictive alert
+    const alertsWithAudio = await Promise.all(
+      (output.predictiveAlerts || []).map(async (alert) => {
+        const ttsInput: TextToSpeechInput = {
+          text: alert.description,
+          language: input.language,
+        };
+        const audioData = await textToSpeech(ttsInput);
+        return {
+          ...alert,
+          audio: audioData,
+        };
+      })
+    );
+
+    return {
+      ...output,
+      predictiveAlerts: alertsWithAudio,
+    };
   }
 );

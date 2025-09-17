@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,6 +47,8 @@ import {
   Wind,
   Waves,
   BellRing,
+  Play,
+  Pause,
 } from "lucide-react";
 import { handleWeatherForecast } from "../actions";
 import type { WeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
@@ -76,6 +78,8 @@ export function WeatherClient() {
   const { toast } = useToast();
   const { language, setLanguage } = useLanguage();
   const t = useTranslation(language, weatherTranslations);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,6 +93,18 @@ export function WeatherClient() {
     form.setValue('language', language);
   }, [language, form]);
 
+  useEffect(() => {
+    audioRef.current = new Audio();
+    audioRef.current.onended = () => setPlayingAudio(null);
+    audioRef.current.onpause = () => setPlayingAudio(null);
+    
+    return () => {
+        if(audioRef.current) {
+            audioRef.current.pause();
+        }
+    }
+  }, []);
+
   const handleLanguageChange = (langValue: string) => {
     setLanguage(langValue);
   };
@@ -96,6 +112,9 @@ export function WeatherClient() {
   const handleSearch = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setResult(null);
+    if (playingAudio) {
+      audioRef.current?.pause();
+    }
 
     try {
       const searchResult = await handleWeatherForecast(data);
@@ -115,6 +134,22 @@ export function WeatherClient() {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleAudio = (audioDataUri: string) => {
+    if (!audioRef.current) return;
+    
+    if (playingAudio === audioDataUri) {
+        audioRef.current.pause();
+        setPlayingAudio(null);
+    } else {
+        if(playingAudio) {
+            audioRef.current.pause();
+        }
+        audioRef.current.src = audioDataUri;
+        audioRef.current.play();
+        setPlayingAudio(audioDataUri);
     }
   };
   
@@ -274,11 +309,16 @@ export function WeatherClient() {
                         <CardHeader>
                         <CardTitle>{t.predictiveAlerts}</CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="space-y-4">
                             {result.predictiveAlerts.length > 0 ? (
                                 result.predictiveAlerts.map((alert, index) => (
                                     <Alert key={index} className="border-accent bg-accent/20 text-accent-foreground">
-                                        <BellRing className="h-4 w-4" />
+                                        <div className="flex justify-between items-center">
+                                            <BellRing className="h-4 w-4" />
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 text-accent-foreground/80 hover:text-accent-foreground" onClick={() => toggleAudio(alert.audio)}>
+                                                {playingAudio === alert.audio ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                                            </Button>
+                                        </div>
                                         <AlertTitle className="font-headline">{alert.title}</AlertTitle>
                                         <AlertDescription>
                                             {alert.description}
