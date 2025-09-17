@@ -63,7 +63,7 @@ const getWeatherForecastPrompt = ai.definePrompt({
   output: {
     schema: WeatherForecastOutputSchema,
   },
-  prompt: `You are a hyper-local weather expert for Indian agriculture. You must respond in the language specified. For the given location, provide a realistic and detailed weather forecast.
+  prompt: `You are a hyper-local weather expert for Indian agriculture. For the given location, provide a realistic and detailed weather forecast.
 
   Location: {{{location}}}
   Language: {{{language}}}
@@ -72,7 +72,7 @@ const getWeatherForecastPrompt = ai.definePrompt({
   1.  **Current Conditions**: Generate a realistic temperature, condition, wind speed, and humidity. Select an appropriate icon.
   2.  **Weekly Forecast**: Generate a 7-day forecast with abbreviated day names, an icon, and temperature for each day.
   3.  **Predictive Alerts**: If there are any potential weather events in the next 2-3 days that could impact farming (heavy rain, strong winds, heatwave), create 1-2 critical alerts. If there are no major events, return an empty array. The alerts should be actionable for a farmer.
-  4. **Language**: All string output must be in the requested language. Day abbreviations must also be translated.
+  4.  **Language**: All string output must be in the requested language. Day abbreviations must also be translated.
   `,
 });
 
