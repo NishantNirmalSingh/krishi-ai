@@ -26,7 +26,95 @@
     "locationLabel": "स्थान",
     "locationPlaceholder": "उदा. रामपूर गाव",
     "questionPlaceholder": "तुमचा प्रश्न येथे विचारा..."
+  },
+  "Assamese": {
+    "initialMessage1": "আপোনাৰ বাৰ্তালাপ ইয়াত ওলাব।",
+    "initialMessage2": "আৰম্ভ কৰিবলৈ তলৰ ফৰ্মখন পূৰণ কৰক।",
+    "languageLabel": "भाषा",
+    "languagePlaceholder": "এটা ভাষা বাছনি কৰক",
+    "locationLabel": "অৱস্থান",
+    "locationPlaceholder": "যেনে, ৰামপুৰ গাঁও",
+    "questionPlaceholder": "ইয়াত আপোনাৰ প্ৰশ্ন সোধক..."
+  },
+  "Bengali": {
+    "initialMessage1": "আপনার কথোপকথন এখানে প্রদর্শিত হবে।",
+    "initialMessage2": "শুরু করতে নিচের ফর্মটি পূরণ করুন।",
+    "languageLabel": "ভাষা",
+    "languagePlaceholder": "একটি ভাষা নির্বাচন করুন",
+    "locationLabel": "অবস্থান",
+    "locationPlaceholder": "যেমন, রামপুর গ্রাম",
+    "questionPlaceholder": "আপনার প্রশ্ন এখানে জিজ্ঞাসা করুন..."
+  },
+  "Gujarati": {
+    "initialMessage1": "તમારી વાતચીત અહીં દેખાશે.",
+    "initialMessage2": "શરૂ કરવા માટે નીચેનું ફોર્મ ભરો.",
+    "languageLabel": "ભાષા",
+    "languagePlaceholder": "એક ભાષા પસંદ કરો",
+    "locationLabel": "સ્થાન",
+    "locationPlaceholder": "દા.ત., રામપુર ગામ",
+    "questionPlaceholder": "તમારો પ્રશ્ન અહીં પૂછો..."
+  },
+  "Kannada": {
+    "initialMessage1": "ನಿಮ್ಮ ಸಂವಾದ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.",
+    "initialMessage2": "ಪ್ರಾರಂಭಿಸಲು ಕೆಳಗಿನ ಫಾರ್ಮ್ ಅನ್ನು ಭರ್ತಿ ಮಾಡಿ.",
+    "languageLabel": "ഭാഷೆ",
+    "languagePlaceholder": "ಒಂದು ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "locationLabel": "ಸ್ಥಳ",
+    "locationPlaceholder": "ಉദാ., ರಾಂಪುರ ಗ್ರಾಮ",
+    "questionPlaceholder": "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಇಲ್ಲಿ ಕೇಳಿ..."
+  },
+  "Malayalam": {
+    "initialMessage1": "നിങ്ങളുടെ സംഭാഷണം ഇവിടെ ദൃശ്യമാകും.",
+    "initialMessage2": "ആരംഭിക്കുന്നതിന് താഴെയുള്ള ഫോം പൂരിപ്പിക്കുക.",
+    "languageLabel": "ഭാഷ",
+    "languagePlaceholder": "ഒരു ഭാഷ തിരഞ്ഞെടുക്കുക",
+    "locationLabel": "സ്ഥലം",
+    "locationPlaceholder": "ഉദാ., രാംപൂർ ഗ്രാമം",
+    "questionPlaceholder": "നിങ്ങളുടെ ചോദ്യം ഇവിടെ ചോദിക്കുക..."
+  },
+  "Odia": {
+    "initialMessage1": "ଆପଣଙ୍କର ବାର୍ତ୍ତାଳାପ ଏଠାରେ ଦେଖାଯିବ।",
+    "initialMessage2": "ଆରମ୍ਭ କରିବାକୁ ନିମ୍ନରେ ଥିବା ଫର୍ମ ପୂରଣ କରନ୍ତୁ।",
+    "languageLabel": "ଭାଷା",
+    "languagePlaceholder": "ଏକ ଭାଷା ଚୟନ କରନ୍ତୁ",
+    "locationLabel": "ସ୍ଥାନ",
+    "locationPlaceholder": "ଉଦାହରଣ, ରାମପୁର ଗ୍ରାମ",
+    "questionPlaceholder": "ଆପଣଙ୍କ ପ୍ରଶ୍ନ ଏଠାରେ ପଚାରନ୍ତୁ..."
+  },
+  "Punjabi": {
+    "initialMessage1": "ਤੁਹਾਡੀ ਗੱਲਬਾਤ ਇੱਥੇ ਦਿਖਾਈ ਦੇਵੇਗੀ।",
+    "initialMessage2": "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਹੇਠਾਂ ਦਿੱਤਾ ਫਾਰਮ ਭਰੋ।",
+    "languageLabel": "ਭਾਸ਼ਾ",
+    "languagePlaceholder": "ਇੱਕ ਭਾਸ਼ਾ ਚੁਣੋ",
+    "locationLabel": "ਸਥਾਨ",
+    "locationPlaceholder": "ਉਦਾਹਰਨ ਲਈ, ਰਾਮਪੁਰ ਪਿੰਡ",
+    "questionPlaceholder": "ਆਪਣਾ ਸਵਾਲ ਇੱਥੇ ਪੁੱਛੋ..."
+  },
+  "Tamil": {
+    "initialMessage1": "உங்கள் உரையாடல் இங்கே தோன்றும்.",
+    "initialMessage2": "தொடங்க கீழே உள்ள படிவத்தை நிரப்பவும்.",
+    "languageLabel": "மொழி",
+    "languagePlaceholder": "ഒരു மொழியைத் தேர்ந்தெடுக்கவும்",
+    "locationLabel": "இடம்",
+    "locationPlaceholder": "எ.கா., ராம்பூர் கிராமம்",
+    "questionPlaceholder": "உங்கள் கேள்வியை இங்கே கேளுங்கள்..."
+  },
+  "Telugu": {
+    "initialMessage1": "మీ సంభాషణ ఇక్కడ కనిపిస్తుంది.",
+    "initialMessage2": "ప్రారంభించడానికి దిగువ ఫారమ్‌ను పూరించండి.",
+    "languageLabel": "மொழி",
+    "languagePlaceholder": "ఒక భాషను ఎంచుకోండి",
+    "locationLabel": "స్థానం",
+    "locationPlaceholder": "ఉదా., రాంపూర్ గ్రామం",
+    "questionPlaceholder": "మీ ప్రశ్నను ఇక్కడ అడగండి..."
+  },
+  "Urdu": {
+    "initialMessage1": "آپ کی گفتگو یہاں ظاہر ہوگی۔",
+    "initialMessage2": "شروع کرنے کے لیے نیچے دیا گیا فارم پُر کریں۔",
+    "languageLabel": "زبان",
+    "languagePlaceholder": "ایک زبان منتخب کریں",
+    "locationLabel": "مقام",
+    "locationPlaceholder": "مثال کے طور پر، رام پور گاؤں",
+    "questionPlaceholder": "اپنا سوال یہاں پوچھیں..."
   }
 }
-
-    
