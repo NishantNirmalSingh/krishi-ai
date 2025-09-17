@@ -12,14 +12,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Settings, User, Moon, Sun } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 import { useTranslation } from "@/hooks/use-translation";
 import layoutTranslations from "@/lib/translations/layout.json";
+import { useTheme } from "next-themes";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export function UserNav() {
   const { language } = useLanguage();
   const t = useTranslation(language, layoutTranslations);
+  const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -61,6 +65,15 @@ export function UserNav() {
             <Settings className="mr-2 h-4 w-4" />
             <span>{t.userMenuSettings}</span>
           </DropdownMenuItem>
+           <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+            {theme === 'dark' ? <Moon className="mr-2 h-4 w-4" /> : <Sun className="mr-2 h-4 w-4" />}
+            <Label htmlFor="dark-mode-switch" className="flex-grow">Dark Mode</Label>
+            <Switch
+                id="dark-mode-switch"
+                checked={theme === 'dark'}
+                onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+            />
+           </div>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>

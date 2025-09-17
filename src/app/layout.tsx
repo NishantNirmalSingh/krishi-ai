@@ -6,6 +6,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { LanguageProvider } from "@/context/language-context";
 import { PT_Sans, Roboto_Slab } from 'next/font/google';
+import { ThemeProvider } from "@/components/theme-provider";
 
 const ptSans = PT_Sans({
   subsets: ['latin'],
@@ -33,14 +34,21 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${ptSans.variable} ${robotoSlab.variable}`}>
       <head/>
       <body className="font-body antialiased">
-        <LanguageProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              <main className="flex-1 p-4 sm:p-6">{children}</main>
-            </SidebarInset>
-          </SidebarProvider>
-        </LanguageProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+          <LanguageProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <main className="flex-1 p-4 sm:p-6">{children}</main>
+              </SidebarInset>
+            </SidebarProvider>
+          </LanguageProvider>
+        </ThemeProvider>
         <Toaster />
       </body>
     </html>
