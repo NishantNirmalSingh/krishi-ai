@@ -89,7 +89,7 @@ export default function DashboardPage() {
           priority
         />
         <div className="absolute inset-0 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 to-transparent p-8 md:p-12">
-          <h1 className="max-w-2xl font-headline text-3xl font-bold text-white md:text-5xl">
+          <h1 className="max-w-2xl font-headline text-3xl text-white md:text-5xl">
             {t.heroTitle}
           </h1>
           <p className="mt-4 max-w-2xl text-base text-white/90 md:text-lg">
@@ -112,7 +112,7 @@ export default function DashboardPage() {
             className="flex h-full flex-col transition-shadow duration-300 hover:shadow-subtle-lg"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xl font-bold">
+              <CardTitle className="text-xl">
                 {action.title}
               </CardTitle>
               <action.icon className="h-6 w-6 text-muted-foreground" />
