@@ -19,7 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { languages } from '@/lib/languages';
 import { useTranslation } from '@/hooks/use-translation';
-import { cropAdvisoryTranslations } from '@/lib/translations/crop-advisory';
+import cropAdvisoryTranslations from '@/lib/translations/crop-advisory.json';
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
@@ -324,5 +324,3 @@ export function CropAdvisoryClient() {
     </Card>
   );
 }
-
-    
