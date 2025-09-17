@@ -88,7 +88,7 @@ export default function DashboardPage() {
           data-ai-hint="farmer smartphone field"
           priority
         />
-        <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-r from-black/80 to-black/10 p-8 md:p-12">
+        <div className="absolute inset-0 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 to-transparent p-8 md:p-12">
           <h1 className="max-w-2xl font-headline text-3xl font-bold text-white md:text-5xl">
             {t.heroTitle}
           </h1>
