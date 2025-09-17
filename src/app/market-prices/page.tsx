@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -33,11 +34,15 @@ export default function MarketPricesPage() {
     try {
       const searchResult = await handleMarketPriceSearch({ crop: searchTerm });
       setResult(searchResult);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to fetch market price:", error);
+      let description = "Could not fetch market price data. Please try again.";
+      if (error.message && error.message.includes('503')) {
+        description = 'The AI model is currently overloaded. Please try again in a few moments.';
+      }
       toast({
         title: "Search Failed",
-        description: "Could not fetch market price data. Please try again.",
+        description: description,
         variant: "destructive",
       });
     } finally {
@@ -195,3 +200,5 @@ export default function MarketPricesPage() {
     </div>
   );
 }
+
+    
