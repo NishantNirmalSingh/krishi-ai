@@ -110,7 +110,7 @@ export function CropAdvisoryClient() {
             audioRef.current.pause();
         }
     }
-  }, []);
+  }, [toast, form]);
   
   useEffect(() => {
     const viewport = scrollAreaRef.current?.querySelector('div[data-radix-scroll-area-viewport]');

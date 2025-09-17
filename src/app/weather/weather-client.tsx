@@ -279,7 +279,6 @@ export function WeatherClient() {
                                     <Alert key={index} className="border-accent bg-accent/20 text-accent-foreground">
                                         <BellRing className="h-4 w-4" />
                                         <AlertTitle className="font-headline">{alert.title}</AlertTitle>
-
                                         <AlertDescription>
                                             {alert.description}
                                         </AlertDescription>

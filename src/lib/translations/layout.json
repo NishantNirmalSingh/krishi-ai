@@ -1,0 +1,48 @@
+
+{
+    "English": {
+        "navHome": "Home",
+        "navCropAdvisory": "Crop Advisory",
+        "descCropAdvisory": "Get personalized crop advice.",
+        "navPestDetection": "Pest Detection",
+        "descPestDetection": "Identify pests from an image.",
+        "navMarketPrices": "Market Prices",
+        "descMarketPrices": "View current market prices.",
+        "navWeather": "Weather",
+        "descWeather": "Check local weather alerts.",
+        "launchButton": "Launch",
+        "userMenuProfile": "Profile",
+        "userMenuSettings": "Settings",
+        "userMenuLogout": "Log out"
+    },
+    "Hindi": {
+        "navHome": "होम",
+        "navCropAdvisory": "फसल सलाह",
+        "descCropAdvisory": "व्यक्तिगत फसल सलाह प्राप्त करें।",
+        "navPestDetection": "कीट पहचान",
+        "descPestDetection": "एक छवि से कीटों की पहचान करें।",
+        "navMarketPrices": "बाजार मूल्य",
+        "descMarketPrices": "वर्तमान बाजार मूल्य देखें।",
+        "navWeather": "मौसम",
+        "descWeather": "स्थानीय मौसम अलर्ट देखें।",
+        "launchButton": "लॉन्च",
+        "userMenuProfile": "प्रोफ़ाइल",
+        "userMenuSettings": "सेटिंग्स",
+        "userMenuLogout": "लॉग आउट"
+    },
+    "Marathi": {
+        "navHome": "मुख्यपृष्ठ",
+        "navCropAdvisory": "पीक सल्ला",
+        "descCropAdvisory": "वैयक्तिक पीक सल्ला मिळवा.",
+        "navPestDetection": "कीड ओळख",
+        "descPestDetection": "प्रतिमेवरून कीटक ओळखा.",
+        "navMarketPrices": "बाजार भाव",
+        "descMarketPrices": "सध्याचे बाजार भाव पहा.",
+        "navWeather": "हवामान",
+        "descWeather": "स्थानिक हवामान सूचना तपासा.",
+        "launchButton": "सुरु करा",
+        "userMenuProfile": "प्रोफाइल",
+        "userMenuSettings": "सेटिंग्ज",
+        "userMenuLogout": "लॉग आउट"
+    }
+}

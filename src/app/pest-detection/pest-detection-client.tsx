@@ -15,22 +15,10 @@ import { Loader2, Upload, Play, Pause } from 'lucide-react';
 import { handlePestDetection } from '@/app/actions';
 import type { DetectPestDiseaseOutput } from '@/ai/flows/pest-disease-detection';
 import { useToast } from '@/hooks/use-toast';
-
-const languages = [
-  { value: 'Assamese', label: 'অসমীয়া (Assamese)' },
-  { value: 'Bengali', label: 'বাংলা (Bengali)' },
-  { value: 'English', label: 'English' },
-  { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)' },
-  { value: 'Hindi', label: 'हिंदी (Hindi)' },
-  { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)' },
-  { value: 'Malayalam', label: 'മലയാളം (Malayalam)' },
-  { value: 'Marathi', label: 'मराठी (Marathi)' },
-  { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)' },
-  { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)' },
-  { value: 'Tamil', label: 'தமிழ் (Tamil)' },
-  { value: 'Telugu', label: 'తెలుగు (Telugu)' },
-  { value: 'Urdu', label: 'اردو (Urdu)' },
-];
+import { languages } from '@/lib/languages';
+import { useLanguage } from '@/context/language-context';
+import { useTranslation } from '@/hooks/use-translation';
+import pestDetectionTranslations from '@/lib/translations/pest-detection.json';
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
@@ -50,14 +38,24 @@ export function PestDetectionClient() {
   const { toast } = useToast();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const { language, setLanguage } = useLanguage();
+  const t = useTranslation(language, pestDetectionTranslations);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      language: 'English',
+      language: language,
       plantImage: undefined,
     }
   });
+
+  useEffect(() => {
+    form.setValue('language', language);
+  }, [language, form]);
+
+  const handleLanguageChange = (langValue: string) => {
+    setLanguage(langValue);
+  };
   
   useEffect(() => {
     audioRef.current = new Audio();
@@ -99,7 +97,7 @@ export function PestDetectionClient() {
         }
         toast({
           variant: 'destructive',
-          title: 'Analysis Failed',
+          title: t.analysisFailedTitle,
           description,
         });
         console.error(e);
@@ -110,8 +108,8 @@ export function PestDetectionClient() {
     reader.onerror = () => {
       toast({
         variant: 'destructive',
-        title: 'File Error',
-        description: 'Failed to read the image file.',
+        title: t.fileErrorTitle,
+        description: t.fileErrorDescription,
       });
       setIsLoading(false);
     };
@@ -155,8 +153,8 @@ export function PestDetectionClient() {
     <div className="grid gap-8 md:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>Upload Plant Image</CardTitle>
-          <CardDescription>Select a language and a clear photo of the affected plant part.</CardDescription>
+          <CardTitle>{t.uploadTitle}</CardTitle>
+          <CardDescription>{t.uploadDescription}</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -166,11 +164,11 @@ export function PestDetectionClient() {
                 name="language"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Language</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
+                    <FormLabel>{t.languageLabel}</FormLabel>
+                    <Select onValueChange={(value) => {field.onChange(value); handleLanguageChange(value);}} value={field.value} disabled={isLoading}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a language" />
+                          <SelectValue placeholder={t.languagePlaceholder} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -195,8 +193,8 @@ export function PestDetectionClient() {
                       ) : (
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <Upload className="mb-3 h-10 w-10 text-muted-foreground" />
-                          <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                          <p className="text-xs text-muted-foreground">PNG, JPG (MAX. 5MB)</p>
+                          <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">{t.uploadClick}</span> {t.uploadDrag}</p>
+                          <p className="text-xs text-muted-foreground">{t.uploadFormat}</p>
                         </div>
                       )}
                     </FormLabel>
@@ -221,7 +219,7 @@ export function PestDetectionClient() {
             <CardFooter>
               <Button type="submit" disabled={isLoading} className="w-full">
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Analyze Image
+                {t.analyzeButton}
               </Button>
             </CardFooter>
           </form>
@@ -230,21 +228,21 @@ export function PestDetectionClient() {
 
       <Card className="flex flex-col">
         <CardHeader>
-          <CardTitle>Analysis Result</CardTitle>
-          <CardDescription>Here is the diagnosis and recommendation from our AI.</CardDescription>
+          <CardTitle>{t.resultTitle}</CardTitle>
+          <CardDescription>{t.resultDescription}</CardDescription>
         </CardHeader>
         <CardContent className="flex-grow flex items-center justify-center">
           {isLoading && (
             <div className="flex flex-col items-center justify-center h-full gap-4">
               <Loader2 className="h-12 w-12 animate-spin text-primary" />
-              <p className="text-muted-foreground">Analyzing your image...</p>
+              <p className="text-muted-foreground">{t.loadingMessage}</p>
             </div>
           )}
           {result && !isLoading && (
             <div className="space-y-4 w-full">
                <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold text-muted-foreground">Identified Issue</h3>
+                  <h3 className="font-semibold text-muted-foreground">{t.identifiedIssueLabel}</h3>
                   <p className="text-2xl font-bold text-primary">{result.disease}</p>
                 </div>
                 {result.audio && (
@@ -254,18 +252,18 @@ export function PestDetectionClient() {
                 )}
               </div>
               <div>
-                <h3 className="font-semibold text-muted-foreground">Confidence Level</h3>
+                <h3 className="font-semibold text-muted-foreground">{t.confidenceLabel}</h3>
                 <p className="text-lg">{(result.confidence * 100).toFixed(0)}%</p>
               </div>
               <div>
-                <h3 className="font-semibold text-muted-foreground">Recommended Treatment</h3>
+                <h3 className="font-semibold text-muted-foreground">{t.treatmentLabel}</h3>
                 <p className="text-sm whitespace-pre-wrap">{result.treatmentOptions}</p>
               </div>
             </div>
           )}
           {!result && !isLoading && (
             <div className="text-center text-muted-foreground">
-              <p>Your analysis result will appear here.</p>
+              <p>{t.initialResultMessage}</p>
             </div>
           )}
         </CardContent>
@@ -273,7 +271,3 @@ export function PestDetectionClient() {
     </div>
   );
 }
-
-    
-
-    

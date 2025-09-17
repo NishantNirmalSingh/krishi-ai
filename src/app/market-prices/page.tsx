@@ -17,22 +17,12 @@ import { handleMarketPriceSearch } from "../actions";
 import type { MarketPriceOutput } from "@/ai/flows/get-market-price";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { languages } from "@/lib/languages";
+import { useLanguage } from "@/context/language-context";
+import { useTranslation } from "@/hooks/use-translation";
+import marketPricesTranslations from "@/lib/translations/market-prices.json";
+import layoutTranslations from '@/lib/translations/layout.json';
 
-const languages = [
-  { value: 'Assamese', label: 'অসমীয়া (Assamese)', code: 'as-IN' },
-  { value: 'Bengali', label: 'বাংলা (Bengali)', code: 'bn-IN' },
-  { value: 'English', label: 'English', code: 'en-US' },
-  { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)', code: 'gu-IN' },
-  { value: 'Hindi', label: 'हिंदी (Hindi)', code: 'hi-IN' },
-  { value: 'Kannada', label: 'ಕನ್ನಡ (Kannada)', code: 'kn-IN' },
-  { value: 'Malayalam', label: 'മലയാളം (Malayalam)', code: 'ml-IN' },
-  { value: 'Marathi', label: 'मराठी (Marathi)', code: 'mr-IN' },
-  { value: 'Odia', label: 'ଓଡ଼ିଆ (Odia)', code: 'or-IN' },
-  { value: 'Punjabi', label: 'ਪੰਜਾਬੀ (Punjabi)', code: 'pa-IN' },
-  { value: 'Tamil', label: 'தமிழ் (Tamil)', code: 'ta-IN' },
-  { value: 'Telugu', label: 'తెలుగు (Telugu)', code: 'te-IN' },
-  { value: 'Urdu', label: 'اردو (Urdu)', code: 'ur-IN' },
-];
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
@@ -48,14 +38,25 @@ export default function MarketPricesPage() {
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const { language, setLanguage } = useLanguage();
+  const t = useTranslation(language, marketPricesTranslations);
+  const t_layout = useTranslation(language, layoutTranslations);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      language: 'English',
+      language: language,
       crop: '',
     },
   });
+
+  useEffect(() => {
+    form.setValue('language', language);
+  }, [language, form]);
+
+  const handleLanguageChange = (langValue: string) => {
+    setLanguage(langValue);
+  };
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -115,6 +116,7 @@ export default function MarketPricesPage() {
     if (!audioRef.current) return;
     if (playingAudio === audioDataUri) {
       audioRef.current.pause();
+      setPlayingAudio(null);
     } else {
       if(playingAudio) audioRef.current.pause();
       audioRef.current.src = audioDataUri;
@@ -152,8 +154,8 @@ export default function MarketPricesPage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        title="Market Price Dashboard"
-        description="Search for current mandi prices and get recommendations on where to sell your produce."
+        title={t_layout.navMarketPrices}
+        description={t_layout.descMarketPrices}
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSearch)} className="space-y-4">
@@ -163,11 +165,11 @@ export default function MarketPricesPage() {
               name="language"
               render={({ field }) => (
                 <FormItem className="md:col-span-1">
-                  <FormLabel>Language</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
+                  <FormLabel>{t.languageLabel}</FormLabel>
+                  <Select onValueChange={(value) => {field.onChange(value); handleLanguageChange(value);}} value={field.value} disabled={isLoading}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a language" />
+                        <SelectValue placeholder={t.languagePlaceholder} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -183,13 +185,13 @@ export default function MarketPricesPage() {
               name="crop"
               render={({ field }) => (
                 <FormItem className="md:col-span-2">
-                  <FormLabel>Crop Name</FormLabel>
+                  <FormLabel>{t.cropLabel}</FormLabel>
                   <div className="relative flex-grow">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="e.g., 'Tomato' or 'Onion'"
+                        placeholder={t.cropPlaceholder}
                         className="pl-10 pr-20"
                         disabled={isLoading}
                       />
@@ -202,7 +204,7 @@ export default function MarketPricesPage() {
                       )}
                       <Button type="submit" size="sm" disabled={isLoading}>
                         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                        <span className="hidden lg:inline ml-2">Search</span>
+                        <span className="hidden lg:inline ml-2">{t.searchButton}</span>
                       </Button>
                     </div>
                   </div>
@@ -220,10 +222,10 @@ export default function MarketPricesPage() {
              <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Crop</TableHead>
-                    <TableHead>Market</TableHead>
-                    <TableHead className="text-right">Current Price (per Quintal)</TableHead>
-                    <TableHead className="text-right">Price Trend</TableHead>
+                    <TableHead>{t.tableHeaderCrop}</TableHead>
+                    <TableHead>{t.tableHeaderMarket}</TableHead>
+                    <TableHead className="text-right">{t.tableHeaderCurrentPrice}</TableHead>
+                    <TableHead className="text-right">{t.tableHeaderTrend}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -231,7 +233,7 @@ export default function MarketPricesPage() {
                       <TableCell colSpan={4} className="h-24 text-center">
                         <div className="flex justify-center items-center gap-2 text-muted-foreground">
                           <Loader2 className="h-5 w-5 animate-spin"/>
-                          <span>Fetching market data for "{form.getValues('crop')}"...</span>
+                          <span>{t.loadingMessage.replace('{{crop}}', form.getValues('crop'))}</span>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -247,16 +249,16 @@ export default function MarketPricesPage() {
              <Table>
                 <TableHeader>
                    <TableRow>
-                    <TableHead>Crop</TableHead>
-                    <TableHead>Market</TableHead>
-                    <TableHead className="text-right">Current Price (per Quintal)</TableHead>
-                    <TableHead className="text-right">Price Trend</TableHead>
+                    <TableHead>{t.tableHeaderCrop}</TableHead>
+                    <TableHead>{t.tableHeaderMarket}</TableHead>
+                    <TableHead className="text-right">{t.tableHeaderCurrentPrice}</TableHead>
+                    <TableHead className="text-right">{t.tableHeaderTrend}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   <TableRow>
                     <TableCell colSpan={4} className="h-24 text-center">
-                      Your search results will appear here.
+                      {t.initialMessage}
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -270,7 +272,7 @@ export default function MarketPricesPage() {
             <Card>
               <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle>Market Data</CardTitle>
+                    <CardTitle>{t.resultsTitle}</CardTitle>
                     {result.audio && (
                        <Button variant="ghost" size="icon" className="h-10 w-10" onClick={() => toggleAudio(result.audio!)}>
                          {playingAudio === result.audio ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
@@ -285,10 +287,10 @@ export default function MarketPricesPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Crop</TableHead>
-                      <TableHead>Market</TableHead>
-                      <TableHead className="text-right">Current Price (per Quintal)</TableHead>
-                      <TableHead className="text-right">Price Trend</TableHead>
+                      <TableHead>{t.tableHeaderCrop}</TableHead>
+                      <TableHead>{t.tableHeaderMarket}</TableHead>
+                      <TableHead className="text-right">{t.tableHeaderCurrentPrice}</TableHead>
+                      <TableHead className="text-right">{t.tableHeaderTrend}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -302,7 +304,7 @@ export default function MarketPricesPage() {
                                 {trend === 'up' && <ArrowUp className="h-3 w-3" />}
                                 {trend === 'down' && <ArrowDown className="h-3 w-3" />}
                                 {trend === 'stable' && <Minus className="h-3 w-3" />}
-                                {trend.charAt(0).toUpperCase() + trend.slice(1)}
+                                {t[trend]}
                               </Badge>
                             )}
                           </TableCell>
@@ -316,7 +318,7 @@ export default function MarketPricesPage() {
               <Card>
                 <CardHeader className="flex-row items-center gap-2 space-y-0">
                   <Globe className="h-5 w-5 text-primary" />
-                  <CardTitle>Online Selling Platforms</CardTitle>
+                  <CardTitle>{t.onlinePlatformsTitle}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {result.onlinePlatforms.map((platform, index) => (
@@ -330,7 +332,7 @@ export default function MarketPricesPage() {
               <Card>
                 <CardHeader className="flex-row items-center gap-2 space-y-0">
                   <Store className="h-5 w-5 text-primary"/>
-                  <CardTitle>Local & Offline Options</CardTitle>
+                  <CardTitle>{t.offlinePlatformsTitle}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {result.offlinePlatforms.map((platform, index) => (
@@ -347,7 +349,3 @@ export default function MarketPricesPage() {
     </div>
   );
 }
-
-    
-
-    

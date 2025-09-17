@@ -22,38 +22,40 @@ import {
 import { useLanguage } from "@/context/language-context";
 import { useTranslation } from "@/hooks/use-translation";
 import homeTranslations from "@/lib/translations/home.json";
+import layoutTranslations from "@/lib/translations/layout.json";
 import { languages } from "@/lib/languages";
-
-const quickActions = [
-  {
-    title: "Crop Advisory",
-    description: "Get personalized crop advice.",
-    icon: Bot,
-    href: "/crop-advisory",
-  },
-  {
-    title: "Pest Detection",
-    description: "Identify pests from an image.",
-    icon: ImageIcon,
-    href: "/pest-detection",
-  },
-  {
-    title: "Market Prices",
-    description: "View current market prices.",
-    icon: LineChart,
-    href: "/market-prices",
-  },
-  {
-    title: "Weather Forecast",
-    description: "Check local weather alerts.",
-    icon: CloudSun,
-    href: "/weather",
-  },
-];
 
 export default function DashboardPage() {
   const { language, setLanguage } = useLanguage();
   const t = useTranslation(language, homeTranslations);
+  const t_layout = useTranslation(language, layoutTranslations);
+
+  const quickActions = [
+    {
+      title: t_layout.navCropAdvisory,
+      description: t_layout.descCropAdvisory,
+      icon: Bot,
+      href: "/crop-advisory",
+    },
+    {
+      title: t_layout.navPestDetection,
+      description: t_layout.descPestDetection,
+      icon: ImageIcon,
+      href: "/pest-detection",
+    },
+    {
+      title: t_layout.navMarketPrices,
+      description: t_layout.descMarketPrices,
+      icon: LineChart,
+      href: "/market-prices",
+    },
+    {
+      title: t_layout.navWeather,
+      description: t_layout.descWeather,
+      icon: CloudSun,
+      href: "/weather",
+    },
+  ];
 
   const selectedLanguageLabel = languages.find(l => l.value === language)?.label || 'English';
 
@@ -120,7 +122,7 @@ export default function DashboardPage() {
             </CardContent>
             <CardContent>
               <Button asChild variant="outline" className="w-full">
-                <Link href={action.href}>Launch</Link>
+                <Link href={action.href}>{t_layout.launchButton}</Link>
               </Button>
             </CardContent>
           </Card>

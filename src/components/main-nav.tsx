@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -8,17 +9,22 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-
-const links = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/crop-advisory", label: "Crop Advisory", icon: Bot },
-  { href: "/pest-detection", label: "Pest Detection", icon: ImageIcon },
-  { href: "/market-prices", label: "Market Prices", icon: LineChart },
-  { href: "/weather", label: "Weather", icon: CloudSun },
-];
+import { useLanguage } from "@/context/language-context";
+import { useTranslation } from "@/hooks/use-translation";
+import layoutTranslations from "@/lib/translations/layout.json";
 
 export function MainNav() {
   const pathname = usePathname();
+  const { language } = useLanguage();
+  const t = useTranslation(language, layoutTranslations);
+
+  const links = [
+    { href: "/", label: t.navHome, icon: Home },
+    { href: "/crop-advisory", label: t.navCropAdvisory, icon: Bot },
+    { href: "/pest-detection", label: t.navPestDetection, icon: ImageIcon },
+    { href: "/market-prices", label: t.navMarketPrices, icon: LineChart },
+    { href: "/weather", label: t.navWeather, icon: CloudSun },
+  ];
 
   return (
     <SidebarMenu>
