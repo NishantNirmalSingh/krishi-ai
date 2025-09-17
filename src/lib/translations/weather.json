@@ -14,7 +14,8 @@
         "wind": "Wind",
         "humidity": "Humidity",
         "predictiveAlerts": "Predictive Alerts",
-        "noAlerts": "No critical alerts for your location right now."
+        "noAlerts": "No critical alerts for your location right now.",
+        "searchFailedTitle": "Search Failed"
     },
     "Hindi": {
         "languageLabel": "भाषा",
@@ -31,7 +32,8 @@
         "wind": "हवा",
         "humidity": "नमी",
         "predictiveAlerts": "भविष्यवाणी संबंधी अलर्ट",
-        "noAlerts": "अभी आपके स्थान के लिए कोई महत्वपूर्ण अलर्ट नहीं है।"
+        "noAlerts": "अभी आपके स्थान के लिए कोई महत्वपूर्ण अलर्ट नहीं है。",
+        "searchFailedTitle": "खोज विफल"
     },
     "Marathi": {
         "languageLabel": "भाषा",
@@ -48,6 +50,7 @@
         "wind": "वारा",
         "humidity": "आर्द्रता",
         "predictiveAlerts": "भविष्यसूचक सूचना",
-        "noAlerts": "सध्या तुमच्या स्थानासाठी कोणत्याही गंभीर सूचना नाहीत."
+        "noAlerts": "सध्या तुमच्या स्थानासाठी कोणत्याही गंभीर सूचना नाहीत.",
+        "searchFailedTitle": "शोध अयशस्वी"
     }
 }
