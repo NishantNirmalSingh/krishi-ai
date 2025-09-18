@@ -1,5 +1,16 @@
 {
   "node": {
+    "406eb18c12b407082a80eff135d5328c4f592cb0d1": {
+      "workers": {
+        "app/market-prices/page": {
+          "moduleId": "[project]/.next-internal/server/app/market-prices/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/market-prices/page": "action-browser"
+      }
+    },
     "40465ffaf0ceb7ed620650054949fef9abd49dc6e9": {
       "workers": {
         "app/crop-advisory/page": {
@@ -20,17 +31,6 @@
       },
       "layer": {
         "app/pest-detection/page": "action-browser"
-      }
-    },
-    "406eb18c12b407082a80eff135d5328c4f592cb0d1": {
-      "workers": {
-        "app/market-prices/page": {
-          "moduleId": "[project]/.next-internal/server/app/market-prices/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
-          "async": false
-        }
-      },
-      "layer": {
-        "app/market-prices/page": "action-browser"
       }
     },
     "40389c252f64ce55d6e40024abef3447ad1380b167": {

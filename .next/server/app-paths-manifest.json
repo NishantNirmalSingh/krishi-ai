@@ -1,5 +1,7 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
   "/crop-advisory/page": "app/crop-advisory/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/market-prices/page": "app/market-prices/page.js",
   "/page": "app/page.js",
   "/pest-detection/page": "app/pest-detection/page.js",
