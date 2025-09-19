@@ -1,5 +1,17 @@
 {
-  "node": {},
+  "node": {
+    "408b55a9708df9dfe94e5778991efaa929b929236c": {
+      "workers": {
+        "app/pest-detection/page": {
+          "moduleId": "[project]/.next-internal/server/app/pest-detection/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/app/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/pest-detection/page": "action-browser"
+      }
+    }
+  },
   "edge": {},
   "encryptionKey": "V3vPAtsXsMHJdcfs9dmKw8uYQ2PBDnw3aXleweNDyvM="
 }

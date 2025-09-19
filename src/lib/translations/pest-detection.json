@@ -76,7 +76,7 @@
         "identifiedIssueLabel": "চিনাক্ত কৰা সমস্যা",
         "confidenceLabel": "আত্মবিশ্বাস স্তৰ",
         "treatmentLabel": "পৰামৰ্শিত চিকিৎসা",
-        "analysisFailedTitle": "বিশ্লেষণ విఫಲమైంది",
+        "analysisFailedTitle": "বিশ্লেষণ విఫలమైంది",
         "fileErrorTitle": "ফাইল ত্ৰুটি",
         "fileErrorDescription": "ছবি ফাইল পঢ়াত విఫలమైంది।"
     },
@@ -96,9 +96,9 @@
         "identifiedIssueLabel": "শনাক্ত করা সমস্যা",
         "confidenceLabel": "আত্মবিশ্বাসের স্তর",
         "treatmentLabel": "সুপারিশকৃত চিকিৎসা",
-        "analysisFailedTitle": "বিশ্লেষণ ವಿಫಲವಾಗಿದೆ",
+        "analysisFailedTitle": "বিশ্লেষণ ব্যর্থ",
         "fileErrorTitle": "ফাইল ত্রুটি",
-        "fileErrorDescription": "ছবি ফাইল পড়তে ವಿఫಲವಾಗಿದೆ।"
+        "fileErrorDescription": "ছবি ফাইল পড়তে ব্যর্থ হয়েছে।"
     },
     "Gujarati": {
         "languageLabel": "ભાષા",
@@ -210,7 +210,7 @@
         "uploadFormat": "PNG, JPG (MAX. 5MB)",
         "analyzeButton": "படத்தை பகுப்பாய்வு செய்யவும்",
         "resultTitle": "பகுப்பாய்வு முடிவு",
-        "resultDescription": "எங்கள் AI இன் രോഗനിർണയവും ശുപാർശയും இங்கே உள்ளது.",
+        "resultDescription": "எங்கள் AI இன் நோய் கண்டறிதல் மற்றும் பரிந்துரை இங்கே உள்ளது.",
         "loadingMessage": "உங்கள் படத்தை பகுப்பாய்வு செய்கிறது...",
         "initialResultMessage": "உங்கள் பகுப்பாய்வு முடிவு இங்கே தோன்றும்.",
         "identifiedIssueLabel": "அடையாளம் காணப்பட்ட சிக்கல்",

@@ -141,7 +141,7 @@
         "searchButton": "തിരയുക",
         "initialMessage": "നിങ്ങളുടെ തിരയൽ ഫലങ്ങൾ ഇവിടെ ദൃശ്യമാകും.",
         "loadingMessage": "\"{{crop}}\" എന്നതിനായുള്ള മാർക്കറ്റ് ഡാറ്റ ലഭ്യമാക്കുന്നു...",
-        "resultsTitle": "മാർക്കറ്റ് ഡാറ്റ",
+        "resultsTitle": "വിപണി ഡാറ്റ",
         "tableHeaderCrop": "വിള",
         "tableHeaderMarket": "വിപണി",
         "tableHeaderCurrentPrice": "നിലവിലെ വില (ക്വിന്റലിന്)",
