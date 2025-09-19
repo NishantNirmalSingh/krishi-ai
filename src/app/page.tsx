@@ -24,6 +24,7 @@ import { useTranslation } from "@/hooks/use-translation";
 import homeTranslations from "@/lib/translations/home.json";
 import layoutTranslations from "@/lib/translations/layout.json";
 import { languages } from "@/lib/languages";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function DashboardPage() {
   const { language, setLanguage } = useLanguage();
@@ -62,6 +63,9 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="relative overflow-hidden rounded-xl shadow-lg">
+        <div className="absolute left-4 top-4 z-10 md:hidden">
+            <SidebarTrigger className="bg-background/80 text-foreground hover:bg-background"/>
+        </div>
         <div className="absolute right-4 top-4 z-10">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -88,7 +92,7 @@ export default function DashboardPage() {
           data-ai-hint="farmer smartphone field"
           priority
         />
-        <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-t from-black/80 to-transparent p-6 sm:p-8 md:p-12">
+        <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-t from-black/80 to-transparent p-6 py-12 sm:p-8 md:p-12">
           <div className="max-w-2xl">
             <h1 className="font-headline text-3xl text-white md:text-5xl">
                 {t.heroTitle}
@@ -111,7 +115,7 @@ export default function DashboardPage() {
         {quickActions.map((action) => (
           <Card
             key={action.title}
-            className="flex h-full flex-col transition-shadow duration-300 hover:shadow-lg"
+            className="flex h-full flex-col shadow-subtle transition-shadow duration-300 hover:shadow-subtle-lg"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-xl">
