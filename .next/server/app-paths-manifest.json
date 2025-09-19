@@ -1,4 +1,5 @@
 {
   "/page": "app/page.js",
-  "/pest-detection/page": "app/pest-detection/page.js"
+  "/pest-detection/page": "app/pest-detection/page.js",
+  "/market-prices/page": "app/market-prices/page.js"
 }

@@ -84,10 +84,14 @@ export default function MarketPricesPage() {
 
       recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
+        let description = `An error occurred: ${event.error}. Please ensure microphone access is allowed.`;
+        if (event.error === 'network') {
+          description = 'A network error occurred. Please check your internet connection and try again.';
+        }
         toast({
           variant: 'destructive',
           title: 'Speech Recognition Error',
-          description: `An error occurred: ${event.error}`,
+          description: description,
         });
         setIsRecording(false);
       };
