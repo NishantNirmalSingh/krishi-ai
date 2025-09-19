@@ -74,6 +74,8 @@ const getMarketPricePrompt = ai.definePrompt({
   },
   prompt: `You are a market data analyst and advisor for Indian agriculture. You MUST respond fully in the language specified in the 'language' field. All text fields in your output, including 'crop', 'market', platform 'name' and 'details', and 'summary', must be translated into the requested language: {{{language}}}.
 
+The 'unit' field MUST NOT be translated; it must always be "Quintal".
+
 For the given crop: {{{crop}}}
 
 1.  **Market Data**: Find a major agricultural market (mandi) in India relevant to this crop. Provide a realistic current price in INR per quintal. Provide a recent historical price to show a trend. The unit must be "Quintal".

@@ -61,16 +61,17 @@ const cropAdvisoryPrompt = ai.definePrompt({
       .describe('The AI’s recommendation on what to plant, in the farmer’s language.'),
   })},
   tools: [getSoilType],
-  prompt: `You are a helpful agricultural advisor assisting farmers in India. Your response for 'recommendation' MUST be in the language specified in the 'language' field: {{{language}}}.
+  prompt: `You are a helpful agricultural advisor assisting farmers in India. Your 'recommendation' response MUST be in the language specified in the 'language' field: {{{language}}}.
 
   If the user has not provided the soil type, use the getSoilType tool to determine it from their location.
 
   Here are the details:
+  Language: {{{language}}}
   Location: {{{location}}}
   Soil Type: {{{soilType}}}
   Question: {{{question}}}
 
-  Based on the information provided, what crop do you recommend the farmer plant? Explain your reasoning in simple terms that a farmer can understand. Your response must be in the same language as the question.`,
+  Based on the information provided, what crop do you recommend the farmer plant? Explain your reasoning in simple terms that a farmer can understand. Your entire response must be in the same language as the question.`,
 });
 
 const cropAdvisoryFlow = ai.defineFlow(

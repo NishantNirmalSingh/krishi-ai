@@ -50,11 +50,12 @@ const prompt = ai.definePrompt({
   },
   prompt: `You are an expert plant pathologist. A farmer has uploaded a photo of a plant. You must identify the pest or disease, provide a confidence level, and suggest treatment options.
 
-  You MUST respond fully in the requested language: {{{language}}}. All text fields in your output, including 'disease' and 'treatmentOptions', must be in this language. Your response must be easily understandable to a non-expert farmer.
+You MUST respond fully in the requested language: {{{language}}}. All text fields in your output, including 'disease' and 'treatmentOptions', must be in this language. Your response must be easily understandable to a non-expert farmer.
 
-  Analyze the following image and provide your diagnosis:
+Analyze the following image and provide your diagnosis.
 
-  Photo: {{media url=photoDataUri}}
+Language: {{{language}}}
+Photo: {{media url=photoDataUri}}
   `,
 });
 
