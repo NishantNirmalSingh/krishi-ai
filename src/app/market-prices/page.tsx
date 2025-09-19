@@ -146,7 +146,9 @@ export default function MarketPricesPage() {
     } catch (error: any) {
       console.error("Failed to fetch market price:", error);
       let description = "Could not fetch market price data. Please try again.";
-      if (error.message && error.message.includes('503')) {
+      if (error.message && error.message.includes('429')) {
+        description = 'You have exceeded the API quota for today. Please try again tomorrow.';
+      } else if (error.message && error.message.includes('503')) {
         description = 'The AI model is currently overloaded. Please try again in a few moments.';
       }
       toast({

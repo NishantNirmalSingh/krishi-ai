@@ -97,7 +97,9 @@ export function PestDetectionClient() {
         setResult(detectionResult);
       } catch (e: any) {
         let description = 'An error occurred while analyzing the image. Please try again.';
-        if (e.message && e.message.includes('503')) {
+        if (e.message && e.message.includes('429')) {
+          description = 'You have exceeded the API quota for today. Please try again tomorrow.';
+        } else if (e.message && e.message.includes('503')) {
           description = 'The AI model is currently overloaded. Please try again in a few moments.';
         }
         toast({
@@ -276,3 +278,5 @@ export function PestDetectionClient() {
     </div>
   );
 }
+
+    

@@ -137,16 +137,14 @@ export function WeatherClient() {
       setResult(searchResult);
     } catch (error: any) {
       console.error("Failed to fetch weather forecast:", error);
-      let description =
-        "Could not fetch weather data. Please try again.";
-      if (error.message && error.message.includes("503")) {
-        description =
-          "The AI model is currently overloaded. Please try again in a few moments.";
-      } else if (error.message && error.message.includes('429')) {
-        description = "You have exceeded the API quota for today. Please try again tomorrow."
+      let description = "Could not fetch weather data. Please try again.";
+      if (error.message && error.message.includes("429")) {
+        description = "You have exceeded the API quota for today. Please try again tomorrow.";
+      } else if (error.message && error.message.includes("503")) {
+        description = "The AI model is currently overloaded. Please try again in a few moments.";
       }
       toast({
-        title: t.searchFailedTitle || "Search Failed",
+        title: t.searchFailedTitle,
         description: description,
         variant: "destructive",
       });
@@ -373,3 +371,5 @@ export function WeatherClient() {
     </div>
   );
 }
+
+    
