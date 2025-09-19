@@ -9,11 +9,16 @@
         "app/market-prices/page": {
           "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fstudio%2Fsrc%2Fapp%2Factions.ts%22%2C%5B%7B%22id%22%3A%2240352e44707a3acd2ea2aa29d4e44b8470428d3b0b%22%2C%22exportedName%22%3A%22handlePestDetection%22%7D%2C%7B%22id%22%3A%22404468a6c855d9aac957cfac7078e0d3eb6b65aa69%22%2C%22exportedName%22%3A%22handleCropAdvisory%22%7D%2C%7B%22id%22%3A%224054646f72f957c3bf3397d0fba4ea7080b57aa43a%22%2C%22exportedName%22%3A%22handleWeatherForecast%22%7D%2C%7B%22id%22%3A%2240b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235%22%2C%22exportedName%22%3A%22handleMarketPriceSearch%22%7D%5D%5D%5D&__client_imported__=true!",
           "async": false
+        },
+        "app/weather/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fstudio%2Fsrc%2Fapp%2Factions.ts%22%2C%5B%7B%22id%22%3A%2240352e44707a3acd2ea2aa29d4e44b8470428d3b0b%22%2C%22exportedName%22%3A%22handlePestDetection%22%7D%2C%7B%22id%22%3A%22404468a6c855d9aac957cfac7078e0d3eb6b65aa69%22%2C%22exportedName%22%3A%22handleCropAdvisory%22%7D%2C%7B%22id%22%3A%224054646f72f957c3bf3397d0fba4ea7080b57aa43a%22%2C%22exportedName%22%3A%22handleWeatherForecast%22%7D%2C%7B%22id%22%3A%2240b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235%22%2C%22exportedName%22%3A%22handleMarketPriceSearch%22%7D%5D%5D%5D&__client_imported__=true!",
+          "async": false
         }
       },
       "layer": {
         "app/pest-detection/page": "action-browser",
-        "app/market-prices/page": "action-browser"
+        "app/market-prices/page": "action-browser",
+        "app/weather/page": "action-browser"
       }
     },
     "404468a6c855d9aac957cfac7078e0d3eb6b65aa69": {
@@ -25,11 +30,16 @@
         "app/market-prices/page": {
           "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fstudio%2Fsrc%2Fapp%2Factions.ts%22%2C%5B%7B%22id%22%3A%2240352e44707a3acd2ea2aa29d4e44b8470428d3b0b%22%2C%22exportedName%22%3A%22handlePestDetection%22%7D%2C%7B%22id%22%3A%22404468a6c855d9aac957cfac7078e0d3eb6b65aa69%22%2C%22exportedName%22%3A%22handleCropAdvisory%22%7D%2C%7B%22id%22%3A%224054646f72f957c3bf3397d0fba4ea7080b57aa43a%22%2C%22exportedName%22%3A%22handleWeatherForecast%22%7D%2C%7B%22id%22%3A%2240b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235%22%2C%22exportedName%22%3A%22handleMarketPriceSearch%22%7D%5D%5D%5D&__client_imported__=true!",
           "async": false
+        },
+        "app/weather/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fstudio%2Fsrc%2Fapp%2Factions.ts%22%2C%5B%7B%22id%22%3A%2240352e44707a3acd2ea2aa29d4e44b8470428d3b0b%22%2C%22exportedName%22%3A%22handlePestDetection%22%7D%2C%7B%22id%22%3A%22404468a6c855d9aac957cfac7078e0d3eb6b65aa69%22%2C%22exportedName%22%3A%22handleCropAdvisory%22%7D%2C%7B%22id%22%3A%224054646f72f957c3bf3397d0fba4ea7080b57aa43a%22%2C%22exportedName%22%3A%22handleWeatherForecast%22%7D%2C%7B%22id%22%3A%2240b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235%22%2C%22exportedName%22%3A%22handleMarketPriceSearch%22%7D%5D%5D%5D&__client_imported__=true!",
+          "async": false
         }
       },
       "layer": {
         "app/pest-detection/page": "action-browser",
-        "app/market-prices/page": "action-browser"
+        "app/market-prices/page": "action-browser",
+        "app/weather/page": "action-browser"
       }
     },
     "4054646f72f957c3bf3397d0fba4ea7080b57aa43a": {
@@ -41,11 +51,16 @@
         "app/market-prices/page": {
           "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fstudio%2Fsrc%2Fapp%2Factions.ts%22%2C%5B%7B%22id%22%3A%2240352e44707a3acd2ea2aa29d4e44b8470428d3b0b%22%2C%22exportedName%22%3A%22handlePestDetection%22%7D%2C%7B%22id%22%3A%22404468a6c855d9aac957cfac7078e0d3eb6b65aa69%22%2C%22exportedName%22%3A%22handleCropAdvisory%22%7D%2C%7B%22id%22%3A%224054646f72f957c3bf3397d0fba4ea7080b57aa43a%22%2C%22exportedName%22%3A%22handleWeatherForecast%22%7D%2C%7B%22id%22%3A%2240b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235%22%2C%22exportedName%22%3A%22handleMarketPriceSearch%22%7D%5D%5D%5D&__client_imported__=true!",
           "async": false
+        },
+        "app/weather/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fstudio%2Fsrc%2Fapp%2Factions.ts%22%2C%5B%7B%22id%22%3A%2240352e44707a3acd2ea2aa29d4e44b8470428d3b0b%22%2C%22exportedName%22%3A%22handlePestDetection%22%7D%2C%7B%22id%22%3A%22404468a6c855d9aac957cfac7078e0d3eb6b65aa69%22%2C%22exportedName%22%3A%22handleCropAdvisory%22%7D%2C%7B%22id%22%3A%224054646f72f957c3bf3397d0fba4ea7080b57aa43a%22%2C%22exportedName%22%3A%22handleWeatherForecast%22%7D%2C%7B%22id%22%3A%2240b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235%22%2C%22exportedName%22%3A%22handleMarketPriceSearch%22%7D%5D%5D%5D&__client_imported__=true!",
+          "async": false
         }
       },
       "layer": {
         "app/pest-detection/page": "action-browser",
-        "app/market-prices/page": "action-browser"
+        "app/market-prices/page": "action-browser",
+        "app/weather/page": "action-browser"
       }
     },
     "40b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235": {
@@ -57,11 +72,16 @@
         "app/market-prices/page": {
           "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fstudio%2Fsrc%2Fapp%2Factions.ts%22%2C%5B%7B%22id%22%3A%2240352e44707a3acd2ea2aa29d4e44b8470428d3b0b%22%2C%22exportedName%22%3A%22handlePestDetection%22%7D%2C%7B%22id%22%3A%22404468a6c855d9aac957cfac7078e0d3eb6b65aa69%22%2C%22exportedName%22%3A%22handleCropAdvisory%22%7D%2C%7B%22id%22%3A%224054646f72f957c3bf3397d0fba4ea7080b57aa43a%22%2C%22exportedName%22%3A%22handleWeatherForecast%22%7D%2C%7B%22id%22%3A%2240b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235%22%2C%22exportedName%22%3A%22handleMarketPriceSearch%22%7D%5D%5D%5D&__client_imported__=true!",
           "async": false
+        },
+        "app/weather/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Fuser%2Fstudio%2Fsrc%2Fapp%2Factions.ts%22%2C%5B%7B%22id%22%3A%2240352e44707a3acd2ea2aa29d4e44b8470428d3b0b%22%2C%22exportedName%22%3A%22handlePestDetection%22%7D%2C%7B%22id%22%3A%22404468a6c855d9aac957cfac7078e0d3eb6b65aa69%22%2C%22exportedName%22%3A%22handleCropAdvisory%22%7D%2C%7B%22id%22%3A%224054646f72f957c3bf3397d0fba4ea7080b57aa43a%22%2C%22exportedName%22%3A%22handleWeatherForecast%22%7D%2C%7B%22id%22%3A%2240b228e6b10a4da4c84fe252e5cf7e5c8c45dd2235%22%2C%22exportedName%22%3A%22handleMarketPriceSearch%22%7D%5D%5D%5D&__client_imported__=true!",
+          "async": false
         }
       },
       "layer": {
         "app/pest-detection/page": "action-browser",
-        "app/market-prices/page": "action-browser"
+        "app/market-prices/page": "action-browser",
+        "app/weather/page": "action-browser"
       }
     }
   },

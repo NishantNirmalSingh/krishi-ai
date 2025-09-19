@@ -300,7 +300,7 @@ export function CropAdvisoryClient() {
                 render={({ field }) => (
                   <FormItem className="flex-grow">
                     <FormControl>
-                      <Textarea placeholder={t.questionPlaceholder} {...field} disabled={isLoading} className="min-h-[40px] resize-none" onKeyDown={(e) => {
+                      <Textarea placeholder={t.questionPlaceholder} {...field} disabled={isLoading} rows={1} onKeyDown={(e) => {
                           if (e.key === "Enter" && !e.shiftKey) {
                               e.preventDefault();
                               if (!isLoading) form.handleSubmit(onSubmit)();

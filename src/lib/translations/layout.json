@@ -13,7 +13,11 @@
         "launchButton": "Launch",
         "userMenuProfile": "Profile",
         "userMenuSettings": "Settings",
-        "userMenuLogout": "Log out"
+        "userMenuLogout": "Log out",
+        "userMenuTheme": "Theme",
+        "themeLight": "Light",
+        "themeDark": "Dark",
+        "themeSystem": "System"
     },
     "Hindi": {
         "navHome": "होम",
@@ -28,7 +32,11 @@
         "launchButton": "शुरू करें",
         "userMenuProfile": "प्रोफ़ाइल",
         "userMenuSettings": "सेटिंग्स",
-        "userMenuLogout": "लॉग आउट"
+        "userMenuLogout": "लॉग आउट",
+        "userMenuTheme": "थीम",
+        "themeLight": "लाइट",
+        "themeDark": "डार्क",
+        "themeSystem": "सिस्टम"
     },
     "Marathi": {
         "navHome": "मुख्यपृष्ठ",
@@ -43,12 +51,16 @@
         "launchButton": "सुरु करा",
         "userMenuProfile": "प्रोफाइल",
         "userMenuSettings": "सेटिंग्ज",
-        "userMenuLogout": "लॉग आउट"
+        "userMenuLogout": "लॉग आउट",
+        "userMenuTheme": "थीम",
+        "themeLight": "लाइट",
+        "themeDark": "डार्क",
+        "themeSystem": "सिस्टम"
     },
     "Assamese": {
         "navHome": "গৃহ",
         "navCropAdvisory": "শস্য পৰামৰ্শ",
-        "descCropAdvisory": "ব্যক্তিগত শস্যৰ পৰামৰ্শ লাভ কৰক।",
+        "descCropAdvisory": "ব্যক্তিগত শস্যৰ পৰামৰ্ש লাভ কৰক।",
         "navPestDetection": "pest શોધ",
         "descPestDetection": "এখন ছবি আপলোড কৰি pest চিনাক্ত কৰক।",
         "navMarketPrices": "বজাৰ মূল্য",
@@ -58,7 +70,11 @@
         "launchButton": "আৰম্ভ কৰক",
         "userMenuProfile": "প্ৰফাইল",
         "userMenuSettings": "ছেটিংছ",
-        "userMenuLogout": "লগ আউট"
+        "userMenuLogout": "লগ আউট",
+        "userMenuTheme": "থীম",
+        "themeLight": "পোহৰ",
+        "themeDark": "আন্ধাৰ",
+        "themeSystem": "চিস্টেম"
     },
     "Bengali": {
         "navHome": "হোম",
@@ -73,7 +89,11 @@
         "launchButton": "শুরু করুন",
         "userMenuProfile": "প্রোফাইল",
         "userMenuSettings": "সেটিংস",
-        "userMenuLogout": "লগ আউট"
+        "userMenuLogout": "লগ আউট",
+        "userMenuTheme": "থিম",
+        "themeLight": "আলো",
+        "themeDark": "অন্ধকার",
+        "themeSystem": "সিস্টেম"
     },
     "Gujarati": {
         "navHome": "ઘર",
@@ -88,13 +108,17 @@
         "launchButton": "શરૂ કરો",
         "userMenuProfile": "પ્રોફાઇલ",
         "userMenuSettings": "સેટિંગ્સ",
-        "userMenuLogout": "લૉગ આઉટ"
+        "userMenuLogout": "લૉગ આઉટ",
+        "userMenuTheme": "થીમ",
+        "themeLight": "લાઇટ",
+        "themeDark": "ડાર્ક",
+        "themeSystem": "સિસ્ટમ"
     },
     "Kannada": {
         "navHome": "ಮನೆ",
         "navCropAdvisory": "ಬೆಳೆ ಸಲಹೆ",
         "descCropAdvisory": "ವೈಯಕ್ತಿಕ ಬೆಳೆ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ.",
-        "navPestDetection": "ಕೀਟ ಪತ್ತೆ",
+        "navPestDetection": "ಕೀಟ ಪತ್ತೆ",
         "descPestDetection": "ಒಂದು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡುವ ಮೂಲಕ ಕೀಟಗಳನ್ನು ಗುರುತಿಸಿ.",
         "navMarketPrices": "ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು",
         "descMarketPrices": "ಪ್ರಸ್ತುತ ಕೃಷಿ ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳನ್ನು ವೀಕ್ಷಿಸಿ.",
@@ -103,7 +127,11 @@
         "launchButton": "ಪ್ರಾರಂಭಿಸಿ",
         "userMenuProfile": "ಪ್ರೊಫೈಲ್",
         "userMenuSettings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
-        "userMenuLogout": "ಲಾಗ್ ಔಟ್"
+        "userMenuLogout": "ಲಾಗ್ ಔಟ್",
+        "userMenuTheme": "ಥೀಮ್",
+        "themeLight": "ಬೆಳಕು",
+        "themeDark": "ಡಾರ್ಕ್",
+        "themeSystem": "ಸಿಸ್ಟಮ್"
     },
     "Malayalam": {
         "navHome": "വീട്",
@@ -118,7 +146,11 @@
         "launchButton": "തുടങ്ങുക",
         "userMenuProfile": "പ്രൊഫൈൽ",
         "userMenuSettings": "ക്രമീകരണങ്ങൾ",
-        "userMenuLogout": "ലോഗ് ഔട്ട്"
+        "userMenuLogout": "ലോഗ് ഔട്ട്",
+        "userMenuTheme": "തീം",
+        "themeLight": "ലൈറ്റ്",
+        "themeDark": "ഡാർക്ക്",
+        "themeSystem": "സിസ്റ്റം"
     },
     "Odia": {
         "navHome": "ଘର",
@@ -133,7 +165,11 @@
         "launchButton": "ଆରମ୍ଭ କରନ୍ତୁ",
         "userMenuProfile": "ପ୍ରୋଫାଇଲ୍",
         "userMenuSettings": "ସେଟିଂସ",
-        "userMenuLogout": "ଲଗ୍ ଆଉଟ୍"
+        "userMenuLogout": "ଲଗ୍ ଆଉଟ୍",
+        "userMenuTheme": "ଥିମ୍",
+        "themeLight": "ଆଲୋକ",
+        "themeDark": "ଅନ୍ଧାର",
+        "themeSystem": "ସିଷ୍ଟମ୍"
     },
     "Punjabi": {
         "navHome": "ਘਰ",
@@ -148,7 +184,11 @@
         "launchButton": "ਸ਼ੁਰੂ ਕਰੋ",
         "userMenuProfile": "ਪ੍ਰੋਫ਼ਾਈਲ",
         "userMenuSettings": "ਸੈਟਿੰਗਜ਼",
-        "userMenuLogout": "ਲਾਗ ਆਊਟ"
+        "userMenuLogout": "ਲਾਗ ਆਊਟ",
+        "userMenuTheme": "ਥੀਮ",
+        "themeLight": "ਲਾਈਟ",
+        "themeDark": "ਡਾਰਕ",
+        "themeSystem": "ਸਿਸਟਮ"
     },
     "Tamil": {
         "navHome": "முகப்பு",
@@ -163,7 +203,11 @@
         "launchButton": "தொடங்கு",
         "userMenuProfile": "சுயவிவரம்",
         "userMenuSettings": "அமைப்புகள்",
-        "userMenuLogout": "வெளியேறு"
+        "userMenuLogout": "வெளியேறு",
+        "userMenuTheme": "தீம்",
+        "themeLight": "லைட்",
+        "themeDark": "டார்க்",
+        "themeSystem": "சிஸ்டம்"
     },
     "Telugu": {
         "navHome": "హోమ్",
@@ -178,7 +222,11 @@
         "launchButton": "ప్రారంభించండి",
         "userMenuProfile": "ప్రొఫైల్",
         "userMenuSettings": "సెట్టింగ్‌లు",
-        "userMenuLogout": "లాగ్ అవుట్"
+        "userMenuLogout": "లాగ్ అవుట్",
+        "userMenuTheme": "థీమ్",
+        "themeLight": "లైట్",
+        "themeDark": "డార్క్",
+        "themeSystem": "సిస్టమ్"
     },
     "Urdu": {
         "navHome": "گھر",
@@ -193,6 +241,10 @@
         "launchButton": "شروع کریں",
         "userMenuProfile": "پروفائل",
         "userMenuSettings": "ترتیبات",
-        "userMenuLogout": "لاگ آؤٹ"
+        "userMenuLogout": "لاگ آؤٹ",
+        "userMenuTheme": "تھیم",
+        "themeLight": "لائٹ",
+        "themeDark": "ڈارک",
+        "themeSystem": "سسٹم"
     }
 }

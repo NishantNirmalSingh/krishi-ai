@@ -1,12 +1,12 @@
 
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,7 +24,6 @@ import { useTranslation } from "@/hooks/use-translation";
 import homeTranslations from "@/lib/translations/home.json";
 import layoutTranslations from "@/lib/translations/layout.json";
 import { languages } from "@/lib/languages";
-import Balancer from "react-wrap-balancer";
 
 export default function DashboardPage() {
   const { language, setLanguage } = useLanguage();
@@ -62,7 +61,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="relative overflow-hidden rounded-xl shadow-subtle-lg">
+      <div className="relative overflow-hidden rounded-xl shadow-lg">
         <div className="absolute right-4 top-4 z-10">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -90,12 +89,14 @@ export default function DashboardPage() {
           priority
         />
         <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-t from-black/80 to-transparent p-6 sm:p-8 md:p-12">
-          <h1 className="max-w-2xl font-headline text-3xl text-white md:text-5xl">
-            <Balancer>{t.heroTitle}</Balancer>
-          </h1>
-          <p className="mt-4 max-w-2xl text-base text-white/90 md:text-lg">
-            <Balancer>{t.heroSubtitle}</Balancer>
-          </p>
+          <div className="max-w-2xl">
+            <h1 className="font-headline text-3xl text-white md:text-5xl">
+                {t.heroTitle}
+            </h1>
+            <p className="mt-4 text-base text-white/90 md:text-lg">
+                {t.heroSubtitle}
+            </p>
+          </div>
           <Button
             asChild
             size="lg"
@@ -110,7 +111,7 @@ export default function DashboardPage() {
         {quickActions.map((action) => (
           <Card
             key={action.title}
-            className="flex h-full flex-col transition-shadow duration-300 hover:shadow-subtle-lg"
+            className="flex h-full flex-col transition-shadow duration-300 hover:shadow-lg"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-xl">
@@ -121,11 +122,11 @@ export default function DashboardPage() {
             <CardContent className="flex-grow">
               <CardDescription>{action.description}</CardDescription>
             </CardContent>
-            <CardContent>
+            <CardFooter>
               <Button asChild variant="outline" className="w-full">
                 <Link href={action.href}>{t_layout.launchButton}</Link>
               </Button>
-            </CardContent>
+            </CardFooter>
           </Card>
         ))}
       </div>
