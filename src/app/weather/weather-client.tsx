@@ -146,7 +146,7 @@ export function WeatherClient() {
         description = "You have exceeded the API quota for today. Please try again tomorrow."
       }
       toast({
-        title: t('searchFailedTitle') || "Search Failed",
+        title: t.searchFailedTitle || "Search Failed",
         description: description,
         variant: "destructive",
       });
