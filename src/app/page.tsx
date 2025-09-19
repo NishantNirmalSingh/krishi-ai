@@ -24,7 +24,7 @@ import { useTranslation } from "@/hooks/use-translation";
 import homeTranslations from "@/lib/translations/home.json";
 import layoutTranslations from "@/lib/translations/layout.json";
 import { languages } from "@/lib/languages";
-import { Provider as BalancerProvider, Balancer } from "react-wrap-balancer";
+import { Provider as BalancerProvider } from "react-wrap-balancer";
 
 export default function DashboardPage() {
   const { language, setLanguage } = useLanguage();
@@ -90,12 +90,12 @@ export default function DashboardPage() {
             data-ai-hint="farmer smartphone field"
             priority
           />
-          <div className="absolute inset-0 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 to-transparent p-8 py-8 md:p-12">
+          <div className="absolute inset-0 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 to-transparent p-6 sm:p-8 md:p-12">
             <h1 className="max-w-2xl font-headline text-3xl text-white md:text-5xl">
-              <Balancer>{t.heroTitle}</Balancer>
+              {t.heroTitle}
             </h1>
             <p className="mt-4 max-w-2xl text-base text-white/90 md:text-lg">
-              <Balancer>{t.heroSubtitle}</Balancer>
+              {t.heroSubtitle}
             </p>
             <Button
               asChild
