@@ -72,6 +72,12 @@ const iconMap: { [key: string]: React.ComponentType<any> } = {
   CloudLightning,
 };
 
+type AudioPlaybackInfo = {
+  url: string;
+  startTime: number;
+  endTime: number;
+};
+
 export function WeatherClient() {
   const [result, setResult] = useState<WeatherForecastOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -79,7 +85,7 @@ export function WeatherClient() {
   const { language, setLanguage } = useLanguage();
   const t = useTranslation(language, weatherTranslations);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<AudioPlaybackInfo | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -94,16 +100,26 @@ export function WeatherClient() {
   }, [language, form]);
 
   useEffect(() => {
-    audioRef.current = new Audio();
-    audioRef.current.onended = () => setPlayingAudio(null);
-    audioRef.current.onpause = () => setPlayingAudio(null);
+    const audio = new Audio();
+    audioRef.current = audio;
+
+    const handleTimeUpdate = () => {
+        if (audio.currentTime >= (playingAudio?.endTime ?? 0)) {
+            audio.pause();
+            setPlayingAudio(null);
+        }
+    };
+    const handlePause = () => setPlayingAudio(null);
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('pause', handlePause);
     
     return () => {
-        if(audioRef.current) {
-            audioRef.current.pause();
-        }
+        audio.removeEventListener('timeupdate', handleTimeUpdate);
+        audio.removeEventListener('pause', handlePause);
+        audio.pause();
     }
-  }, []);
+  }, [playingAudio]);
 
   const handleLanguageChange = (langValue: string) => {
     setLanguage(langValue);
@@ -126,6 +142,8 @@ export function WeatherClient() {
       if (error.message && error.message.includes("503")) {
         description =
           "The AI model is currently overloaded. Please try again in a few moments.";
+      } else if (error.message && error.message.includes('429')) {
+        description = "You have exceeded the API quota for today. Please try again tomorrow."
       }
       toast({
         title: t('searchFailedTitle') || "Search Failed",
@@ -137,19 +155,27 @@ export function WeatherClient() {
     }
   };
 
-  const toggleAudio = (audioDataUri: string) => {
-    if (!audioRef.current) return;
+  const toggleAudio = (audioInfo: AudioPlaybackInfo) => {
+    const audio = audioRef.current;
+    if (!audio) return;
     
-    if (playingAudio === audioDataUri) {
-        audioRef.current.pause();
+    // If the clicked audio is already playing, pause it.
+    if (playingAudio?.url === audioInfo.url && playingAudio?.startTime === audioInfo.startTime) {
+        audio.pause();
         setPlayingAudio(null);
     } else {
-        if(playingAudio) {
-            audioRef.current.pause();
+        // If a different audio is playing, pause it first.
+        if (!audio.paused) {
+            audio.pause();
         }
-        audioRef.current.src = audioDataUri;
-        audioRef.current.play();
-        setPlayingAudio(audioDataUri);
+
+        // Set the new source, update current time, play, and set state.
+        if (audio.src !== audioInfo.url) {
+            audio.src = audioInfo.url;
+        }
+        audio.currentTime = audioInfo.startTime;
+        audio.play();
+        setPlayingAudio(audioInfo);
     }
   };
   
@@ -311,20 +337,29 @@ export function WeatherClient() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {result.predictiveAlerts.length > 0 ? (
-                                result.predictiveAlerts.map((alert, index) => (
-                                    <Alert key={index} className="bg-accent text-accent-foreground border-accent/50">
-                                        <div className="flex justify-between items-center">
-                                            <BellRing className="h-4 w-4" />
-                                            <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 text-accent-foreground/80 hover:text-accent-foreground" onClick={() => toggleAudio(alert.audio)}>
-                                                {playingAudio === alert.audio ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-                                            </Button>
-                                        </div>
-                                        <AlertTitle className="font-headline">{alert.title}</AlertTitle>
-                                        <AlertDescription>
-                                            {alert.description}
-                                        </AlertDescription>
-                                    </Alert>
-                                ))
+                                result.predictiveAlerts.map((alert, index) => {
+                                    const audioInfo = {
+                                        url: alert.audio.url,
+                                        startTime: alert.audio.startTime,
+                                        endTime: alert.audio.endTime,
+                                    };
+                                    const isPlaying = playingAudio?.url === audioInfo.url && playingAudio?.startTime === audioInfo.startTime;
+
+                                    return (
+                                        <Alert key={index} className="bg-accent text-accent-foreground border-accent/50">
+                                            <div className="flex justify-between items-center">
+                                                <BellRing className="h-4 w-4" />
+                                                <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 text-accent-foreground/80 hover:text-accent-foreground" onClick={() => toggleAudio(audioInfo)}>
+                                                    {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                                                </Button>
+                                            </div>
+                                            <AlertTitle className="font-headline">{alert.title}</AlertTitle>
+                                            <AlertDescription>
+                                                {alert.description}
+                                            </AlertDescription>
+                                        </Alert>
+                                    );
+                                })
                             ) : (
                                 <p className="text-sm text-muted-foreground">{t.noAlerts}</p>
                             )}

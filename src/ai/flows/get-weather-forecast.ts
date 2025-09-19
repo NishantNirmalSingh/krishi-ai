@@ -9,7 +9,10 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { textToSpeech, TextToSpeechInput } from './text-to-speech';
+import {
+  textToSpeechMulti,
+  TextToSpeechMultiInput,
+} from './text-to-speech-multi';
 
 const WeatherForecastInputSchema = z.object({
   location: z
@@ -29,32 +32,59 @@ const iconEnum = z.enum([
 ]);
 
 const PredictiveAlertSchema = z.object({
-      title: z.string().describe('A short, catchy title for the alert, in the requested language.'),
-      description: z.string().describe('The detailed alert message for the farmer, in the requested language.'),
-      audio: z.string().describe('A data URI of the audio of the alert in WAV format.'),
-    })
+  title: z
+    .string()
+    .describe('A short, catchy title for the alert, in the requested language.'),
+  description: z
+    .string()
+    .describe(
+      'The detailed alert message for the farmer, in the requested language.'
+    ),
+  audio: z.object({
+    url: z.string().describe('A data URI of the audio of the alert in WAV format.'),
+    startTime: z.number().describe('The start time of the audio segment in seconds.'),
+    endTime: z.number().describe('The end time of the audio segment in seconds.'),
+  }),
+});
 
 const WeatherForecastOutputSchema = z.object({
-  lastUpdated: z.string().describe("How long ago the weather was updated, e.g., 'just now', '5 minutes ago', in the requested language."),
+  lastUpdated: z
+    .string()
+    .describe(
+      "How long ago the weather was updated, e.g., 'just now', '5 minutes ago', in the requested language."
+    ),
   currentConditions: z.object({
     temperature: z.string().describe('The current temperature, e.g., "31°C".'),
-    condition: z.string().describe('The current weather condition, e.g., "Partly Cloudy", in the requested language.'),
+    condition: z
+      .string()
+      .describe(
+        'The current weather condition, e.g., "Partly Cloudy", in the requested language.'
+      ),
     icon: iconEnum.describe('An icon name representing the current condition.'),
     wind: z.string().describe('The current wind speed, e.g., "12 km/h".'),
     humidity: z.string().describe('The current humidity, e.g., "68%".'),
   }),
-  weeklyForecast: z.array(z.object({
-      day: z.string().describe('The day of the week, abbreviated, e.g., "Mon", in the requested language.'),
-      icon: iconEnum.describe('An icon name representing the forecast condition.'),
-      temp: z.string().describe('The forecasted temperature, e.g., "32°".'),
-    }))
+  weeklyForecast: z
+    .array(
+      z.object({
+        day: z
+          .string()
+          .describe(
+            'The day of the week, abbreviated, e.g., "Mon", in the requested language.'
+          ),
+        icon: iconEnum.describe(
+          'An icon name representing the forecast condition.'
+        ),
+        temp: z.string().describe('The forecasted temperature, e.g., "32°".'),
+      })
+    )
     .length(7)
     .describe('A 7-day weather forecast.'),
-  predictiveAlerts: z.array(PredictiveAlertSchema)
+  predictiveAlerts: z
+    .array(PredictiveAlertSchema)
     .describe('Any critical weather alerts for the next 48-72 hours.'),
 });
 export type WeatherForecastOutput = z.infer<typeof WeatherForecastOutputSchema>;
-
 
 export async function getWeatherForecast(
   input: WeatherForecastInput
@@ -66,8 +96,10 @@ const getWeatherForecastPrompt = ai.definePrompt({
   name: 'getWeatherForecastPrompt',
   input: {schema: WeatherForecastInputSchema},
   output: {
-    schema: WeatherForecastOutputSchema.extend({
-      predictiveAlerts: z.array(PredictiveAlertSchema.omit({ audio: true }))
+    schema: WeatherForecastOutputSchema.omit({predictiveAlerts: true}).extend({
+      predictiveAlerts: z.array(
+        PredictiveAlertSchema.omit({audio: true})
+      ),
     }),
   },
   prompt: `You are a hyper-local weather expert for Indian agriculture. For the given location, provide a realistic and detailed weather forecast.
@@ -96,20 +128,31 @@ const getWeatherForecastFlow = ai.defineFlow(
       throw new Error('Failed to get weather data from the AI model.');
     }
 
-    // Generate audio for each predictive alert
-    const alertsWithAudio = await Promise.all(
-      (output.predictiveAlerts || []).map(async (alert) => {
-        const ttsInput: TextToSpeechInput = {
-          text: alert.description,
-          language: input.language,
-        };
-        const audioData = await textToSpeech(ttsInput);
-        return {
-          ...alert,
-          audio: audioData,
-        };
-      })
-    );
+    if (!output.predictiveAlerts || output.predictiveAlerts.length === 0) {
+      return {
+        ...output,
+        predictiveAlerts: [],
+      };
+    }
+
+    // Generate audio for each predictive alert in a single batch
+    const ttsInput: TextToSpeechMultiInput = {
+      language: input.language,
+      segments: output.predictiveAlerts.map(alert => alert.description),
+    };
+    const audioResult = await textToSpeechMulti(ttsInput);
+
+    const alertsWithAudio = output.predictiveAlerts.map((alert, index) => {
+      const audioInfo = audioResult.segments[index];
+      return {
+        ...alert,
+        audio: {
+          url: audioResult.audio,
+          startTime: audioInfo.startTime,
+          endTime: audioInfo.endTime,
+        },
+      };
+    });
 
     return {
       ...output,
