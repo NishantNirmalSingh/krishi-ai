@@ -53,9 +53,11 @@ export default function MarketPricesPage() {
   useEffect(() => {
     form.setValue('language', language);
     // If there's already a result, re-fetch the data in the new language.
-    if (result && form.getValues('crop')) {
-        handleSearch({ language, crop: form.getValues('crop') });
+    const currentCrop = form.getValues('crop');
+    if (result && currentCrop) {
+        handleSearch({ language, crop: currentCrop });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
   const handleLanguageChange = (langValue: string) => {

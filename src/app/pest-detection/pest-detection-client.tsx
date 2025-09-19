@@ -55,6 +55,10 @@ export function PestDetectionClient() {
 
   const handleLanguageChange = (langValue: string) => {
     setLanguage(langValue);
+    // If there is an image and a result, re-analyze with the new language
+    if (imagePreview && result) {
+      form.handleSubmit(onSubmit)();
+    }
   };
   
   useEffect(() => {
@@ -84,6 +88,7 @@ export function PestDetectionClient() {
     reader.readAsDataURL(file);
     reader.onload = async () => {
       const dataUri = reader.result as string;
+      setImagePreview(dataUri); // Ensure preview is set
       try {
         const detectionResult = await handlePestDetection({ 
           photoDataUri: dataUri,

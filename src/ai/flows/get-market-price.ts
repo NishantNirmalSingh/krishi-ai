@@ -72,14 +72,13 @@ const getMarketPricePrompt = ai.definePrompt({
   output: {
     schema: MarketPriceOutputSchema.omit({audio: true}),
   },
-  prompt: `You are a market data analyst and advisor for Indian agriculture. You must respond in the language specified. For the given crop, provide the following information:
+  prompt: `You are a market data analyst and advisor for Indian agriculture. You MUST respond fully in the language specified in the 'language' field. All text fields in your output, including 'crop', 'market', platform 'name' and 'details', and 'summary', must be translated into the requested language: {{{language}}}.
 
-  Crop: {{{crop}}}
-  Language: {{{language}}}
+For the given crop: {{{crop}}}
 
-  1.  **Market Data**: Find a major agricultural market (mandi) in India relevant to this crop. Provide a realistic current price in INR per quintal. Provide a recent historical price to show a trend. The unit must be "Quintal".
-  2.  **Selling Platforms**: Suggest 2-3 online platforms (like agri-tech marketplaces, B2B portals) and 2-3 offline options (like farmer co-operatives, local food processors). For each suggestion, provide a brief, helpful detail that includes actionable advice on how the farmer can connect with or reach out to them. For example, for an online platform, mention if they have a mobile app or a website registration. For an offline buyer, suggest how a farmer might find their local representative.
-  3.  **Summary**: Provide a brief, one-sentence summary of the key market information (crop name, current price, and trend) in the requested language.
+1.  **Market Data**: Find a major agricultural market (mandi) in India relevant to this crop. Provide a realistic current price in INR per quintal. Provide a recent historical price to show a trend. The unit must be "Quintal".
+2.  **Selling Platforms**: Suggest 2-3 online platforms and 2-3 offline options. For each, provide a brief, helpful detail including actionable advice on how the farmer can connect with them.
+3.  **Summary**: Provide a brief, one-sentence summary of the key market information (crop name, current price, and trend).
   `,
 });
 
