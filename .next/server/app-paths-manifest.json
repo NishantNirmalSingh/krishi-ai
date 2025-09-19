@@ -1,5 +1,6 @@
 {
   "/page": "app/page.js",
   "/crop-advisory/page": "app/crop-advisory/page.js",
-  "/weather/page": "app/weather/page.js"
+  "/weather/page": "app/weather/page.js",
+  "/pest-detection/page": "app/pest-detection/page.js"
 }
