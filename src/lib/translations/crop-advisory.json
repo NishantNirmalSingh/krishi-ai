@@ -30,7 +30,7 @@
   "Assamese": {
     "initialMessage1": "আপোনাৰ বাৰ্তালাপ ইয়াত ওলাব।",
     "initialMessage2": "আৰম্ভ কৰিবলৈ তলৰ ফৰ্মখন পূৰণ কৰক।",
-    "languageLabel": "भाषा",
+    "languageLabel": "ভাষা",
     "languagePlaceholder": "এটা ভাষা বাছনি কৰক",
     "locationLabel": "অৱস্থান",
     "locationPlaceholder": "যেনে, ৰামপুৰ গাঁও",
@@ -57,10 +57,10 @@
   "Kannada": {
     "initialMessage1": "ನಿಮ್ಮ ಸಂವಾದ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.",
     "initialMessage2": "ಪ್ರಾರಂಭಿಸಲು ಕೆಳಗಿನ ಫಾರ್ಮ್ ಅನ್ನು ಭರ್ತಿ ಮಾಡಿ.",
-    "languageLabel": "ഭാഷೆ",
+    "languageLabel": "ಭಾಷೆ",
     "languagePlaceholder": "ಒಂದು ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
     "locationLabel": "ಸ್ಥಳ",
-    "locationPlaceholder": "ಉദാ., ರಾಂಪುರ ಗ್ರಾಮ",
+    "locationPlaceholder": "ಉದಾ., ರಾಂಪುರ ಗ್ರಾಮ",
     "questionPlaceholder": "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಇಲ್ಲಿ ಕೇಳಿ..."
   },
   "Malayalam": {
@@ -74,7 +74,7 @@
   },
   "Odia": {
     "initialMessage1": "ଆପଣଙ୍କର ବାର୍ତ୍ତାଳାପ ଏଠାରେ ଦେଖାଯିବ।",
-    "initialMessage2": "ଆରମ୍ਭ କରିବାକୁ ନିମ୍ନରେ ଥିବା ଫର୍ମ ପୂରଣ କରନ୍ତୁ।",
+    "initialMessage2": "ଆରମ୍ଭ କରିବାକୁ ନିମ୍ନରେ ଥିବା ଫର୍ମ ପୂରଣ କରନ୍ତୁ।",
     "languageLabel": "ଭାଷା",
     "languagePlaceholder": "ଏକ ଭାଷା ଚୟନ କରନ୍ତୁ",
     "locationLabel": "ସ୍ଥାନ",
@@ -94,7 +94,7 @@
     "initialMessage1": "உங்கள் உரையாடல் இங்கே தோன்றும்.",
     "initialMessage2": "தொடங்க கீழே உள்ள படிவத்தை நிரப்பவும்.",
     "languageLabel": "மொழி",
-    "languagePlaceholder": "ഒരു மொழியைத் தேர்ந்தெடுக்கவும்",
+    "languagePlaceholder": "ஒரு மொழியைத் தேர்ந்தெடுக்கவும்",
     "locationLabel": "இடம்",
     "locationPlaceholder": "எ.கா., ராம்பூர் கிராமம்",
     "questionPlaceholder": "உங்கள் கேள்வியை இங்கே கேளுங்கள்..."
@@ -102,7 +102,7 @@
   "Telugu": {
     "initialMessage1": "మీ సంభాషణ ఇక్కడ కనిపిస్తుంది.",
     "initialMessage2": "ప్రారంభించడానికి దిగువ ఫారమ్‌ను పూరించండి.",
-    "languageLabel": "மொழி",
+    "languageLabel": "భాష",
     "languagePlaceholder": "ఒక భాషను ఎంచుకోండి",
     "locationLabel": "స్థానం",
     "locationPlaceholder": "ఉదా., రాంపూర్ గ్రామం",
