@@ -24,6 +24,7 @@ import { useTranslation } from "@/hooks/use-translation";
 import homeTranslations from "@/lib/translations/home.json";
 import layoutTranslations from "@/lib/translations/layout.json";
 import { languages } from "@/lib/languages";
+import { Provider as BalancerProvider, Balancer } from "react-wrap-balancer";
 
 export default function DashboardPage() {
   const { language, setLanguage } = useLanguage();
@@ -60,74 +61,76 @@ export default function DashboardPage() {
   const selectedLanguageLabel = languages.find(l => l.value === language)?.label || 'English';
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="relative overflow-hidden rounded-xl shadow-subtle-lg">
-        <div className="absolute right-4 top-4 z-10">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="sm" className="gap-2 bg-background/80 hover:bg-background">
-                  <Globe className="h-4 w-4"/>
-                  <span>{selectedLanguageLabel}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {languages.map((lang) => (
-                    <DropdownMenuItem key={lang.value} onSelect={() => setLanguage(lang.value)}>
-                        {lang.label}
-                    </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+    <BalancerProvider>
+      <div className="flex flex-col gap-8">
+        <div className="relative overflow-hidden rounded-xl shadow-subtle-lg">
+          <div className="absolute right-4 top-4 z-10">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="secondary" size="sm" className="gap-2 bg-background/80 hover:bg-background">
+                    <Globe className="h-4 w-4"/>
+                    <span>{selectedLanguageLabel}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {languages.map((lang) => (
+                      <DropdownMenuItem key={lang.value} onSelect={() => setLanguage(lang.value)}>
+                          {lang.label}
+                      </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+          </div>
+          <Image
+            src="https://picsum.photos/seed/hero-farmer/1200/400"
+            width={1200}
+            height={400}
+            alt="Farmer using a smartphone in a field"
+            className="aspect-[16/6] w-full object-cover"
+            data-ai-hint="farmer smartphone field"
+            priority
+          />
+          <div className="absolute inset-0 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 to-transparent p-8 py-8 md:p-12">
+            <h1 className="max-w-2xl font-headline text-3xl text-white md:text-5xl">
+              <Balancer>{t.heroTitle}</Balancer>
+            </h1>
+            <p className="mt-4 max-w-2xl text-base font-bold text-white/90 md:text-lg">
+              <Balancer>{t.heroSubtitle}</Balancer>
+            </p>
+            <Button
+              asChild
+              size="lg"
+              className="mt-6 bg-accent text-accent-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent/90"
+            >
+              <Link href="/crop-advisory">{t.getStartedButton}</Link>
+            </Button>
+          </div>
         </div>
-        <Image
-          src="https://picsum.photos/seed/hero-farmer/1200/400"
-          width={1200}
-          height={400}
-          alt="Farmer using a smartphone in a field"
-          className="aspect-[16/6] w-full object-cover"
-          data-ai-hint="farmer smartphone field"
-          priority
-        />
-        <div className="absolute inset-0 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 to-transparent p-8 py-8 md:p-12">
-          <h1 className="max-w-2xl font-headline text-3xl text-white md:text-5xl">
-            {t.heroTitle}
-          </h1>
-          <p className="mt-4 max-w-2xl text-base font-bold text-white/90 md:text-lg">
-            {t.heroSubtitle}
-          </p>
-          <Button
-            asChild
-            size="lg"
-            className="mt-6 bg-accent text-accent-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent/90"
-          >
-            <Link href="/crop-advisory">{t.getStartedButton}</Link>
-          </Button>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {quickActions.map((action) => (
-          <Card
-            key={action.title}
-            className="flex h-full flex-col transition-shadow duration-300 hover:shadow-subtle-lg"
-          >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xl">
-                {action.title}
-              </CardTitle>
-              <action.icon className="h-6 w-6 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <CardDescription>{action.description}</CardDescription>
-            </CardContent>
-            <CardContent>
-              <Button asChild variant="outline" className="w-full">
-                <Link href={action.href}>{t_layout.launchButton}</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {quickActions.map((action) => (
+            <Card
+              key={action.title}
+              className="flex h-full flex-col transition-shadow duration-300 hover:shadow-subtle-lg"
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xl">
+                  {action.title}
+                </CardTitle>
+                <action.icon className="h-6 w-6 text-muted-foreground" />
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <CardDescription>{action.description}</CardDescription>
+              </CardContent>
+              <CardContent>
+                <Button asChild variant="outline" className="w-full">
+                  <Link href={action.href}>{t_layout.launchButton}</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
+    </BalancerProvider>
   );
 }

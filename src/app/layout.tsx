@@ -12,12 +12,14 @@ const ptSans = PT_Sans({
   subsets: ['latin'],
   weight: ['400', '700'],
   variable: '--font-pt-sans',
+  display: 'swap',
 });
 
 const robotoSlab = Roboto_Slab({
   subsets: ['latin'],
   weight: ['400', '700'],
   variable: '--font-roboto-slab',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
