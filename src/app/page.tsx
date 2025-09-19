@@ -94,7 +94,7 @@ export default function DashboardPage() {
             <h1 className="max-w-2xl font-headline text-3xl text-white md:text-5xl">
               <Balancer>{t.heroTitle}</Balancer>
             </h1>
-            <p className="mt-4 max-w-2xl text-base font-bold text-white/90 md:text-lg">
+            <p className="mt-4 max-w-2xl text-base text-white/90 md:text-lg">
               <Balancer>{t.heroSubtitle}</Balancer>
             </p>
             <Button
