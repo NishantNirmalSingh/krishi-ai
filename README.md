@@ -1,6 +1,6 @@
 # KrishiAI: Your Personal AI Agri-Scientist
 
-KrishiAI is a revolutionary web application designed to empower farmers by placing the knowledge of an agricultural scientist directly into their hands. By leveraging the power of advanced artificial intelligence, KrishiAI provides timely, personalized, and accessible guidance to help farmers make informed decisions, increase their yield, and improve their profitability. The platform is built to overcome linguistic and technical barriers, delivering critical information in a variety of regional languages through an intuitive, user-friendly interface.
+KrishiAI is a revolutionary web application that places an AI agricultural scientist in every farmer's pocket. It provides instant, personalized advice on crop selection, pest detection via photo upload, real-time market prices, and hyper-local weather forecasts. By delivering critical information in regional languages with audio support, KrishiAI empowers farmers to increase yield, reduce risk, and boost profitability, making advanced agricultural knowledge accessible to all.
 
 ## Key Features
 
