@@ -16,10 +16,14 @@ import {textToSpeech, TextToSpeechInput} from './text-to-speech';
 const DetectPestDiseaseInputSchema = z.object({
   photoDataUri: z
     .string()
+    .optional()
     .describe(
       "A photo of a plant leaf or plant, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  description: z.string().optional().describe("A text description of the plant's symptoms."),
   language: z.string().describe('The language for the diagnosis and recommendation.'),
+}).refine(data => data.photoDataUri || data.description, {
+  message: "Either a photo or a description must be provided.",
 });
 export type DetectPestDiseaseInput = z.infer<typeof DetectPestDiseaseInputSchema>;
 
@@ -49,16 +53,23 @@ const prompt = ai.definePrompt({
       summaryForAudio: z.string().describe('A single, concise sentence summarizing the diagnosis and key treatment advice for audio playback, in the requested language.'),
     })
   },
-  prompt: `You are an expert plant pathologist. A farmer has uploaded a photo of a plant. You must identify the pest or disease, provide a confidence level, and suggest treatment options.
+  prompt: `You are an expert plant pathologist. A farmer needs help identifying a pest or disease. Use the provided information (image and/or text description) to make your diagnosis.
 
 You MUST respond fully in the requested language: {{{language}}}. All text fields in your output, including 'disease', 'treatmentOptions', and 'summaryForAudio' must be in this language. Your response must be easily understandable to a non-expert farmer.
 
+If an image is provided, it is the primary source of information. If only a text description is provided, base your diagnosis on that. If both are provided, use them together. Provide a confidence level and suggest treatment options.
+
 In 'summaryForAudio', create a single, natural-sounding sentence that summarizes the diagnosis and the most important treatment step. For example: "The plant appears to have Powdery Mildew. You should begin by applying a fungicide."
 
-Analyze the following image and provide your diagnosis.
+Analyze the following information and provide your diagnosis.
 
 Language: {{{language}}}
+{{#if description}}
+Description: {{{description}}}
+{{/if}}
+{{#if photoDataUri}}
 Photo: {{media url=photoDataUri}}
+{{/if}}
   `,
 });
 

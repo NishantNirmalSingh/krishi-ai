@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Image from 'next/image';
-import { Loader2, Upload, Play, Pause, X } from 'lucide-react';
+import { Loader2, Upload, Play, Pause, X, Mic, MicOff, Search } from 'lucide-react';
 import { handlePestDetection } from '@/app/actions';
 import type { DetectPestDiseaseOutput } from '@/ai/flows/pest-disease-detection';
 import { useToast } from '@/hooks/use-toast';
@@ -20,16 +20,23 @@ import { useLanguage } from '@/context/language-context';
 import { useTranslation } from '@/hooks/use-translation';
 import pestDetectionTranslations from '@/lib/translations/pest-detection.json';
 import { cn } from '@/lib/utils';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
+  description: z.string().optional(),
   plantImage: z.any()
-    .refine((files) => files?.length == 1, 'An image of the plant is required.')
-    .refine((files) => files?.[0]?.size <= 5000000, `Max file size is 5MB.`)
+    .optional()
+    .refine((files) => !files || files?.length !== 1 || files?.[0]?.size <= 5000000, `Max file size is 5MB.`)
     .refine(
-      (files) => ['image/jpeg', 'image/png'].includes(files?.[0]?.type),
+      (files) => !files || files?.length !== 1 || ['image/jpeg', 'image/png'].includes(files?.[0]?.type),
       'Only .jpg and .png file formats are supported.'
     ),
+}).refine(data => data.plantImage?.length === 1 || (data.description && data.description.length > 0), {
+    message: 'Please upload an image or provide a description.',
+    path: ['description'], // Show error under description field
 });
 
 export function PestDetectionClient() {
@@ -42,11 +49,15 @@ export function PestDetectionClient() {
   const { language, setLanguage } = useLanguage();
   const t = useTranslation(language, pestDetectionTranslations);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeechSupported, setIsSpeechSupported] = useState(false);
+  const recognitionRef = useRef<any>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       language: language,
+      description: '',
       plantImage: undefined,
     }
   });
@@ -57,27 +68,55 @@ export function PestDetectionClient() {
 
   const handleLanguageChange = (langValue: string) => {
     setLanguage(langValue);
-    // If there is an image and a result, re-analyze with the new language
-    if (imagePreview && form.getValues('plantImage')) {
-      form.handleSubmit(onSubmit)();
-    } else {
-      setResult(null); // Clear previous result if no image is present
-    }
+    setResult(null);
   };
   
   useEffect(() => {
     audioRef.current = new Audio();
     audioRef.current.onended = () => setPlayingAudio(null);
     audioRef.current.onpause = () => setPlayingAudio(null);
+
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setIsSpeechSupported(true);
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = languages.find(l => l.value === language)?.code || 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        form.setValue('description', transcript);
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        toast({ variant: 'destructive', title: 'Speech Recognition Error', description: `An error occurred: ${event.error}` });
+        setIsRecording(false);
+      };
+
+      recognitionRef.current.onend = () => setIsRecording(false);
+    } else {
+      setIsSpeechSupported(false);
+    }
     
     return () => {
         if(audioRef.current) {
             audioRef.current.pause();
         }
     }
-  }, []);
+  }, [language, toast, form]);
 
-  const fileRef = form.register('plantImage');
+  const toggleRecording = () => {
+    if (!isSpeechSupported || !recognitionRef.current) return;
+    if (isRecording) {
+      recognitionRef.current.stop();
+    } else {
+      recognitionRef.current.lang = languages.find(l => l.value === form.getValues('language'))?.code || 'en-US';
+      recognitionRef.current.start();
+      setIsRecording(true);
+    }
+  };
+  
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
@@ -86,68 +125,71 @@ export function PestDetectionClient() {
       audioRef.current?.pause();
       setPlayingAudio(null);
     }
+    
+    const file = data.plantImage?.[0];
+    const description = data.description;
 
-    const file = data.plantImage[0];
-    if (!file) {
-      setIsLoading(false);
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-      const dataUri = reader.result as string;
-      setImagePreview(dataUri); // Ensure preview is set
-      try {
-        const detectionResult = await handlePestDetection({ 
-          photoDataUri: dataUri,
-          language: data.language
-        });
-        setResult(detectionResult);
-      } catch (e: any) {
-        let description = 'An error occurred while analyzing the image. Please try again.';
-        if (e.message && e.message.includes('429')) {
-          description = 'You have exceeded the API quota for today. Please try again tomorrow.';
-        } else if (e.message && e.message.includes('503')) {
-          description = 'The AI model is currently overloaded. Please try again in a few moments.';
+    const processRequest = async (photoDataUri?: string) => {
+        try {
+            const detectionResult = await handlePestDetection({ 
+                photoDataUri,
+                description,
+                language: data.language
+            });
+            setResult(detectionResult);
+        } catch (e: any) {
+            let errorDesc = 'An error occurred while analyzing your request. Please try again.';
+            if (e.message?.includes('429')) {
+            errorDesc = 'You have exceeded the API quota. Please try again tomorrow.';
+            } else if (e.message?.includes('503')) {
+            errorDesc = 'The AI model is currently overloaded. Please try again in a few moments.';
+            }
+            toast({
+            variant: 'destructive',
+            title: t.analysisFailedTitle,
+            description: errorDesc,
+            });
+            console.error(e);
+        } finally {
+            setIsLoading(false);
         }
-        toast({
-          variant: 'destructive',
-          title: t.analysisFailedTitle,
-          description,
-        });
-        console.error(e);
-      } finally {
-        setIsLoading(false);
-      }
     };
-    reader.onerror = () => {
-      toast({
-        variant: 'destructive',
-        title: t.fileErrorTitle,
-        description: t.fileErrorDescription,
-      });
-      setIsLoading(false);
-    };
+
+
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => processRequest(reader.result as string);
+        reader.onerror = () => {
+            toast({ variant: 'destructive', title: t.fileErrorTitle, description: t.fileErrorDescription });
+            setIsLoading(false);
+        };
+    } else {
+        processRequest();
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       form.setValue('plantImage', event.target.files);
+      form.clearErrors('description');
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
-        form.handleSubmit(onSubmit)();
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const resetImage = () => {
+  const resetForm = () => {
     setImagePreview(null);
     setResult(null);
-    form.resetField('plantImage');
+    form.reset({
+        language: form.getValues('language'),
+        description: '',
+        plantImage: undefined
+    });
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -177,7 +219,7 @@ export function PestDetectionClient() {
     <div className="grid gap-8 md:grid-cols-2">
       <Card>
         <Form {...form}>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardHeader>
               <CardTitle>{t.uploadTitle}</CardTitle>
               <CardDescription>{t.uploadDescription}</CardDescription>
@@ -223,7 +265,7 @@ export function PestDetectionClient() {
                             variant="destructive" 
                             size="icon" 
                             className="absolute top-2 right-2 z-10 h-7 w-7"
-                            onClick={resetImage}
+                            onClick={resetForm}
                             disabled={isLoading}
                           >
                             <X className="h-4 w-4" />
@@ -252,15 +294,58 @@ export function PestDetectionClient() {
                   </FormItem>
                 )}
               />
+
+              <div className="relative flex items-center justify-center">
+                <Separator className="shrink" />
+                <span className="absolute bg-card px-2 text-sm text-muted-foreground">{t.orSeparator}</span>
+              </div>
+              
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t.descriptionLabel}</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Textarea 
+                            placeholder={t.descriptionPlaceholder} 
+                            {...field} 
+                            disabled={isLoading} 
+                            rows={2} 
+                            className="pr-10"
+                        />
+                         {isSpeechSupported && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'ghost'} onClick={toggleRecording} disabled={isLoading} className="absolute right-1 bottom-1 h-8 w-8">
+                                {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{t.voiceInputTooltip}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
             </CardContent>
-             {imagePreview && (
-              <CardFooter>
-                <Button onClick={() => form.handleSubmit(onSubmit)()} disabled={isLoading} className="w-full">
-                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                  {t.reAnalyzeButton}
+            <CardFooter className="flex flex-col gap-4">
+                <Button type="submit" disabled={isLoading} className="w-full">
+                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
+                  {t.analyzeButton}
                 </Button>
-              </CardFooter>
-            )}
+                {(imagePreview || form.getValues('description')) && (
+                    <Button type="button" variant="outline" onClick={resetForm} disabled={isLoading} className="w-full">
+                        {t.resetButton}
+                    </Button>
+                )}
+            </CardFooter>
           </form>
         </Form>
       </Card>
@@ -301,7 +386,7 @@ export function PestDetectionClient() {
             </div>
           )}
           {!result && !isLoading && (
-            <div className="text-center text-muted-foreground">
+            <div className="text-center text-muted-foreground p-4">
               <p>{t.initialResultMessage}</p>
             </div>
           )}
