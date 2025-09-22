@@ -62,7 +62,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="relative overflow-hidden rounded-xl shadow-lg">
+       <div className="relative overflow-hidden rounded-xl shadow-lg">
         <Image
           src="https://picsum.photos/seed/hero-farmer/1200/400"
           width={1200}
@@ -98,12 +98,10 @@ export default function DashboardPage() {
             </div>
 
             {/* Main content */}
-            <div className="flex flex-1 flex-col items-start justify-end p-6 pt-16 sm:justify-center sm:p-8 md:p-12">
-                <div className="max-w-2xl">
-                    <h1 className="font-headline text-xl font-bold text-white sm:text-3xl md:text-5xl">
-                        {t.heroTitle}
-                    </h1>
-                </div>
+            <div className="flex flex-1 items-center justify-center p-6 text-center">
+                <h1 className="font-headline text-2xl font-bold text-white sm:text-3xl md:text-5xl">
+                    {t.heroTitle}
+                </h1>
             </div>
         </div>
       </div>
