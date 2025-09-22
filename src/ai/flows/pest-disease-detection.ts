@@ -46,11 +46,14 @@ const prompt = ai.definePrompt({
       disease: z.string().describe('The name of the identified plant disease or pest.'),
       confidence: z.number().describe('The confidence level of the identification (0-1).'),
       treatmentOptions: z.string().describe('Recommended treatment options for the identified pest or disease.'),
+      summaryForAudio: z.string().describe('A single, concise sentence summarizing the diagnosis and key treatment advice for audio playback, in the requested language.'),
     })
   },
   prompt: `You are an expert plant pathologist. A farmer has uploaded a photo of a plant. You must identify the pest or disease, provide a confidence level, and suggest treatment options.
 
-You MUST respond fully in the requested language: {{{language}}}. All text fields in your output, including 'disease' and 'treatmentOptions', must be in this language. Your response must be easily understandable to a non-expert farmer.
+You MUST respond fully in the requested language: {{{language}}}. All text fields in your output, including 'disease', 'treatmentOptions', and 'summaryForAudio' must be in this language. Your response must be easily understandable to a non-expert farmer.
+
+In 'summaryForAudio', create a single, natural-sounding sentence that summarizes the diagnosis and the most important treatment step. For example: "The plant appears to have Powdery Mildew. You should begin by applying a fungicide."
 
 Analyze the following image and provide your diagnosis.
 
@@ -71,19 +74,17 @@ const detectPestDiseaseFlow = ai.defineFlow(
       throw new Error('Failed to get a diagnosis from the AI model.');
     }
     
-    const diagnosisText = `Diagnosis: ${output.disease}. Treatment: ${output.treatmentOptions}`;
-
     const ttsInput: TextToSpeechInput = {
-        text: diagnosisText,
+        text: output.summaryForAudio,
         language: input.language,
     };
     const audioData = await textToSpeech(ttsInput);
 
     return {
-      ...output,
+      disease: output.disease,
+      confidence: output.confidence,
+      treatmentOptions: output.treatmentOptions,
       audio: audioData,
     };
   }
 );
-
-

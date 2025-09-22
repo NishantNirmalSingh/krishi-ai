@@ -23,11 +23,11 @@ import pestDetectionTranslations from '@/lib/translations/pest-detection.json';
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
   plantImage: z.any()
-    .refine((files) => files?.length == 1, 'Image is required.')
+    .refine((files) => files?.length == 1, 'An image of the plant is required.')
     .refine((files) => files?.[0]?.size <= 5000000, `Max file size is 5MB.`)
     .refine(
       (files) => ['image/jpeg', 'image/png'].includes(files?.[0]?.type),
-      'Only .jpg and .png formats are supported.'
+      'Only .jpg and .png file formats are supported.'
     ),
 });
 
@@ -278,5 +278,3 @@ export function PestDetectionClient() {
     </div>
   );
 }
-
-    
