@@ -63,10 +63,10 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="relative overflow-hidden rounded-xl shadow-lg">
-        <div className="absolute left-4 top-4 z-10 md:hidden">
+        <div className="absolute left-4 top-4 z-20 md:hidden">
             <SidebarTrigger className="bg-background/80 text-foreground hover:bg-background"/>
         </div>
-        <div className="absolute right-4 top-4 z-10">
+        <div className="absolute right-4 top-4 z-20">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary" size="sm" className="gap-2 bg-background/80 hover:bg-background">
@@ -92,7 +92,7 @@ export default function DashboardPage() {
           data-ai-hint="farmer smartphone field"
           priority
         />
-        <div className="absolute inset-0 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 to-transparent p-6 py-8 sm:justify-center sm:p-8 md:p-12">
+        <div className="absolute inset-0 z-10 flex flex-col items-start justify-end bg-gradient-to-t from-black/80 to-transparent p-6 pt-20 sm:justify-center sm:p-8 md:p-12">
           <div className="max-w-2xl">
             <h1 className="font-headline text-2xl font-bold text-white sm:text-3xl md:text-5xl">
                 {t.heroTitle}
