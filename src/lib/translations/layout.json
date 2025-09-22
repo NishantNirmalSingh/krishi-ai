@@ -60,8 +60,8 @@
     "Assamese": {
         "navHome": "গৃহ",
         "navCropAdvisory": "শস্য পৰামৰ্ש",
-        "descCropAdvisory": "ব্যক্তিগত শস্যৰ পৰামৰ্শ লাভ কৰক।",
-        "navPestDetection": "pest શોધ",
+        "descCropAdvisory": "ব্যক্তিগত শস্যৰ পৰামৰ্ש লাভ কৰক।",
+        "navPestDetection": "কীট চিনাক্তকৰণ",
         "descPestDetection": "এখন ছবি আপলোড কৰি pest চিনাক্ত কৰক।",
         "navMarketPrices": "বজাৰ মূল্য",
         "descMarketPrices": "বৰ্তমানৰ কৃষি বজাৰ মূল্য চাওক।",
@@ -109,7 +109,7 @@
         "userMenuProfile": "प्रोफ़ाइल",
         "userMenuSettings": "सेटिंग्स",
         "userMenuLogout": "लॉग आउट",
-        "userMenuTheme": "थीम",
+        "userMenuTheme": "थीম",
         "themeLight": "उजाला",
         "themeDark": "अन्हार",
         "themeSystem": "सिस्टम"
