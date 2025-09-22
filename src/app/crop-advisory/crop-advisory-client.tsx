@@ -21,6 +21,7 @@ import { languages } from '@/lib/languages';
 import { useTranslation } from '@/hooks/use-translation';
 import cropAdvisoryTranslations from '@/lib/translations/crop-advisory.json';
 import { useLanguage } from '@/context/language-context';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
@@ -313,9 +314,16 @@ export function CropAdvisoryClient() {
               />
                <div className="flex items-center gap-2">
                 {isSpeechSupported && (
-                  <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading} className="shrink-0">
-                    {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading} className="shrink-0">
+                        {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{t.voiceInputTooltip}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
                 <Button type="submit" size="icon" disabled={isLoading} className="shrink-0">
                   <Send className="h-4 w-4" />

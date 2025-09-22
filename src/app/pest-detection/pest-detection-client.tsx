@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Image from 'next/image';
-import { Loader2, Upload, Play, Pause } from 'lucide-react';
+import { Loader2, Upload, Play, Pause, X } from 'lucide-react';
 import { handlePestDetection } from '@/app/actions';
 import type { DetectPestDiseaseOutput } from '@/ai/flows/pest-disease-detection';
 import { useToast } from '@/hooks/use-toast';
@@ -19,6 +19,7 @@ import { languages } from '@/lib/languages';
 import { useLanguage } from '@/context/language-context';
 import { useTranslation } from '@/hooks/use-translation';
 import pestDetectionTranslations from '@/lib/translations/pest-detection.json';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
@@ -40,6 +41,7 @@ export function PestDetectionClient() {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const { language, setLanguage } = useLanguage();
   const t = useTranslation(language, pestDetectionTranslations);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,8 +58,10 @@ export function PestDetectionClient() {
   const handleLanguageChange = (langValue: string) => {
     setLanguage(langValue);
     // If there is an image and a result, re-analyze with the new language
-    if (imagePreview && result) {
+    if (imagePreview && form.getValues('plantImage')) {
       form.handleSubmit(onSubmit)();
+    } else {
+      setResult(null); // Clear previous result if no image is present
     }
   };
   
@@ -84,6 +88,11 @@ export function PestDetectionClient() {
     }
 
     const file = data.plantImage[0];
+    if (!file) {
+      setIsLoading(false);
+      return;
+    }
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
@@ -125,15 +134,23 @@ export function PestDetectionClient() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      form.setValue('plantImage', event.target.files);
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
+        form.handleSubmit(onSubmit)();
       };
       reader.readAsDataURL(file);
-    } else {
-      setImagePreview(null);
     }
+  };
+
+  const resetImage = () => {
+    setImagePreview(null);
     setResult(null);
+    form.resetField('plantImage');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
     if(playingAudio) {
       audioRef.current?.pause();
       setPlayingAudio(null);
@@ -159,12 +176,12 @@ export function PestDetectionClient() {
   return (
     <div className="grid gap-8 md:grid-cols-2">
       <Card>
-        <CardHeader>
-          <CardTitle>{t.uploadTitle}</CardTitle>
-          <CardDescription>{t.uploadDescription}</CardDescription>
-        </CardHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <CardHeader>
+              <CardTitle>{t.uploadTitle}</CardTitle>
+              <CardDescription>{t.uploadDescription}</CardDescription>
+            </CardHeader>
             <CardContent className="space-y-4">
               <FormField
                 control={form.control}
@@ -189,14 +206,29 @@ export function PestDetectionClient() {
               <FormField
                 control={form.control}
                 name="plantImage"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormLabel
                       htmlFor="plantImage"
-                      className="flex aspect-video w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/50 hover:border-primary"
+                      className={cn(
+                        "relative flex aspect-video w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed bg-muted/50 hover:border-primary",
+                        {"cursor-default hover:border-dashed": imagePreview}
+                      )}
                     >
                       {imagePreview ? (
-                        <Image src={imagePreview} alt="Plant preview" width={400} height={225} className="h-full w-full rounded-lg object-contain" />
+                        <>
+                          <Image src={imagePreview} alt="Plant preview" layout="fill" className="rounded-lg object-contain" />
+                          <Button 
+                            type="button"
+                            variant="destructive" 
+                            size="icon" 
+                            className="absolute top-2 right-2 z-10 h-7 w-7"
+                            onClick={resetImage}
+                            disabled={isLoading}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
                       ) : (
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <Upload className="mb-3 h-10 w-10 text-muted-foreground" />
@@ -207,15 +239,13 @@ export function PestDetectionClient() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        {...fileRef}
+                        ref={fileInputRef}
                         id="plantImage"
                         type="file"
                         className="hidden"
                         accept="image/png, image/jpeg"
-                        onChange={(e) => {
-                          field.onChange(e.target.files);
-                          handleFileChange(e);
-                        }}
+                        onChange={handleFileChange}
+                        disabled={isLoading || !!imagePreview}
                       />
                     </FormControl>
                     <FormMessage />
@@ -223,12 +253,14 @@ export function PestDetectionClient() {
                 )}
               />
             </CardContent>
-            <CardFooter>
-              <Button type="submit" disabled={isLoading} className="w-full">
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                {t.analyzeButton}
-              </Button>
-            </CardFooter>
+             {imagePreview && (
+              <CardFooter>
+                <Button onClick={() => form.handleSubmit(onSubmit)()} disabled={isLoading} className="w-full">
+                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                  {t.reAnalyzeButton}
+                </Button>
+              </CardFooter>
+            )}
           </form>
         </Form>
       </Card>

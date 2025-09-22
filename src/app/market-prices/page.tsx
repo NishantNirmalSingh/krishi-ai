@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUp, ArrowDown, Minus, Search, Loader2, Store, Globe, Mic, MicOff, Play, Pause, MapPin } from "lucide-react";
+import { ArrowUp, ArrowDown, Minus, Search, Loader2, Store, Globe, Mic, MicOff, Play, Pause, MapPin, LineChart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/page-header";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import { useLanguage } from "@/context/language-context";
 import { useTranslation } from "@/hooks/use-translation";
 import marketPricesTranslations from "@/lib/translations/market-prices.json";
 import layoutTranslations from '@/lib/translations/layout.json';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 
 const formSchema = z.object({
@@ -214,9 +215,16 @@ export default function MarketPricesPage() {
                       <Input {...field} placeholder={t.cropPlaceholder} className="pl-10 pr-10" disabled={isLoading} />
                     </FormControl>
                     {isSpeechSupported && (
-                      <Button type="button" size="icon" variant={isRecording && activeRecordingField === 'crop' ? 'destructive' : 'ghost'} onClick={() => toggleRecording('crop')} disabled={isLoading} className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
-                        {isRecording && activeRecordingField === 'crop' ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                           <Button type="button" size="icon" variant={isRecording && activeRecordingField === 'crop' ? 'destructive' : 'ghost'} onClick={() => toggleRecording('crop')} disabled={isLoading} className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                            {isRecording && activeRecordingField === 'crop' ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t.voiceInputTooltipCrop}</p>
+                        </TooltipContent>
+                      </Tooltip>
                     )}
                   </div>
                   <FormMessage />
@@ -236,9 +244,16 @@ export default function MarketPricesPage() {
                     </FormControl>
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
                       {isSpeechSupported && (
-                        <Button type="button" size="icon" variant={isRecording && activeRecordingField === 'location' ? 'destructive' : 'ghost'} onClick={() => toggleRecording('location')} disabled={isLoading} className="shrink-0 h-8 w-8">
-                          {isRecording && activeRecordingField === 'location' ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                        </Button>
+                         <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button type="button" size="icon" variant={isRecording && activeRecordingField === 'location' ? 'destructive' : 'ghost'} onClick={() => toggleRecording('location')} disabled={isLoading} className="shrink-0 h-8 w-8">
+                              {isRecording && activeRecordingField === 'location' ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{t.voiceInputTooltipLocation}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       )}
                       <Button type="submit" size="sm" disabled={isLoading}>
                         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
@@ -271,7 +286,7 @@ export default function MarketPricesPage() {
                       <TableCell colSpan={4} className="h-24 text-center">
                         <div className="flex justify-center items-center gap-2 text-muted-foreground">
                           <Loader2 className="h-5 w-5 animate-spin"/>
-                          <span>{t.loadingMessage.replace('{{crop}}', form.getValues('crop'))}</span>
+                          <span>{t.loadingMessage.replace('{{crop}}', form.getValues('crop') || 'your crop')}</span>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -283,24 +298,12 @@ export default function MarketPricesPage() {
 
       {!isLoading && !result && (
          <Card>
-           <CardContent className="p-0">
-             <Table>
-                <TableHeader>
-                   <TableRow>
-                    <TableHead>{t.tableHeaderCrop}</TableHead>
-                    <TableHead>{t.tableHeaderMarket}</TableHead>
-                    <TableHead className="text-right">{t.tableHeaderCurrentPrice}</TableHead>
-                    <TableHead className="text-right">{t.tableHeaderTrend}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center">
-                      {t.initialMessage}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+            <CardContent className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+              <div className="rounded-full border border-dashed p-4">
+                <LineChart className="h-12 w-12 text-muted-foreground" />
+              </div>
+              <h3 className="font-semibold">{t.initialTitle}</h3>
+              <p className="text-sm text-muted-foreground">{t.initialMessage}</p>
             </CardContent>
         </Card>
       )}
@@ -387,5 +390,3 @@ export default function MarketPricesPage() {
     </div>
   );
 }
-
-    

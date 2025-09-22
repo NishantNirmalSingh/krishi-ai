@@ -179,7 +179,7 @@ export function WeatherClient() {
   
   const getLoadingMessage = () => {
     const message = t.loadingMessage || 'Finding weather data for "{{location}}"...';
-    return message.replace('{{location}}', form.getValues('location'));
+    return message.replace('{{location}}', form.getValues('location') || 'your location');
   }
   
   const getLastUpdatedMessage = () => {
@@ -190,11 +190,12 @@ export function WeatherClient() {
 
   const renderInitialState = () => (
     <Card className="lg:col-span-3">
-        <CardHeader>
-            <CardTitle>{t.initialTitle}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex items-center justify-center py-20 text-muted-foreground">
-            <p>{t.initialMessage}</p>
+        <CardContent className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+            <div className="rounded-full border border-dashed p-4">
+              <CloudSun className="h-12 w-12 text-muted-foreground" />
+            </div>
+            <h3 className="font-semibold">{t.initialTitle}</h3>
+            <p className="text-sm text-muted-foreground">{t.initialMessage}</p>
         </CardContent>
     </Card>
   );
@@ -371,5 +372,3 @@ export function WeatherClient() {
     </div>
   );
 }
-
-    

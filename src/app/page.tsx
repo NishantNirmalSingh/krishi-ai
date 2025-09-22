@@ -74,7 +74,7 @@ export default function DashboardPage() {
         />
         <div className="absolute inset-0 z-10 flex flex-col bg-gradient-to-t from-black/80 to-transparent">
             {/* Header for buttons */}
-            <div className="flex justify-between p-4">
+            <header className="flex items-center justify-between p-4">
                 <div className="md:hidden">
                     <SidebarTrigger className="bg-background/80 text-foreground hover:bg-background"/>
                 </div>
@@ -95,13 +95,16 @@ export default function DashboardPage() {
                     </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-            </div>
+            </header>
 
             {/* Main content */}
-            <div className="flex flex-1 items-center justify-center p-6 text-center">
-                <h1 className="font-headline text-2xl font-bold text-white sm:text-3xl md:text-5xl">
-                    {t.heroTitle}
+            <div className="flex flex-1 flex-col items-center justify-center p-4 text-center">
+                <h1 className="font-headline text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
+                  {t.heroTitle}
                 </h1>
+                <p className="mt-2 max-w-2xl text-sm text-white/90 sm:text-base">
+                  {t.heroSubtitle}
+                </p>
             </div>
         </div>
       </div>
@@ -110,7 +113,7 @@ export default function DashboardPage() {
         {quickActions.map((action) => (
           <Card
             key={action.title}
-            className="flex h-full flex-col shadow-subtle transition-shadow duration-300 hover:shadow-subtle-lg"
+            className="flex h-full flex-col shadow-sm transition-all duration-300 hover:shadow-lg"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-xl">
