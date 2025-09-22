@@ -15,6 +15,12 @@ const MarketPriceInputSchema = z.object({
     .string()
     .describe('The name of the crop, fruit, or vegetable to search for.'),
   language: z.string().describe('The language for the market data summary.'),
+  location: z
+    .string()
+    .optional()
+    .describe(
+      'The user-provided location (e.g., village, district) to find a nearby market.'
+    ),
 });
 export type MarketPriceInput = z.infer<typeof MarketPriceInputSchema>;
 
@@ -77,8 +83,9 @@ const getMarketPricePrompt = ai.definePrompt({
 The 'unit' field MUST NOT be translated; it must always be "Quintal".
 
 For the given crop: {{{crop}}}
+And location: {{{location}}}
 
-1.  **Market Data**: Find a major agricultural market (mandi) in India relevant to this crop. Provide a realistic current price in INR per quintal. Provide a recent historical price to show a trend. The unit must be "Quintal".
+1.  **Market Data**: Find a major agricultural market (mandi) in India that is relevant and geographically near the provided 'location'. If no location is given, choose a major market known for the crop. Provide a realistic current price in INR per quintal. Provide a recent historical price to show a trend. The unit must be "Quintal".
 2.  **Selling Platforms**: Suggest 2-3 online platforms and 2-3 offline options. For each, provide a brief, helpful detail including actionable advice on how the farmer can connect with them.
 3.  **Summary**: Provide a brief, one-sentence summary of the key market information (crop name, current price, and trend).
   `,

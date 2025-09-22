@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUp, ArrowDown, Minus, Search, Loader2, Store, Globe, Mic, MicOff, Play, Pause } from "lucide-react";
+import { ArrowUp, ArrowDown, Minus, Search, Loader2, Store, Globe, Mic, MicOff, Play, Pause, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/page-header";
 import { Input } from "@/components/ui/input";
@@ -27,13 +27,19 @@ import layoutTranslations from '@/lib/translations/layout.json';
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
   crop: z.string().min(2, 'Crop name is required.'),
+  location: z.string().optional(),
 });
+
+type FormSchemaType = z.infer<typeof formSchema>;
+type ActiveRecordingField = 'crop' | 'location' | null;
+
 
 export default function MarketPricesPage() {
   const [result, setResult] = useState<MarketPriceOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [isRecording, setIsRecording] = useState(false);
+  const [activeRecordingField, setActiveRecordingField] = useState<ActiveRecordingField>(null);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -42,20 +48,20 @@ export default function MarketPricesPage() {
   const t = useTranslation(language, marketPricesTranslations);
   const t_layout = useTranslation(language, layoutTranslations);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       language: language,
       crop: '',
+      location: '',
     },
   });
 
   useEffect(() => {
     form.setValue('language', language);
-    // If there's already a result, re-fetch the data in the new language.
     const currentCrop = form.getValues('crop');
     if (result && currentCrop) {
-        handleSearch({ language, crop: currentCrop });
+        handleSearch({ language, crop: currentCrop, location: form.getValues('location') });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
@@ -79,7 +85,9 @@ export default function MarketPricesPage() {
 
       recognitionRef.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
-        form.setValue('crop', transcript);
+        if(activeRecordingField) {
+            form.setValue(activeRecordingField, transcript);
+        }
       };
 
       recognitionRef.current.onerror = (event: any) => {
@@ -94,10 +102,12 @@ export default function MarketPricesPage() {
           description: description,
         });
         setIsRecording(false);
+        setActiveRecordingField(null);
       };
 
       recognitionRef.current.onend = () => {
         setIsRecording(false);
+        setActiveRecordingField(null);
       };
     } else {
       setIsSpeechSupported(false);
@@ -108,13 +118,14 @@ export default function MarketPricesPage() {
             audioRef.current.pause();
         }
     }
-  }, [form, toast]);
+  }, [form, toast, activeRecordingField]);
 
-  const toggleRecording = () => {
+  const toggleRecording = (field: 'crop' | 'location') => {
     if (!isSpeechSupported) return;
     if (isRecording) {
       recognitionRef.current.stop();
     } else {
+      setActiveRecordingField(field);
       const selectedLangCode = languages.find(l => l.value === form.getValues('language'))?.code || 'en-US';
       recognitionRef.current.lang = selectedLangCode;
       recognitionRef.current.start();
@@ -135,7 +146,7 @@ export default function MarketPricesPage() {
     }
   };
 
-  const handleSearch = async (data: z.infer<typeof formSchema>) => {
+  const handleSearch = async (data: FormSchemaType) => {
     setIsLoading(true);
     setResult(null);
     if(playingAudio) audioRef.current?.pause();
@@ -171,8 +182,8 @@ export default function MarketPricesPage() {
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSearch)} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <FormField
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+             <FormField
               control={form.control}
               name="language"
               render={({ field }) => (
@@ -196,22 +207,38 @@ export default function MarketPricesPage() {
               control={form.control}
               name="crop"
               render={({ field }) => (
-                <FormItem className="md:col-span-2">
+                <FormItem className="md:col-span-1">
                   <FormLabel>{t.cropLabel}</FormLabel>
-                  <div className="relative flex-grow">
+                  <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder={t.cropPlaceholder}
-                        className="pl-10 pr-20"
-                        disabled={isLoading}
-                      />
+                      <Input {...field} placeholder={t.cropPlaceholder} className="pl-10 pr-10" disabled={isLoading} />
+                    </FormControl>
+                    {isSpeechSupported && (
+                      <Button type="button" size="icon" variant={isRecording && activeRecordingField === 'crop' ? 'destructive' : 'ghost'} onClick={() => toggleRecording('crop')} disabled={isLoading} className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                        {isRecording && activeRecordingField === 'crop' ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                      </Button>
+                    )}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel>{t.locationLabel}</FormLabel>
+                  <div className="relative flex-grow">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <FormControl>
+                      <Input {...field} placeholder={t.locationPlaceholder} className="pl-10 pr-20" disabled={isLoading}/>
                     </FormControl>
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                       {isSpeechSupported && (
-                        <Button type="button" size="icon" variant={isRecording ? 'destructive' : 'outline'} onClick={toggleRecording} disabled={isLoading} className="shrink-0 h-8 w-8">
-                          {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                      {isSpeechSupported && (
+                        <Button type="button" size="icon" variant={isRecording && activeRecordingField === 'location' ? 'destructive' : 'ghost'} onClick={() => toggleRecording('location')} disabled={isLoading} className="shrink-0 h-8 w-8">
+                          {isRecording && activeRecordingField === 'location' ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                         </Button>
                       )}
                       <Button type="submit" size="sm" disabled={isLoading}>
@@ -361,5 +388,3 @@ export default function MarketPricesPage() {
     </div>
   );
 }
-
-    
