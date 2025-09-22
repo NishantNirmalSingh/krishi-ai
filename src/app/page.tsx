@@ -97,8 +97,8 @@ export default function DashboardPage() {
             </header>
 
             {/* Main content */}
-            <div className="flex flex-1 flex-col items-center justify-end p-4 pb-12 text-center md:pb-16">
-                <h1 className="font-headline text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+            <div className="flex flex-1 flex-col items-center justify-center p-4 text-center">
+                <h1 className="font-headline text-2xl font-bold text-white sm:text-4xl md:text-5xl">
                   {t.heroTitle}
                 </h1>
             </div>
