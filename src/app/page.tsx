@@ -62,7 +62,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-       <div className="relative -m-4 sm:-m-6 overflow-hidden rounded-none sm:rounded-xl shadow-lg">
+      <div className="relative -m-4 sm:-m-6 overflow-hidden rounded-none sm:rounded-xl shadow-lg">
         <Image
           src="https://picsum.photos/seed/hero-farmer/1200/400"
           width={1200}
@@ -73,35 +73,34 @@ export default function DashboardPage() {
           priority
         />
         <div className="absolute inset-0 z-10 flex flex-col bg-gradient-to-t from-black/80 to-transparent">
-            <header className="flex items-center justify-between p-4">
-                <div className="md:hidden">
-                    <SidebarTrigger className="bg-background/80 text-foreground hover:bg-background"/>
-                </div>
-                <div className="ml-auto">
-                    <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="secondary" size="sm" className="gap-2 bg-background/80 hover:bg-background">
-                        <Globe className="h-4 w-4"/>
-                        <span>{selectedLanguageLabel}</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {languages.map((lang) => (
-                            <DropdownMenuItem key={lang.value} onSelect={() => setLanguage(lang.value)}>
-                                {lang.label}
-                            </DropdownMenuItem>
-                        ))}
-                    </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            </header>
-
-            {/* Main content */}
-            <div className="flex flex-1 flex-col items-center justify-center p-4 text-center">
-                <h1 className="font-headline text-2xl font-bold text-white sm:text-4xl md:text-5xl">
-                  {t.heroTitle}
-                </h1>
+          <header className="flex items-center justify-between p-4">
+            <div className="md:hidden">
+              <SidebarTrigger className="bg-background/80 text-foreground hover:bg-background" />
             </div>
+            <div className="ml-auto">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="secondary" size="sm" className="gap-2 bg-background/80 hover:bg-background">
+                    <Globe className="h-4 w-4" />
+                    <span>{selectedLanguageLabel}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {languages.map((lang) => (
+                    <DropdownMenuItem key={lang.value} onSelect={() => setLanguage(lang.value)}>
+                      {lang.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </header>
+
+          <div className="flex flex-1 flex-col items-center justify-center p-4 pb-12 text-center">
+            <h1 className="font-headline text-xl font-bold text-white sm:text-3xl lg:text-4xl">
+              {t.heroTitle}
+            </h1>
+          </div>
         </div>
       </div>
 
@@ -109,7 +108,7 @@ export default function DashboardPage() {
         {quickActions.map((action) => (
           <Card
             key={action.title}
-            className="flex h-full flex-col shadow-sm transition-all duration-300 hover:shadow-lg"
+            className="flex h-full flex-col shadow-sm transition-shadow duration-300 hover:shadow-md"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-xl">
