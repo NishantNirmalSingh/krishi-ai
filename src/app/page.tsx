@@ -103,9 +103,6 @@ export default function DashboardPage() {
                     <h1 className="font-headline text-2xl font-bold text-white sm:text-3xl md:text-5xl">
                         {t.heroTitle}
                     </h1>
-                    <p className="mt-2 text-sm text-white/90 sm:mt-4 sm:text-base md:text-lg">
-                        {t.heroSubtitle}
-                    </p>
                 </div>
                 <Button
                     asChild
