@@ -70,7 +70,7 @@
         "humidity": "আৰ্দ্ৰতা",
         "predictiveAlerts": "ভৱিষ্যতসূচক সতৰ্কবাণী",
         "noAlerts": "আপোনাৰ অৱস্থানৰ বাবে এতিয়া কোনো গুৰুত্বপূৰ্ণ সতৰ্কবাণী নাই।",
-        "searchFailedTitle": "অনুসন্ধান বিফল"
+        "searchFailedTitle": "অনুসন্ধان বিফল"
     },
     "Bengali": {
         "languageLabel": "ভাষা",
@@ -89,6 +89,24 @@
         "predictiveAlerts": "ভবিষ্যদ্বাণীমূলক সতর্কতা",
         "noAlerts": "আপনার অবস্থানের জন্য এখন কোনো গুরুতর সতর্কতা নেই।",
         "searchFailedTitle": "অনুসন্ধান ব্যর্থ"
+    },
+    "Bhojpuri": {
+        "languageLabel": "भाषा",
+        "languagePlaceholder": "भाषा चुनीं",
+        "locationLabel": "जगह",
+        "locationPlaceholder": "जइसे, रउआ गाँव, तालुका, भा जिला",
+        "searchButton": "खोजीं",
+        "initialTitle": "जगह खोजीं",
+        "initialMessage": "स्थानीय मौसम के पूर्वानुमान पावे खातिर एगो जगह डालीं।",
+        "loadingTitle": "पूर्वानुमान लिआ रहल बा...",
+        "loadingMessage": "\"{{location}}\" खातिर मौसम के डेटा खोजा रहल बा...",
+        "currentConditions": "अभी के स्थिति",
+        "lastUpdated": "पिछला अपडेट: {{time}}",
+        "wind": "हवा",
+        "humidity": "नमी",
+        "predictiveAlerts": "भविष्यवाणी वाला अलर्ट",
+        "noAlerts": "अभी रउआ जगह खातिर कवनो जरूरी अलर्ट नइखे।",
+        "searchFailedTitle": "खोज फेल हो गइल"
     },
     "Gujarati": {
         "languageLabel": "ભાષા",
@@ -122,9 +140,9 @@
         "lastUpdated": "ಕೊನೆಯ ಅಪ್‌ಡೇಟ್: {{time}}",
         "wind": "ಗಾಳಿ",
         "humidity": "ಆರ್ದ್ರತೆ",
-        "predictiveAlerts": "ಭವಿಷ್ಯಸೂಚಕ ಎಚ್ಚರಿಕೆಗಳು",
+        "predictiveAlerts": "ಭವಿष्यಸೂಚಕ ಎಚ್ಚರಿಕೆಗಳು",
         "noAlerts": "ನಿಮ್ಮ ಸ್ಥಳಕ್ಕಾಗಿ ಇದೀಗ ಯಾವುದೇ ಗંભೀರ ಎಚ್ಚರಿಕೆಗಳಿಲ್ಲ.",
-        "searchFailedTitle": "ಹುಡುಕಾಟ ವಿಫలವಾಗಿದೆ"
+        "searchFailedTitle": "ಹುಡುಕಾಟ ವಿಫಲವಾಗಿದೆ"
     },
     "Malayalam": {
         "languageLabel": "ഭാഷ",
@@ -150,7 +168,7 @@
         "locationLabel": "ସ୍ଥାନ",
         "locationPlaceholder": "ଉदा., ଆପଣଙ୍କ ଗାଁ, તાલુકા, କିମ୍ବା ଜିଲ୍ଲା",
         "searchButton": "ଖୋଜନ୍ତୁ",
-        "initialTitle": "ଏକ ସ୍ଥାନ ପାଇଁ ଖୋଜନ୍ତୁ",
+        "initialTitle": "ଏକ ସ୍ଥାନ ପାଇଁ ଖੋଜନ୍ତୁ",
         "initialMessage": "ହାଇପର-ଲୋକାଲ ପାଣିପାଗର ପୂର୍ବାନୁମାନ ପାଇବାକୁ ଏକ ସ୍ଥାନ ଦିଅନ୍ତୁ।",
         "loadingTitle": "ପୂର୍ବାନୁମାନ ଅଣାଯାଉଛି...",
         "loadingMessage": "\"{{location}}\" ପାଇଁ ପାଣିପାଗ ଡାଟା ଖୋଜାଯାଉଛି...",

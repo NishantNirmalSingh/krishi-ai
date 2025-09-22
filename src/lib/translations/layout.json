@@ -59,8 +59,8 @@
     },
     "Assamese": {
         "navHome": "গৃহ",
-        "navCropAdvisory": "শস্য পৰামৰ্শ",
-        "descCropAdvisory": "ব্যক্তিগত শস্যৰ পৰামৰ্ש লাভ কৰক।",
+        "navCropAdvisory": "শস্য পৰামৰ্ש",
+        "descCropAdvisory": "ব্যক্তিগত শস্যৰ পৰামৰ্শ লাভ কৰক।",
         "navPestDetection": "pest શોધ",
         "descPestDetection": "এখন ছবি আপলোড কৰি pest চিনাক্ত কৰক।",
         "navMarketPrices": "বজাৰ মূল্য",
@@ -95,6 +95,25 @@
         "themeDark": "অন্ধকার",
         "themeSystem": "সিস্টেম"
     },
+    "Bhojpuri": {
+        "navHome": "होम",
+        "navCropAdvisory": "फसल सलाह",
+        "descCropAdvisory": "व्यक्तिगत फसल सिफारिश पाईं।",
+        "navPestDetection": "कीड़ा के पहचान",
+        "descPestDetection": "फोटो अपलोड क के कीड़ा के पहचानीं।",
+        "navMarketPrices": "बाजार के दाम",
+        "descMarketPrices": "अभी के खेती के बाजार के दाम देखीं।",
+        "navWeather": "मौसम",
+        "descWeather": "স্থানীয় मौसम अउर अलर्ट जाँचीं।",
+        "launchButton": "शुरू करीं",
+        "userMenuProfile": "प्रोफ़ाइल",
+        "userMenuSettings": "सेटिंग्स",
+        "userMenuLogout": "लॉग आउट",
+        "userMenuTheme": "थीम",
+        "themeLight": "उजाला",
+        "themeDark": "अन्हार",
+        "themeSystem": "सिस्टम"
+    },
     "Gujarati": {
         "navHome": "ઘર",
         "navCropAdvisory": "પાક સલાહ",
@@ -117,7 +136,7 @@
     "Kannada": {
         "navHome": "ಮನೆ",
         "navCropAdvisory": "ಬೆಳೆ ಸಲಹೆ",
-        "descCropAdvisory": "ವೈಯಕ್ತಿಕ ಬೆಳೆ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ.",
+        "descCropAdvisory": "ವೈಯಕ್ತಿಕ ಬೆಳೆ ಶಿಫਾਰಸುಗಳನ್ನು ಪಡೆಯಿರಿ.",
         "navPestDetection": "ಕೀಟ ಪತ್ತೆ",
         "descPestDetection": "ಒಂದು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡುವ ಮೂಲಕ ಕೀಟಗಳನ್ನು ಗುರುತಿಸಿ.",
         "navMarketPrices": "ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು",

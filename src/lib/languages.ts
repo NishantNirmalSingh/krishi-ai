@@ -2,6 +2,7 @@
 export const languages = [
   { value: 'Assamese', label: 'অসমীয়া (Assamese)', code: 'as-IN' },
   { value: 'Bengali', label: 'বাংলা (Bengali)', code: 'bn-IN' },
+  { value: 'Bhojpuri', label: 'भोजपुरी (Bhojpuri)', code: 'bho-IN' },
   { value: 'English', label: 'English', code: 'en-US' },
   { value: 'Gujarati', label: 'ગુજરાતી (Gujarati)', code: 'gu-IN' },
   { value: 'Hindi', label: 'हिंदी (Hindi)', code: 'hi-IN' },

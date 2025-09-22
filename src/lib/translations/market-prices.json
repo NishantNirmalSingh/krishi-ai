@@ -105,6 +105,27 @@
         "onlinePlatformsTitle": "অনলাইন বিক্রয় প্ল্যাটফর্ম",
         "offlinePlatformsTitle": "স্থানীয় এবং অফলাইন বিকল্প"
     },
+    "Bhojpuri": {
+        "languageLabel": "भाषा",
+        "languagePlaceholder": "एगो भाषा चुनीं",
+        "cropLabel": "फसल के नाम",
+        "cropPlaceholder": "जइसे, 'टमाटर'",
+        "locationLabel": "रउआ जगह",
+        "locationPlaceholder": "जइसे, 'नासिक', 'मैसूर'",
+        "searchButton": "खोजीं",
+        "initialMessage": "रउआ खोज के नतीजा इहाँ लउकी।",
+        "loadingMessage": "\"{{crop}}\" खातिर बाजार के डेटा लिआ रहल बा...",
+        "resultsTitle": "बाजार के डेटा",
+        "tableHeaderCrop": "फसल",
+        "tableHeaderMarket": "बाजार",
+        "tableHeaderCurrentPrice": "अभी के दाम (प्रति क्विंटल)",
+        "tableHeaderTrend": "दाम के ट्रेंड",
+        "up": "ऊपर",
+        "down": "नीचे",
+        "stable": "स्थिर",
+        "onlinePlatformsTitle": "ऑनलाइन बेचे वाला प्लेटफॉर्म",
+        "offlinePlatformsTitle": "স্থানীয় अउर ऑफलाइन विकल्प"
+    },
     "Gujarati": {
         "languageLabel": "ભાષા",
         "languagePlaceholder": "એક ભાષા પસંદ કરો",

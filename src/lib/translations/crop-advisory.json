@@ -34,7 +34,7 @@
     "languagePlaceholder": "এটা ভাষা বাছনি কৰক",
     "locationLabel": "অৱস্থান",
     "locationPlaceholder": "যেনে, ৰামপুৰ গাঁও",
-    "questionPlaceholder": "ইয়াত আপোনাৰ প্ৰশ্ন সোধক..."
+    "questionPlaceholder": "ইয়াত আপোনাৰ প্ৰש্ন সোধক..."
   },
   "Bengali": {
     "initialMessage1": "আপনার কথোপকথন এখানে প্রদর্শিত হবে।",
@@ -43,7 +43,16 @@
     "languagePlaceholder": "একটি ভাষা নির্বাচন করুন",
     "locationLabel": "অবস্থান",
     "locationPlaceholder": "যেমন, রামপুর গ্রাম",
-    "questionPlaceholder": "আপনার প্রশ্ন এখানে জিজ্ঞাসা করুন..."
+    "questionPlaceholder": "আপনার প্রশ্ন здесь জিজ্ঞাসা করুন..."
+  },
+  "Bhojpuri": {
+    "initialMessage1": "रउआ बातचीत इहाँ लउकी।",
+    "initialMessage2": "शुरू करे खातिर नीचे दिहल फॉर्म भरीं।",
+    "languageLabel": "भाषा",
+    "languagePlaceholder": "एगो भाषा चुनीं",
+    "locationLabel": "जगह",
+    "locationPlaceholder": "जइसे, रामपुर गाँव",
+    "questionPlaceholder": "आपन सवाल इहाँ पूछीं..."
   },
   "Gujarati": {
     "initialMessage1": "તમારી વાતચીત અહીં દેખાશે.",

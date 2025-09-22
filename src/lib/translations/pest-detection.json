@@ -100,6 +100,26 @@
         "fileErrorTitle": "ফাইল ত্রুটি",
         "fileErrorDescription": "ছবি ফাইল পড়তে ব্যর্থ হয়েছে।"
     },
+    "Bhojpuri": {
+        "languageLabel": "भाषा",
+        "languagePlaceholder": "एगो भाषा चुनीं",
+        "uploadTitle": "पौधा के फोटो अपलोड करीं",
+        "uploadDescription": "एगो भाषा आउ प्रभावित पौधा के हिस्सा के साफ फोटो चुनीं।",
+        "uploadClick": "अपलोड करे खातिर क्लिक करीं",
+        "uploadDrag": "भा खींच के छोड़ीं",
+        "uploadFormat": "PNG, JPG (MAX. 5MB)",
+        "analyzeButton": "फोटो के विश्लेषण करीं",
+        "resultTitle": "विश्लेषण के नतीजा",
+        "resultDescription": "इहाँ हमार AI के निदान आउ सिफारिश बा।",
+        "loadingMessage": "रउआ फोटो के विश्लेषण हो रहल बा...",
+        "initialResultMessage": "रउआ विश्लेषण के नतीजा इहाँ लउकी।",
+        "identifiedIssueLabel": "पहचानल समस्या",
+        "confidenceLabel": "आत्मविश्वास के स्तर",
+        "treatmentLabel": "सिफारिश करल इलाज",
+        "analysisFailedTitle": "विश्लेषण फेल हो गइल",
+        "fileErrorTitle": "फाइल में गलती",
+        "fileErrorDescription": "फोटो फाइल पढ़े में फेल हो गइल।"
+    },
     "Gujarati": {
         "languageLabel": "ભાષા",
         "languagePlaceholder": "એક ભાષા પસંદ કરો",
@@ -258,6 +278,6 @@
         "treatmentLabel": "تجویز کردہ علاج",
         "analysisFailedTitle": "تجزیہ ناکام",
         "fileErrorTitle": "فائل کی خرابی",
-        "fileErrorDescription": "تصویری فائل کو پڑھنے میں ناکام।"
+        "fileErrorDescription": "تصویری فائل کو پڑھنے میں ناکام۔"
     }
 }
