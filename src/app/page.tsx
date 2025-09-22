@@ -62,7 +62,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-       <div className="relative overflow-hidden rounded-xl shadow-lg">
+       <div className="relative -m-4 sm:-m-6 overflow-hidden rounded-none sm:rounded-xl shadow-lg">
         <Image
           src="https://picsum.photos/seed/hero-farmer/1200/400"
           width={1200}
@@ -73,7 +73,6 @@ export default function DashboardPage() {
           priority
         />
         <div className="absolute inset-0 z-10 flex flex-col bg-gradient-to-t from-black/80 to-transparent">
-            {/* Header for buttons */}
             <header className="flex items-center justify-between p-4">
                 <div className="md:hidden">
                     <SidebarTrigger className="bg-background/80 text-foreground hover:bg-background"/>
@@ -98,13 +97,10 @@ export default function DashboardPage() {
             </header>
 
             {/* Main content */}
-            <div className="flex flex-1 flex-col items-center justify-center p-4 text-center">
-                <h1 className="font-headline text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
+            <div className="flex flex-1 flex-col items-center justify-end p-4 pb-12 text-center md:pb-16">
+                <h1 className="font-headline text-3xl font-bold text-white sm:text-4xl md:text-5xl">
                   {t.heroTitle}
                 </h1>
-                <p className="mt-2 max-w-2xl text-sm text-white/90 sm:text-base">
-                  {t.heroSubtitle}
-                </p>
             </div>
         </div>
       </div>
