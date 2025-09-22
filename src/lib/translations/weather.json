@@ -70,7 +70,7 @@
         "humidity": "আৰ্দ্ৰতা",
         "predictiveAlerts": "ভৱিষ্যতসূচক সতৰ্কবাণী",
         "noAlerts": "আপোনাৰ অৱস্থানৰ বাবে এতিয়া কোনো গুৰুত্বপূৰ্ণ সতৰ্কবাণী নাই।",
-        "searchFailedTitle": "অনুসন্ধان বিফল"
+        "searchFailedTitle": "অনুসন্ধาน বিফল"
     },
     "Bengali": {
         "languageLabel": "ভাষা",
@@ -106,7 +106,7 @@
         "humidity": "नमी",
         "predictiveAlerts": "भविष्यवाणी वाला अलर्ट",
         "noAlerts": "अभी रउआ जगह खातिर कवनो जरूरी अलर्ट नइखे।",
-        "searchFailedTitle": "खोज फेल हो गइल"
+        "searchFailedTitle": "खोज विफल"
     },
     "Gujarati": {
         "languageLabel": "ભાષા",
@@ -168,7 +168,7 @@
         "locationLabel": "ସ୍ଥାନ",
         "locationPlaceholder": "ଉदा., ଆପଣଙ୍କ ଗାଁ, તાલુકા, କିମ୍ବା ଜିଲ୍ଲା",
         "searchButton": "ଖୋଜନ୍ତୁ",
-        "initialTitle": "ଏକ ସ୍ଥାନ ପାଇଁ ଖੋଜନ୍ତୁ",
+        "initialTitle": "ଏକ ସ୍ଥାନ ପାଇଁ ଖୋଜନ୍ତୁ",
         "initialMessage": "ହାଇପର-ଲୋକାଲ ପାଣିପାଗର ପୂର୍ବାନୁମାନ ପାଇବାକୁ ଏକ ସ୍ଥାନ ଦିଅନ୍ତୁ।",
         "loadingTitle": "ପୂର୍ବାନୁମାନ ଅଣାଯାଉଛି...",
         "loadingMessage": "\"{{location}}\" ପାଇଁ ପାଣିପାଗ ଡାଟା ଖୋଜାଯାଉଛି...",
@@ -253,3 +253,5 @@
         "searchFailedTitle": "تلاش ناکام"
     }
 }
+
+    

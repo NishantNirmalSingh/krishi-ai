@@ -115,7 +115,7 @@
         "searchButton": "खोजीं",
         "initialMessage": "रउआ खोज के नतीजा इहाँ लउकी।",
         "loadingMessage": "\"{{crop}}\" खातिर बाजार के डेटा लिआ रहल बा...",
-        "resultsTitle": "बाजार के डेटा",
+        "resultsTitle": "बाजार डेटा",
         "tableHeaderCrop": "फसल",
         "tableHeaderMarket": "बाजार",
         "tableHeaderCurrentPrice": "अभी के दाम (प्रति क्विंटल)",
@@ -124,7 +124,7 @@
         "down": "नीचे",
         "stable": "स्थिर",
         "onlinePlatformsTitle": "ऑनलाइन बेचे वाला प्लेटफॉर्म",
-        "offlinePlatformsTitle": "স্থানীয় अउर ऑफलाइन विकल्प"
+        "offlinePlatformsTitle": "स्थानीय अउर ऑफलाइन विकल्प"
     },
     "Gujarati": {
         "languageLabel": "ભાષા",
@@ -295,3 +295,5 @@
         "offlinePlatformsTitle": "مقامی اور آف لائن اختیارات"
     }
 }
+
+    

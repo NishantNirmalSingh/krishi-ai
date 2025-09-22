@@ -63,7 +63,6 @@ export default function MarketPricesPage() {
     if (result && currentCrop) {
         handleSearch({ language, crop: currentCrop, location: form.getValues('location') });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
   const handleLanguageChange = (langValue: string) => {
@@ -388,3 +387,5 @@ export default function MarketPricesPage() {
     </div>
   );
 }
+
+    

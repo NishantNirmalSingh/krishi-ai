@@ -43,7 +43,7 @@
     "languagePlaceholder": "একটি ভাষা নির্বাচন করুন",
     "locationLabel": "অবস্থান",
     "locationPlaceholder": "যেমন, রামপুর গ্রাম",
-    "questionPlaceholder": "আপনার প্রশ্ন здесь জিজ্ঞাসা করুন..."
+    "questionPlaceholder": "আপনার প্রশ্ন এখানে জিজ্ঞাসা করুন..."
   },
   "Bhojpuri": {
     "initialMessage1": "रउआ बातचीत इहाँ लउकी।",
@@ -127,3 +127,5 @@
     "questionPlaceholder": "اپنا سوال یہاں پوچھیں..."
   }
 }
+
+    
