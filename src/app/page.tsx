@@ -94,7 +94,7 @@ export default function DashboardPage() {
         />
         <div className="absolute inset-0 flex flex-col items-start justify-center bg-gradient-to-t from-black/80 to-transparent p-6 py-12 sm:p-8 md:p-12">
           <div className="max-w-2xl">
-            <h1 className="font-headline text-3xl text-white md:text-5xl">
+            <h1 className="font-headline text-2xl text-white sm:text-3xl md:text-5xl">
                 {t.heroTitle}
             </h1>
             <p className="mt-4 text-base text-white/90 md:text-lg">
