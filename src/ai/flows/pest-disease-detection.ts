@@ -30,12 +30,6 @@ const DetectPestDiseaseOutputSchema = z.object({
   disease: z.string().describe('The name of the identified plant disease or pest.'),
   confidence: z.number().describe('The confidence level of the identification (0-1).'),
   treatmentOptions: z.string().describe('Recommended treatment options for the identified pest or disease.'),
-  audio: z
-    .string()
-    .optional()
-    .describe(
-      'A data URI of the audio of the diagnosis and treatment in WAV format.'
-    ),
   summaryForAudio: z.string().describe('A single, concise sentence summarizing the diagnosis and key treatment advice for audio playback, in the requested language.'),
 });
 export type DetectPestDiseaseOutput = z.infer<typeof DetectPestDiseaseOutputSchema>;
@@ -47,12 +41,7 @@ export async function detectPestDisease(input: DetectPestDiseaseInput): Promise<
 const prompt = ai.definePrompt({
   name: 'detectPestDiseasePrompt',
   input: {schema: DetectPestDiseaseInputSchema},
-  output: {schema: z.object({
-      disease: z.string().describe('The name of the identified plant disease or pest.'),
-      confidence: z.number().describe('The confidence level of the identification (0-1).'),
-      treatmentOptions: z.string().describe('Recommended treatment options for the identified pest or disease.'),
-      summaryForAudio: z.string().describe('A single, concise sentence summarizing the diagnosis and key treatment advice for audio playback, in the requested language.'),
-    })
+  output: {schema: DetectPestDiseaseOutputSchema
   },
   prompt: `You are an expert plant pathologist. A farmer needs help identifying a pest or disease. Use the provided information (image and/or text description) to make your diagnosis.
 

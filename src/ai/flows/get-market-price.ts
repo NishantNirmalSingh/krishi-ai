@@ -57,12 +57,6 @@ const MarketPriceOutputSchema = z.object({
   summary: z
     .string()
     .describe('A brief summary of the market data in the requested language.'),
-  audio: z
-    .string()
-    .optional()
-    .describe(
-      'A data URI of the audio of the market summary in WAV format.'
-    ),
 });
 export type MarketPriceOutput = z.infer<typeof MarketPriceOutputSchema>;
 
@@ -76,7 +70,7 @@ const getMarketPricePrompt = ai.definePrompt({
   name: 'getMarketPricePrompt',
   input: {schema: MarketPriceInputSchema},
   output: {
-    schema: MarketPriceOutputSchema.omit({audio: true}),
+    schema: MarketPriceOutputSchema,
   },
   prompt: `You are a market data analyst and advisor for Indian agriculture. You MUST respond fully in the language specified in the 'language' field. All text fields in your output, including 'crop', 'market', platform 'name' and 'details', and 'summary', must be translated into the requested language: {{{language}}}.
 
@@ -95,7 +89,7 @@ const getMarketPriceFlow = ai.defineFlow(
   {
     name: 'getMarketPriceFlow',
     inputSchema: MarketPriceInputSchema,
-    outputSchema: MarketPriceOutputSchema.omit({audio: true}),
+    outputSchema: MarketPriceOutputSchema,
   },
   async input => {
     const {output} = await getMarketPricePrompt(input);

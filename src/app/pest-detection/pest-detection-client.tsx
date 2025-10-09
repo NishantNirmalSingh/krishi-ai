@@ -39,8 +39,10 @@ const formSchema = z.object({
     path: ['description'], // Show error under description field
 });
 
+type ResultWithAudio = DetectPestDiseaseOutput & { audio?: string };
+
 export function PestDetectionClient() {
-  const [result, setResult] = useState<DetectPestDiseaseOutput | null>(null);
+  const [result, setResult] = useState<ResultWithAudio | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -202,17 +204,18 @@ export function PestDetectionClient() {
 
   const toggleAudio = async () => {
     if (!audioRef.current || !result) return;
+    const audio = audioRef.current;
     
-    if (playingAudio === result.audio) {
-        audioRef.current.pause();
+    if (playingAudio === result.audio && !audio.paused) {
+        audio.pause();
         setPlayingAudio(null);
         return;
     }
     
     if (result.audio) {
-        if(playingAudio) audioRef.current.pause();
-        audioRef.current.src = result.audio;
-        audioRef.current.play();
+        if(!audio.paused) audio.pause();
+        audio.src = result.audio;
+        audio.play().catch(e => console.error("Error playing audio:", e));
         setPlayingAudio(result.audio);
         return;
     }
@@ -222,9 +225,9 @@ export function PestDetectionClient() {
         const audioDataUri = await handleTextToSpeech({ text: result.summaryForAudio, language: form.getValues('language')});
         setResult(prev => prev ? { ...prev, audio: audioDataUri } : null);
 
-        if(playingAudio) audioRef.current.pause();
-        audioRef.current.src = audioDataUri;
-        audioRef.current.play();
+        if(!audio.paused) audio.pause();
+        audio.src = audioDataUri;
+        audio.play().catch(e => console.error("Error playing audio:", e));
         setPlayingAudio(audioDataUri);
 
     } catch (e: any) {
@@ -383,13 +386,13 @@ export function PestDetectionClient() {
           <CardDescription>{t.resultDescription}</CardDescription>
         </CardHeader>
         <CardContent className="flex-grow flex items-center justify-center">
-          {isLoading && (
+          {isLoading && !result && (
             <div className="flex flex-col items-center justify-center h-full gap-4">
               <Loader2 className="h-12 w-12 animate-spin text-primary" />
               <p className="text-muted-foreground">{t.loadingMessage}</p>
             </div>
           )}
-          {result && !isLoading && (
+          {result && (
             <div className="space-y-4 w-full">
                <div className="flex items-center justify-between">
                 <div>

@@ -165,47 +165,53 @@ export function CropAdvisoryClient() {
   
   const toggleAudio = async (message: Message) => {
     if (!audioRef.current) return;
+    const audio = audioRef.current;
 
-    if (playingAudio === message.audio) {
-        audioRef.current.pause();
-        setPlayingAudio(null);
-        return;
+    // If this message's audio is currently playing, pause it.
+    if (playingAudio === message.audio && !audio.paused) {
+      audio.pause();
+      setPlayingAudio(null);
+      return;
     }
 
+    // If we have the audio data, play it.
     if (message.audio) {
-      if(playingAudio) audioRef.current.pause();
-      audioRef.current.src = message.audio;
-      audioRef.current.play();
+      if (!audio.paused) audio.pause(); // Pause any other playing audio
+      audio.src = message.audio;
+      audio.play().catch(e => console.error("Error playing audio:", e));
       setPlayingAudio(message.audio);
       return;
     }
 
+    // If we don't have the audio data, fetch it.
     setIsLoading(true);
     try {
-        const audioDataUri = await handleTextToSpeech({ text: message.textForAudio, language: form.getValues('language')});
+      const audioDataUri = await handleTextToSpeech({ text: message.textForAudio, language: form.getValues('language') });
+      
+      // Update the message with the new audio data
+      setMessages(prev => prev.map(m =>
+        m.id === message.id ? { ...m, audio: audioDataUri } : m
+      ));
+      
+      if (!audio.paused) audio.pause(); // Pause any other playing audio
+      audio.src = audioDataUri;
+      audio.play().catch(e => console.error("Error playing audio:", e));
+      setPlayingAudio(audioDataUri);
 
-        setMessages(prev => prev.map(m => 
-            m.id === message.id ? { ...m, audio: audioDataUri } : m
-        ));
-
-        if(playingAudio) audioRef.current.pause();
-        audioRef.current.src = audioDataUri;
-        audioRef.current.play();
-        setPlayingAudio(audioDataUri);
     } catch (e: any) {
-        let description = 'An error occurred while generating audio. Please try again.';
-        if (e.message?.includes('429') || e.message?.includes('rate limit')) {
-          description = 'The audio generation service is currently busy. Please try again in a moment.';
-        } else if (e.message?.includes('network')) {
-          description = 'A network error occurred. Please check your internet connection.';
-        }
-        toast({
-            variant: 'destructive',
-            title: 'Audio Generation Failed',
-            description,
-        });
+      let description = 'An error occurred while generating audio. Please try again.';
+      if (e.message?.includes('429') || e.message?.includes('rate limit')) {
+        description = 'The audio generation service is currently busy. Please try again in a moment.';
+      } else if (e.message?.includes('network')) {
+        description = 'A network error occurred. Please check your internet connection.';
+      }
+      toast({
+        variant: 'destructive',
+        title: 'Audio Generation Failed',
+        description,
+      });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -235,7 +241,7 @@ export function CropAdvisoryClient() {
           role: 'bot', 
           content: result.recommendation,
           textForAudio: result.recommendation,
-          audio: result.audio
+          // Audio is not generated here, will be fetched on demand
       };
       setMessages(prev => [...prev, botMessage]);
       form.resetField('question');

@@ -32,11 +32,12 @@ const formSchema = z.object({
 });
 
 type FormSchemaType = z.infer<typeof formSchema>;
+type ResultWithAudio = MarketPriceOutput & { audio?: string };
 type ActiveRecordingField = 'crop' | 'location' | null;
 
 
 export default function MarketPricesPage() {
-  const [result, setResult] = useState<MarketPriceOutput | null>(null);
+  const [result, setResult] = useState<ResultWithAudio | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [isRecording, setIsRecording] = useState(false);
@@ -133,17 +134,18 @@ export default function MarketPricesPage() {
   
   const toggleAudio = async () => {
     if (!audioRef.current || !result) return;
+    const audio = audioRef.current;
     
-    if (playingAudio === result.audio) {
-        audioRef.current.pause();
+    if (playingAudio === result.audio && !audio.paused) {
+        audio.pause();
         setPlayingAudio(null);
         return;
     }
     
     if (result.audio) {
-        if(playingAudio) audioRef.current.pause();
-        audioRef.current.src = result.audio;
-        audioRef.current.play();
+        if(!audio.paused) audio.pause();
+        audio.src = result.audio;
+        audio.play().catch(e => console.error("Error playing audio:", e));
         setPlayingAudio(result.audio);
         return;
     }
@@ -153,9 +155,9 @@ export default function MarketPricesPage() {
         const audioDataUri = await handleTextToSpeech({ text: result.summary, language: form.getValues('language')});
         setResult(prev => prev ? { ...prev, audio: audioDataUri } : null);
 
-        if(playingAudio) audioRef.current.pause();
-        audioRef.current.src = audioDataUri;
-        audioRef.current.play();
+        if(!audio.paused) audio.pause();
+        audio.src = audioDataUri;
+        audio.play().catch(e => console.error("Error playing audio:", e));
         setPlayingAudio(audioDataUri);
 
     } catch (e: any) {

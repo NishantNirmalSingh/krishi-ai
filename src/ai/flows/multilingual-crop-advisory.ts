@@ -37,12 +37,6 @@ const CropAdvisoryOutputSchema = z.object({
   recommendation: z
     .string()
     .describe('The AI’s recommendation on what to plant, in the farmer’s language.'),
-  audio: z
-    .string()
-    .optional()
-    .describe(
-      'A data URI of the audio of the recommendation in WAV format.'
-    ),
 });
 export type CropAdvisoryOutput = z.infer<typeof CropAdvisoryOutputSchema>;
 
@@ -55,11 +49,7 @@ export async function getCropAdvisory(
 const cropAdvisoryPrompt = ai.definePrompt({
   name: 'cropAdvisoryPrompt',
   input: {schema: CropAdvisoryInputSchema},
-  output: {schema: z.object({
-    recommendation: z
-      .string()
-      .describe('The AI’s recommendation on what to plant, in the farmer’s language.'),
-  })},
+  output: {schema: CropAdvisoryOutputSchema},
   tools: [getSoilType],
   prompt: `You are a helpful agricultural advisor assisting farmers in India. Your 'recommendation' response MUST be in the language specified in the 'language' field: {{{language}}}.
 
