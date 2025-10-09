@@ -13,7 +13,7 @@ import { PageHeader } from "@/components/page-header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { handleMarketPriceSearch } from "../actions";
+import { handleMarketPriceSearch, handleTextToSpeech } from "../actions";
 import type { MarketPriceOutput } from "@/ai/flows/get-market-price";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -60,11 +60,7 @@ export default function MarketPricesPage() {
 
   useEffect(() => {
     form.setValue('language', language);
-    const currentCrop = form.getValues('crop');
-    if (result && currentCrop) {
-        handleSearch({ language, crop: currentCrop, location: form.getValues('location') });
-    }
-  }, [language, form, result]);
+  }, [language, form]);
 
   const handleLanguageChange = (langValue: string) => {
     setLanguage(langValue);
@@ -135,16 +131,45 @@ export default function MarketPricesPage() {
     }
   };
   
-  const toggleAudio = (audioDataUri: string) => {
-    if (!audioRef.current) return;
-    if (playingAudio === audioDataUri) {
-      audioRef.current.pause();
-      setPlayingAudio(null);
-    } else {
-      if(playingAudio) audioRef.current.pause();
-      audioRef.current.src = audioDataUri;
-      audioRef.current.play();
-      setPlayingAudio(audioDataUri);
+  const toggleAudio = async () => {
+    if (!audioRef.current || !result) return;
+    
+    if (playingAudio === result.audio) {
+        audioRef.current.pause();
+        setPlayingAudio(null);
+        return;
+    }
+    
+    if (result.audio) {
+        if(playingAudio) audioRef.current.pause();
+        audioRef.current.src = result.audio;
+        audioRef.current.play();
+        setPlayingAudio(result.audio);
+        return;
+    }
+
+    setIsLoading(true);
+    try {
+        const audioDataUri = await handleTextToSpeech({ text: result.summary, language: form.getValues('language')});
+        setResult(prev => prev ? { ...prev, audio: audioDataUri } : null);
+
+        if(playingAudio) audioRef.current.pause();
+        audioRef.current.src = audioDataUri;
+        audioRef.current.play();
+        setPlayingAudio(audioDataUri);
+
+    } catch (e: any) {
+        let description = 'An error occurred while generating audio. Please try again.';
+        if (e.message?.includes('429') || e.message?.includes('rate limit')) {
+          description = 'The audio generation service is currently busy. Please try again in a moment.';
+        }
+        toast({
+            variant: 'destructive',
+            title: 'Audio Generation Failed',
+            description,
+        });
+    } finally {
+        setIsLoading(false);
     }
   };
 
@@ -269,7 +294,7 @@ export default function MarketPricesPage() {
         </form>
       </Form>
       
-      {isLoading && (
+      {isLoading && !result && (
         <Card>
            <CardContent className="p-0">
              <Table>
@@ -308,14 +333,14 @@ export default function MarketPricesPage() {
         </Card>
       )}
 
-      {result && !isLoading && (
+      {result && (
         <div className="flex flex-col gap-8">
             <Card>
               <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>{t.resultsTitle}</CardTitle>
-                    {result.audio && (
-                       <Button variant="ghost" size="icon" className="h-10 w-10" onClick={() => toggleAudio(result.audio!)}>
+                    {result.summary && (
+                       <Button variant="ghost" size="icon" className="h-10 w-10" onClick={toggleAudio} disabled={isLoading && !result.audio}>
                          {playingAudio === result.audio ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                        </Button>
                     )}

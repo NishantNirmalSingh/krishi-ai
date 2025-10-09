@@ -95,7 +95,7 @@ const getMarketPriceFlow = ai.defineFlow(
   {
     name: 'getMarketPriceFlow',
     inputSchema: MarketPriceInputSchema,
-    outputSchema: MarketPriceOutputSchema,
+    outputSchema: MarketPriceOutputSchema.omit({audio: true}),
   },
   async input => {
     const {output} = await getMarketPricePrompt(input);
