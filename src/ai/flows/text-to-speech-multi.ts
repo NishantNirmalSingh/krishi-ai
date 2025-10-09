@@ -87,8 +87,8 @@ const textToSpeechMultiFlow = ai.defineFlow(
       config: {
         responseModalities: ['AUDIO', 'TEXT'],
         speechConfig: {
+          enableTimeStampsEstimation: true,
           multiSpeakerVoiceConfig: {
-            enableTimestampEstimation: true,
             speakerVoiceConfigs: [
               {
                 speaker: 'Speaker1',
