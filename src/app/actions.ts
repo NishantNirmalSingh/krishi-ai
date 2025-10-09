@@ -4,6 +4,7 @@ import { detectPestDisease, DetectPestDiseaseInput, DetectPestDiseaseOutput } fr
 import { getCropAdvisory, CropAdvisoryInput, CropAdvisoryOutput } from "@/ai/flows/multilingual-crop-advisory";
 import { getMarketPrice, MarketPriceInput, MarketPriceOutput } from "@/ai/flows/get-market-price";
 import { getWeatherForecast, WeatherForecastInput, WeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
+import { textToSpeech, TextToSpeechInput } from "@/ai/flows/text-to-speech";
 
 
 export async function handlePestDetection(input: DetectPestDiseaseInput): Promise<DetectPestDiseaseOutput> {
@@ -23,5 +24,10 @@ export async function handleMarketPriceSearch(input: MarketPriceInput): Promise<
 
 export async function handleWeatherForecast(input: WeatherForecastInput): Promise<WeatherForecastOutput> {
   const result = await getWeatherForecast(input);
+  return result;
+}
+
+export async function handleTextToSpeech(input: TextToSpeechInput): Promise<string> {
+  const result = await textToSpeech(input);
   return result;
 }

@@ -104,19 +104,22 @@ export function WeatherClient() {
     audioRef.current = audio;
 
     const handleTimeUpdate = () => {
-        if (audio.currentTime >= (playingAudio?.endTime ?? 0)) {
-            audio.pause();
+        if (playingAudio && audioRef.current && audioRef.current.currentTime >= playingAudio.endTime) {
+            audioRef.current.pause();
             setPlayingAudio(null);
         }
     };
     const handlePause = () => setPlayingAudio(null);
+    const handleEnded = () => setPlayingAudio(null);
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('pause', handlePause);
+    audio.addEventListener('ended', handleEnded);
     
     return () => {
         audio.removeEventListener('timeupdate', handleTimeUpdate);
         audio.removeEventListener('pause', handlePause);
+        audio.removeEventListener('ended', handleEnded);
         audio.pause();
     }
   }, [playingAudio]);
@@ -138,10 +141,8 @@ export function WeatherClient() {
     } catch (error: any) {
       console.error("Failed to fetch weather forecast:", error);
       let description = "Could not fetch weather data. Please try again.";
-      if (error.message && error.message.includes("429")) {
-        description = "You have exceeded the API quota for today. Please try again tomorrow.";
-      } else if (error.message && error.message.includes("503")) {
-        description = "The AI model is currently overloaded. Please try again in a few moments.";
+      if (error.message && (error.message.includes("429") || error.message.includes("rate limit"))) {
+        description = 'You have made too many requests. Please wait a moment before trying again.';
       }
       toast({
         title: t.searchFailedTitle,
@@ -157,22 +158,19 @@ export function WeatherClient() {
     const audio = audioRef.current;
     if (!audio) return;
     
-    // If the clicked audio is already playing, pause it.
     if (playingAudio?.url === audioInfo.url && playingAudio?.startTime === audioInfo.startTime) {
         audio.pause();
         setPlayingAudio(null);
     } else {
-        // If a different audio is playing, pause it first.
         if (!audio.paused) {
             audio.pause();
         }
 
-        // Set the new source, update current time, play, and set state.
         if (audio.src !== audioInfo.url) {
             audio.src = audioInfo.url;
         }
         audio.currentTime = audioInfo.startTime;
-        audio.play();
+        audio.play().catch(e => console.error("Audio play failed:", e));
         setPlayingAudio(audioInfo);
     }
   };

@@ -10,7 +10,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import {textToSpeech, TextToSpeechInput} from './text-to-speech';
 import {getSoilType} from './get-soil-type';
 
 const CropAdvisoryInputSchema = z.object({
@@ -40,6 +39,7 @@ const CropAdvisoryOutputSchema = z.object({
     .describe('The AI’s recommendation on what to plant, in the farmer’s language.'),
   audio: z
     .string()
+    .optional()
     .describe(
       'A data URI of the audio of the recommendation in WAV format.'
     ),
@@ -82,17 +82,12 @@ const cropAdvisoryFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await cropAdvisoryPrompt(input);
-    const recommendation = output!.recommendation;
-    
-    const ttsInput: TextToSpeechInput = {
-      text: recommendation,
-      language: input.language,
-    };
-    const audioData = await textToSpeech(ttsInput);
+    if (!output) {
+        throw new Error('Failed to get crop advisory from the AI model.');
+    }
     
     return {
-      recommendation,
-      audio: audioData,
+      recommendation: output.recommendation,
     };
   }
 );

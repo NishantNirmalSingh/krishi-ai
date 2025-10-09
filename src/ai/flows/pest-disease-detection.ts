@@ -11,7 +11,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import {textToSpeech, TextToSpeechInput} from './text-to-speech';
 
 const DetectPestDiseaseInputSchema = z.object({
   photoDataUri: z
@@ -33,9 +32,11 @@ const DetectPestDiseaseOutputSchema = z.object({
   treatmentOptions: z.string().describe('Recommended treatment options for the identified pest or disease.'),
   audio: z
     .string()
+    .optional()
     .describe(
       'A data URI of the audio of the diagnosis and treatment in WAV format.'
     ),
+  summaryForAudio: z.string().describe('A single, concise sentence summarizing the diagnosis and key treatment advice for audio playback, in the requested language.'),
 });
 export type DetectPestDiseaseOutput = z.infer<typeof DetectPestDiseaseOutputSchema>;
 
@@ -84,18 +85,12 @@ const detectPestDiseaseFlow = ai.defineFlow(
     if (!output) {
       throw new Error('Failed to get a diagnosis from the AI model.');
     }
-    
-    const ttsInput: TextToSpeechInput = {
-        text: output.summaryForAudio,
-        language: input.language,
-    };
-    const audioData = await textToSpeech(ttsInput);
 
     return {
       disease: output.disease,
       confidence: output.confidence,
       treatmentOptions: output.treatmentOptions,
-      audio: audioData,
+      summaryForAudio: output.summaryForAudio
     };
   }
 );

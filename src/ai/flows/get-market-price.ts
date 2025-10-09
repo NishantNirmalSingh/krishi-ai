@@ -8,7 +8,6 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import {textToSpeech, TextToSpeechInput} from './text-to-speech';
 
 const MarketPriceInputSchema = z.object({
   crop: z
@@ -60,6 +59,7 @@ const MarketPriceOutputSchema = z.object({
     .describe('A brief summary of the market data in the requested language.'),
   audio: z
     .string()
+    .optional()
     .describe(
       'A data URI of the audio of the market summary in WAV format.'
     ),
@@ -103,15 +103,8 @@ const getMarketPriceFlow = ai.defineFlow(
       throw new Error('Failed to get market data from the AI model.');
     }
 
-    const ttsInput: TextToSpeechInput = {
-      text: output.summary,
-      language: input.language,
-    };
-    const audioData = await textToSpeech(ttsInput);
-
     return {
       ...output,
-      audio: audioData,
     };
   }
 );

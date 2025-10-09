@@ -64,7 +64,7 @@ export default function MarketPricesPage() {
     if (result && currentCrop) {
         handleSearch({ language, crop: currentCrop, location: form.getValues('location') });
     }
-  }, [language]);
+  }, [language, form, result]);
 
   const handleLanguageChange = (langValue: string) => {
     setLanguage(langValue);
@@ -94,7 +94,9 @@ export default function MarketPricesPage() {
         console.error('Speech recognition error:', event.error);
         let description = `An error occurred: ${event.error}. Please ensure microphone access is allowed.`;
         if (event.error === 'network') {
-          description = 'A network error occurred. Please check your internet connection and try again.';
+          description = 'A network error occurred. Please check your internet connection or try a different browser.';
+        } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          description = 'Microphone access was denied. Please enable it in your browser settings.';
         }
         toast({
           variant: 'destructive',
@@ -157,10 +159,8 @@ export default function MarketPricesPage() {
     } catch (error: any) {
       console.error("Failed to fetch market price:", error);
       let description = "Could not fetch market price data. Please try again.";
-      if (error.message && error.message.includes('429')) {
-        description = 'You have exceeded the API quota for today. Please try again tomorrow.';
-      } else if (error.message && error.message.includes('503')) {
-        description = 'The AI model is currently overloaded. Please try again in a few moments.';
+      if (error.message && (error.message.includes('429') || error.message.includes('rate limit'))) {
+        description = 'You have made too many requests. Please wait a moment before trying again.';
       }
       toast({
         title: "Search Failed",

@@ -166,28 +166,24 @@ export function CropAdvisoryClient() {
   const toggleAudio = async (message: Message) => {
     if (!audioRef.current) return;
 
-    // If this message's audio is already playing, pause it.
     if (playingAudio === message.audio) {
         audioRef.current.pause();
         setPlayingAudio(null);
         return;
     }
 
-    // If audio is already loaded, just play it.
-    if(message.audio) {
-      if(playingAudio) audioRef.current.pause(); // Pause any currently playing audio
+    if (message.audio) {
+      if(playingAudio) audioRef.current.pause();
       audioRef.current.src = message.audio;
       audioRef.current.play();
       setPlayingAudio(message.audio);
       return;
     }
 
-    // If audio is not loaded, fetch it.
     setIsLoading(true);
     try {
         const audioDataUri = await handleTextToSpeech({ text: message.textForAudio, language: form.getValues('language')});
 
-        // Update the specific message with the new audio data
         setMessages(prev => prev.map(m => 
             m.id === message.id ? { ...m, audio: audioDataUri } : m
         ));
@@ -200,6 +196,8 @@ export function CropAdvisoryClient() {
         let description = 'An error occurred while generating audio. Please try again.';
         if (e.message?.includes('429') || e.message?.includes('rate limit')) {
           description = 'The audio generation service is currently busy. Please try again in a moment.';
+        } else if (e.message?.includes('network')) {
+          description = 'A network error occurred. Please check your internet connection.';
         }
         toast({
             variant: 'destructive',
@@ -237,6 +235,7 @@ export function CropAdvisoryClient() {
           role: 'bot', 
           content: result.recommendation,
           textForAudio: result.recommendation,
+          audio: result.audio
       };
       setMessages(prev => [...prev, botMessage]);
       form.resetField('question');
@@ -251,7 +250,6 @@ export function CropAdvisoryClient() {
         description: description,
       });
       console.error(e);
-      // Remove the user's message on error to allow retry
       setMessages(prev => prev.slice(0, -1));
     } finally {
       setIsLoading(false);

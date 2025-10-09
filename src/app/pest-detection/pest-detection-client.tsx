@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Image from 'next/image';
 import { Loader2, Upload, Play, Pause, X, Mic, MicOff, Search } from 'lucide-react';
-import { handlePestDetection } from '@/app/actions';
+import { handlePestDetection, handleTextToSpeech } from '@/app/actions';
 import type { DetectPestDiseaseOutput } from '@/ai/flows/pest-disease-detection';
 import { useToast } from '@/hooks/use-toast';
 import { languages } from '@/lib/languages';
@@ -90,7 +90,11 @@ export function PestDetectionClient() {
       };
 
       recognitionRef.current.onerror = (event: any) => {
-        toast({ variant: 'destructive', title: 'Speech Recognition Error', description: `An error occurred: ${event.error}` });
+        let description = `An error occurred: ${event.error}. Please ensure microphone access is allowed.`;
+        if (event.error === 'network') {
+          description = 'A network error occurred. Please check your internet connection or try a different browser.';
+        }
+        toast({ variant: 'destructive', title: 'Speech Recognition Error', description });
         setIsRecording(false);
       };
 
@@ -117,6 +121,18 @@ export function PestDetectionClient() {
     }
   };
   
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      form.setValue('plantImage', event.target.files);
+      form.clearErrors('description');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
@@ -139,10 +155,8 @@ export function PestDetectionClient() {
             setResult(detectionResult);
         } catch (e: any) {
             let errorDesc = 'An error occurred while analyzing your request. Please try again.';
-            if (e.message?.includes('429')) {
-            errorDesc = 'You have exceeded the API quota. Please try again tomorrow.';
-            } else if (e.message?.includes('503')) {
-            errorDesc = 'The AI model is currently overloaded. Please try again in a few moments.';
+            if (e.message?.includes('429') || e.message?.includes('rate limit')) {
+              errorDesc = 'You have made too many requests. Please wait a moment before trying again.';
             }
             toast({
             variant: 'destructive',
@@ -169,19 +183,6 @@ export function PestDetectionClient() {
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      form.setValue('plantImage', event.target.files);
-      form.clearErrors('description');
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const resetForm = () => {
     setImagePreview(null);
     setResult(null);
@@ -199,19 +200,45 @@ export function PestDetectionClient() {
     }
   };
 
-  const toggleAudio = (audioDataUri: string) => {
-    if (!audioRef.current) return;
+  const toggleAudio = async () => {
+    if (!audioRef.current || !result) return;
     
-    if (playingAudio === audioDataUri) {
+    if (playingAudio === result.audio) {
         audioRef.current.pause();
         setPlayingAudio(null);
-    } else {
-        if(playingAudio) {
-            audioRef.current.pause();
-        }
+        return;
+    }
+    
+    if (result.audio) {
+        if(playingAudio) audioRef.current.pause();
+        audioRef.current.src = result.audio;
+        audioRef.current.play();
+        setPlayingAudio(result.audio);
+        return;
+    }
+
+    setIsLoading(true);
+    try {
+        const audioDataUri = await handleTextToSpeech({ text: result.summaryForAudio, language: form.getValues('language')});
+        setResult(prev => prev ? { ...prev, audio: audioDataUri } : null);
+
+        if(playingAudio) audioRef.current.pause();
         audioRef.current.src = audioDataUri;
         audioRef.current.play();
         setPlayingAudio(audioDataUri);
+
+    } catch (e: any) {
+        let description = 'An error occurred while generating audio. Please try again.';
+        if (e.message?.includes('429') || e.message?.includes('rate limit')) {
+          description = 'The audio generation service is currently busy. Please try again in a moment.';
+        }
+        toast({
+            variant: 'destructive',
+            title: 'Audio Generation Failed',
+            description,
+        });
+    } finally {
+        setIsLoading(false);
     }
   };
 
@@ -369,11 +396,9 @@ export function PestDetectionClient() {
                   <h3 className="font-semibold text-muted-foreground">{t.identifiedIssueLabel}</h3>
                   <p className="text-2xl font-bold text-primary">{result.disease}</p>
                 </div>
-                {result.audio && (
-                   <Button variant="ghost" size="icon" className="h-10 w-10" onClick={() => toggleAudio(result.audio!)}>
-                     {playingAudio === result.audio ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                   </Button>
-                )}
+                 <Button variant="ghost" size="icon" className="h-10 w-10" onClick={toggleAudio} disabled={isLoading && !result.audio}>
+                   {playingAudio === result.audio ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                 </Button>
               </div>
               <div>
                 <h3 className="font-semibold text-muted-foreground">{t.confidenceLabel}</h3>
