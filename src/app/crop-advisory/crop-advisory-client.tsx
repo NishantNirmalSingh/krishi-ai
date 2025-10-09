@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, User, Bot, Send, Mic, MicOff, Play, Pause } from 'lucide-react';
-import { handleCropAdvisory } from '@/app/actions';
+import { handleCropAdvisory, handleTextToSpeech } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -22,6 +22,7 @@ import { useTranslation } from '@/hooks/use-translation';
 import cropAdvisoryTranslations from '@/lib/translations/crop-advisory.json';
 import { useLanguage } from '@/context/language-context';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import type { CropAdvisoryOutput } from '@/ai/flows/multilingual-crop-advisory';
 
 const formSchema = z.object({
   language: z.string().min(1, 'Please select a language.'),
@@ -30,8 +31,10 @@ const formSchema = z.object({
 });
 
 type Message = {
+  id: number;
   role: 'user' | 'bot';
   content: React.ReactNode;
+  textForAudio: string;
   audio?: string;
 };
 
@@ -88,7 +91,9 @@ export function CropAdvisoryClient() {
         console.error('Speech recognition error:', event.error);
         let description = `An error occurred: ${event.error}. Please ensure microphone access is allowed.`;
         if (event.error === 'network') {
-          description = 'A network error occurred. Please check your internet connection and try again.';
+          description = 'A network error occurred. Please check your internet connection or try a different browser.';
+        } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            description = 'Microphone access was denied. Please enable it in your browser settings.';
         }
         toast({
           variant: 'destructive',
@@ -158,21 +163,54 @@ export function CropAdvisoryClient() {
     }
   };
   
-  const toggleAudio = (audioDataUri: string) => {
+  const toggleAudio = async (message: Message) => {
     if (!audioRef.current) return;
-    
-    if (playingAudio === audioDataUri) {
+
+    // If this message's audio is already playing, pause it.
+    if (playingAudio === message.audio) {
         audioRef.current.pause();
         setPlayingAudio(null);
-    } else {
-        if(playingAudio) {
-            audioRef.current.pause();
-        }
+        return;
+    }
+
+    // If audio is already loaded, just play it.
+    if(message.audio) {
+      if(playingAudio) audioRef.current.pause(); // Pause any currently playing audio
+      audioRef.current.src = message.audio;
+      audioRef.current.play();
+      setPlayingAudio(message.audio);
+      return;
+    }
+
+    // If audio is not loaded, fetch it.
+    setIsLoading(true);
+    try {
+        const audioDataUri = await handleTextToSpeech({ text: message.textForAudio, language: form.getValues('language')});
+
+        // Update the specific message with the new audio data
+        setMessages(prev => prev.map(m => 
+            m.id === message.id ? { ...m, audio: audioDataUri } : m
+        ));
+
+        if(playingAudio) audioRef.current.pause();
         audioRef.current.src = audioDataUri;
         audioRef.current.play();
         setPlayingAudio(audioDataUri);
+    } catch (e: any) {
+        let description = 'An error occurred while generating audio. Please try again.';
+        if (e.message?.includes('429') || e.message?.includes('rate limit')) {
+          description = 'The audio generation service is currently busy. Please try again in a moment.';
+        }
+        toast({
+            variant: 'destructive',
+            title: 'Audio Generation Failed',
+            description,
+        });
+    } finally {
+        setIsLoading(false);
     }
   };
+
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
@@ -184,22 +222,33 @@ export function CropAdvisoryClient() {
         </p>
       </div>
     );
-    const userMessage: Message = { role: 'user', content: userMessageContent };
+    const userMessage: Message = { 
+        id: Date.now(),
+        role: 'user', 
+        content: userMessageContent,
+        textForAudio: data.question,
+    };
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      const result = await handleCropAdvisory(data);
-      const botMessage: Message = { role: 'bot', content: result.recommendation, audio: result.audio };
+      const result: CropAdvisoryOutput = await handleCropAdvisory(data);
+      const botMessage: Message = { 
+          id: Date.now() + 1,
+          role: 'bot', 
+          content: result.recommendation,
+          textForAudio: result.recommendation,
+      };
       setMessages(prev => [...prev, botMessage]);
-      if(result.audio){
-        toggleAudio(result.audio);
-      }
       form.resetField('question');
-    } catch (e) {
+    } catch (e: any) {
+      let description = 'An error occurred while getting advice. Please try again.';
+      if (e.message?.includes('429') || e.message?.includes('rate limit')) {
+        description = 'You have made too many requests. Please wait a moment before trying again.';
+      }
       toast({
         variant: 'destructive',
         title: 'Advisory Failed',
-        description: 'An error occurred while getting advice. Please try again.',
+        description: description,
       });
       console.error(e);
       // Remove the user's message on error to allow retry
@@ -219,8 +268,8 @@ export function CropAdvisoryClient() {
               <p>{t.initialMessage1} <br/> {t.initialMessage2}</p>
             </div>
           )}
-          {messages.map((message, index) => (
-            <div key={index} className={cn('flex items-start gap-4', message.role === 'user' ? 'justify-end' : 'justify-start')}>
+          {messages.map((message) => (
+            <div key={message.id} className={cn('flex items-start gap-4', message.role === 'user' ? 'justify-end' : 'justify-start')}>
               {message.role === 'bot' && (
                 <Avatar className="border">
                   <AvatarFallback><Bot /></AvatarFallback>
@@ -231,8 +280,8 @@ export function CropAdvisoryClient() {
                 message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
               )}>
                 <div className="whitespace-pre-wrap text-sm">{message.content}</div>
-                {message.audio && (
-                   <Button variant="ghost" size="icon" className="mt-2 h-8 w-8" onClick={() => toggleAudio(message.audio!)}>
+                {message.role === 'bot' && (
+                   <Button variant="ghost" size="icon" className="mt-2 h-8 w-8" onClick={() => toggleAudio(message)} disabled={isLoading && !message.audio}>
                      {playingAudio === message.audio ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
                    </Button>
                 )}
@@ -244,7 +293,7 @@ export function CropAdvisoryClient() {
               )}
             </div>
           ))}
-          {isLoading && (
+          {isLoading && messages[messages.length-1]?.role === 'user' && (
              <div className="flex items-start gap-4 justify-start">
                 <Avatar className="border">
                   <AvatarFallback><Bot /></AvatarFallback>
