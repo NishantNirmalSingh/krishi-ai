@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A text-to-speech AI agent with fallback mechanism.
@@ -7,7 +8,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {googleAI} from '@genkit-ai/google-genai';
 import {z} from 'genkit';
 import wav from 'wav';
 import {TextToSpeechClient} from '@google-cloud/text-to-speech';
@@ -86,7 +86,7 @@ const textToSpeechFlow = ai.defineFlow(
           responseModalities: ['AUDIO'],
           speechConfig: {
             voiceConfig: {
-              prebuiltVoiceConfig: {voiceName: 'Algenib'},
+              prebuiltVoiceConfig: {voiceName: 'gemini-pro-male'},
             },
           },
         },

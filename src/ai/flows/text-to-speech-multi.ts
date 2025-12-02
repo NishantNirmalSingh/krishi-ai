@@ -9,7 +9,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {googleAI} from '@genkit-ai/google-genai';
 import {z} from 'genkit';
 import wav from 'wav';
 import {config} from 'dotenv';
@@ -93,13 +92,13 @@ const textToSpeechMultiFlow = ai.defineFlow(
               {
                 speaker: 'Speaker1',
                 voiceConfig: {
-                  prebuiltVoiceConfig: {voiceName: 'Algenib'},
+                  prebuiltVoiceConfig: {voiceName: 'gemini-pro-female'},
                 },
               },
               {
                 speaker: 'Speaker2',
                 voiceConfig: {
-                  prebuiltVoiceConfig: {voiceName: 'Achernar'},
+                  prebuiltVoiceConfig: {voiceName: 'gemini-pro-male'},
                 },
               },
             ],
