@@ -6,6 +6,7 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {googleAI} from '@genkit-ai/google-genai';
 
 export const getSoilType = ai.defineTool(
   {
@@ -25,7 +26,7 @@ export const getSoilType = ai.defineTool(
     // simplified lookup with a Genkit prompt.
     const {text} = await ai.generate({
       prompt: `What is the most common soil type in the following location in India: ${location}? Respond with only the soil type name (e.g., "Alluvial Soil", "Black Cotton Soil").`,
-      model: 'googleai/gemini-2.5-flash',
+      model: googleAI('gemini-2.5-flash'),
     });
     return text;
   }

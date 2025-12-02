@@ -1,5 +1,5 @@
 import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
+import {googleAI} from '@genkit-ai/google-genai';
 import { config } from 'dotenv';
 
 config({ path: '.env' });
@@ -10,5 +10,6 @@ export const ai = genkit({
       apiKey: process.env.GEMINI_API_KEY,
     }),
   ],
-  model: 'googleai/gemini-2.5-flash-image-preview',
+  logLevel: 'debug',
+  enableTracing: true,
 });
