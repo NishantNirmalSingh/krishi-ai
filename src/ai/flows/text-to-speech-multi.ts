@@ -83,7 +83,7 @@ const textToSpeechMultiFlow = ai.defineFlow(
       .join('\n');
 
     const {media, output} = await ai.generate({
-      model: googleAI('gemini-2.5-flash-preview-tts'),
+      model: 'googleai/gemini-2.5-flash-preview-tts',
       config: {
         responseModalities: ['AUDIO', 'TEXT'],
         speechConfig: {

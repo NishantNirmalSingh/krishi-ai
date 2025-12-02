@@ -81,7 +81,7 @@ const textToSpeechFlow = ai.defineFlow(
     try {
       // Primary TTS: Gemini 2.5 Flash TTS
       const {media} = await ai.generate({
-        model: googleAI('gemini-2.5-flash-preview-tts'),
+        model: 'googleai/gemini-2.5-flash-preview-tts',
         config: {
           responseModalities: ['AUDIO'],
           speechConfig: {
