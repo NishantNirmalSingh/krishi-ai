@@ -102,6 +102,7 @@ const getWeatherForecastPrompt = ai.definePrompt({
       ),
     }),
   },
+  model: 'googleai/gemini-2.5-flash',
   prompt: `You are a hyper-local weather expert for Indian agriculture. For the given location, provide a realistic and detailed weather forecast.
 
   Location: {{{location}}}
