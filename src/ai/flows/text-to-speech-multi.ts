@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A multi-segment text-to-speech AI agent.
@@ -87,7 +88,6 @@ const textToSpeechMultiFlow = ai.defineFlow(
       config: {
         responseModalities: ['AUDIO', 'TEXT'],
         speechConfig: {
-          enableTimeStampsEstimation: true,
           multiSpeakerVoiceConfig: {
             speakerVoiceConfigs: [
               {
