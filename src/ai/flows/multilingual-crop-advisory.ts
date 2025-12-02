@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -11,6 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {getSoilType} from './get-soil-type';
+import { googleAI } from '@genkit-ai/google-genai';
 
 const CropAdvisoryInputSchema = z.object({
   language: z
@@ -51,6 +53,7 @@ const cropAdvisoryPrompt = ai.definePrompt({
   input: {schema: CropAdvisoryInputSchema},
   output: {schema: CropAdvisoryOutputSchema},
   tools: [getSoilType],
+  model: googleAI('gemini-2.5-flash'),
   prompt: `You are a helpful agricultural advisor assisting farmers in India. Your 'recommendation' response MUST be in the language specified in the 'language' field: {{{language}}}.
 
   If the user has not provided the soil type, use the getSoilType tool to determine it from their location.

@@ -1,3 +1,4 @@
 {
+  "/crop-advisory/page": "app/crop-advisory/page.js",
   "/page": "app/page.js"
 }
