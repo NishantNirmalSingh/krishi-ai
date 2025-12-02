@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Fetches simulated market prices for agricultural crops and suggests selling platforms.
@@ -72,6 +73,7 @@ const getMarketPricePrompt = ai.definePrompt({
   output: {
     schema: MarketPriceOutputSchema,
   },
+  model: 'googleai/gemini-2.5-flash',
   prompt: `You are a market data analyst and advisor for Indian agriculture. You MUST respond fully in the language specified in the 'language' field. All text fields in your output, including 'crop', 'market', platform 'name' and 'details', and 'summary', must be translated into the requested language: {{{language}}}.
 
 The 'unit' field MUST NOT be translated; it must always be "Quintal".
