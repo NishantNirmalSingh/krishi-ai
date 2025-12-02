@@ -43,6 +43,7 @@ const prompt = ai.definePrompt({
   input: {schema: DetectPestDiseaseInputSchema},
   output: {schema: DetectPestDiseaseOutputSchema
   },
+  model: 'googleai/gemini-2.5-flash',
   prompt: `You are an expert plant pathologist. A farmer needs help identifying a pest or disease. Use the provided information (image and/or text description) to make your diagnosis.
 
 You MUST respond fully in the requested language: {{{language}}}. All text fields in your output, including 'disease', 'treatmentOptions', and 'summaryForAudio' must be in this language. Your response must be easily understandable to a non-expert farmer.
