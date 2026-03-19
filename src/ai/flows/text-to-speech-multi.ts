@@ -56,7 +56,7 @@ async function toWav(
       bitDepth: sampleWidth * 8,
     });
 
-    let bufs = [] as any[];
+    let bufs: Buffer[] = [];
     writer.on('error', reject);
     writer.on('data', function (d) {
       bufs.push(d);
@@ -82,7 +82,7 @@ const textToSpeechMultiFlow = ai.defineFlow(
       .join('\n');
 
     const {media, output} = await ai.generate({
-      model: 'googleai/gemini-2.5-pro-preview-tts',
+      model: 'googleai/gemini-2.0-flash-preview-tts',
       config: {
         responseModalities: ['AUDIO', 'TEXT'],
         speechConfig: {
@@ -91,13 +91,13 @@ const textToSpeechMultiFlow = ai.defineFlow(
               {
                 speaker: 'Speaker1',
                 voiceConfig: {
-                  prebuiltVoiceConfig: {voiceName: 'gemini-pro-female'},
+                  prebuiltVoiceConfig: {voiceName: 'Aoede'},
                 },
               },
               {
                 speaker: 'Speaker2',
                 voiceConfig: {
-                  prebuiltVoiceConfig: {voiceName: 'gemini-pro-male'},
+                  prebuiltVoiceConfig: {voiceName: 'Algenib'},
                 },
               },
             ],
@@ -118,7 +118,6 @@ const textToSpeechMultiFlow = ai.defineFlow(
 
     const wavBase64 = await toWav(audioBuffer);
     
-    // In Genkit 1.x, timings are part of the content metadata
     const timings = output.message.content.find(p => !!p.timing)?.timing?.audioTimestamps || [];
 
     const segmentTimings = timings.slice(0, segments.length).map(t => ({

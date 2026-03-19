@@ -34,7 +34,7 @@ async function toWav(
       bitDepth: sampleWidth * 8,
     });
 
-    let bufs = [] as any[];
+    let bufs: Buffer[] = [];
     writer.on('error', reject);
     writer.on('data', function (d) {
       bufs.push(d);
@@ -78,14 +78,14 @@ const textToSpeechFlow = ai.defineFlow(
   },
   async ({text, language}) => {
     try {
-      // Primary TTS: Gemini 2.5 Flash TTS
+      // Primary TTS: Gemini 2.0 Flash TTS
       const {media} = await ai.generate({
-        model: 'googleai/gemini-2.5-flash-preview-tts',
+        model: 'googleai/gemini-2.0-flash-preview-tts',
         config: {
           responseModalities: ['AUDIO'],
           speechConfig: {
             voiceConfig: {
-              prebuiltVoiceConfig: {voiceName: 'gemini-pro-male'},
+              prebuiltVoiceConfig: {voiceName: 'Algenib'},
             },
           },
         },
