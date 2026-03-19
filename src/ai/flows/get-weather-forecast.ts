@@ -1,10 +1,11 @@
+
 'use server';
 /**
  * @fileOverview Fetches and translates hyper-local weather forecasts.
  *
  * - getWeatherForecast - A function that returns weather data for a given location and language.
  * - WeatherForecastInput - The input type for the getWeatherForecast function.
- * - WeatherForecastOutput - The return type for the getWeatherForecast function.
+ * - WeatherForecastOutput - The return type for the weather forecast output.
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';

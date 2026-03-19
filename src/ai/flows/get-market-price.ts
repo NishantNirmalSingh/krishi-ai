@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Fetches simulated market prices for agricultural crops and suggests selling platforms.
