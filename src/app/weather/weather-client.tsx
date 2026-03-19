@@ -1,8 +1,7 @@
-
 "use client";
 
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,8 +46,6 @@ import {
   Wind,
   Waves,
   BellRing,
-  Play,
-  Pause,
 } from "lucide-react";
 import { handleWeatherForecast } from "../actions";
 import type { WeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
@@ -72,20 +69,12 @@ const iconMap: { [key: string]: React.ComponentType<any> } = {
   CloudLightning,
 };
 
-type AudioPlaybackInfo = {
-  url: string;
-  startTime: number;
-  endTime: number;
-};
-
 export function WeatherClient() {
   const [result, setResult] = useState<WeatherForecastOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { language, setLanguage } = useLanguage();
   const t = useTranslation(language, weatherTranslations);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playingAudio, setPlayingAudio] = useState<AudioPlaybackInfo | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -99,31 +88,6 @@ export function WeatherClient() {
     form.setValue('language', language);
   }, [language, form]);
 
-  useEffect(() => {
-    const audio = new Audio();
-    audioRef.current = audio;
-
-    const handleTimeUpdate = () => {
-        if (playingAudio && audioRef.current && audioRef.current.currentTime >= playingAudio.endTime) {
-            audioRef.current.pause();
-            setPlayingAudio(null);
-        }
-    };
-    const handlePause = () => setPlayingAudio(null);
-    const handleEnded = () => setPlayingAudio(null);
-
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('pause', handlePause);
-    audio.addEventListener('ended', handleEnded);
-    
-    return () => {
-        audio.removeEventListener('timeupdate', handleTimeUpdate);
-        audio.removeEventListener('pause', handlePause);
-        audio.removeEventListener('ended', handleEnded);
-        audio.pause();
-    }
-  }, [playingAudio]);
-
   const handleLanguageChange = (langValue: string) => {
     setLanguage(langValue);
   };
@@ -131,9 +95,6 @@ export function WeatherClient() {
   const handleSearch = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setResult(null);
-    if (playingAudio) {
-      audioRef.current?.pause();
-    }
 
     try {
       const searchResult = await handleWeatherForecast(data);
@@ -154,27 +115,6 @@ export function WeatherClient() {
     }
   };
 
-  const toggleAudio = (audioInfo: AudioPlaybackInfo) => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    
-    if (playingAudio?.url === audioInfo.url && playingAudio?.startTime === audioInfo.startTime) {
-        audio.pause();
-        setPlayingAudio(null);
-    } else {
-        if (!audio.paused) {
-            audio.pause();
-        }
-
-        if (audio.src !== audioInfo.url) {
-            audio.src = audioInfo.url;
-        }
-        audio.currentTime = audioInfo.startTime;
-        audio.play().catch(e => console.error("Audio play failed:", e));
-        setPlayingAudio(audioInfo);
-    }
-  };
-  
   const getLoadingMessage = () => {
     const message = t.loadingMessage || 'Finding weather data for "{{location}}"...';
     return message.replace('{{location}}', form.getValues('location') || 'your location');
@@ -335,20 +275,10 @@ export function WeatherClient() {
                         <CardContent className="space-y-4">
                             {result.predictiveAlerts.length > 0 ? (
                                 result.predictiveAlerts.map((alert, index) => {
-                                    const audioInfo = {
-                                        url: alert.audio.url,
-                                        startTime: alert.audio.startTime,
-                                        endTime: alert.audio.endTime,
-                                    };
-                                    const isPlaying = playingAudio?.url === audioInfo.url && playingAudio?.startTime === audioInfo.startTime;
-
                                     return (
                                         <Alert key={index} className="bg-accent text-accent-foreground border-accent/50">
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-center mb-1">
                                                 <BellRing className="h-4 w-4" />
-                                                <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 text-accent-foreground/80 hover:text-accent-foreground" onClick={() => toggleAudio(audioInfo)}>
-                                                    {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-                                                </Button>
                                             </div>
                                             <AlertTitle className="font-headline">{alert.title}</AlertTitle>
                                             <AlertDescription>

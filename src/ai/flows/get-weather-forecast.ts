@@ -1,7 +1,6 @@
-
 'use server';
 /**
- * @fileOverview Fetches and translates hyper-local weather forecasts.
+ * @fileOverview Fetches and translates hyper-local weather forecasts without audio.
  *
  * - getWeatherForecast - A function that returns weather data for a given location and language.
  * - WeatherForecastInput - The input type for the getWeatherForecast function.
@@ -9,10 +8,6 @@
  */
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import {
-  textToSpeechMulti,
-  TextToSpeechMultiInput,
-} from './text-to-speech-multi';
 
 const WeatherForecastInputSchema = z.object({
   location: z
@@ -40,11 +35,6 @@ const PredictiveAlertSchema = z.object({
     .describe(
       'The detailed alert message for the farmer, in the requested language.'
     ),
-  audio: z.object({
-    url: z.string().describe('A data URI of the audio of the alert in WAV format.'),
-    startTime: z.number().describe('The start time of the audio segment in seconds.'),
-    endTime: z.number().describe('The end time of the audio segment in seconds.'),
-  }),
 });
 
 const WeatherForecastOutputSchema = z.object({
@@ -96,11 +86,7 @@ const getWeatherForecastPrompt = ai.definePrompt({
   name: 'getWeatherForecastPrompt',
   input: {schema: WeatherForecastInputSchema},
   output: {
-    schema: WeatherForecastOutputSchema.omit({predictiveAlerts: true}).extend({
-      predictiveAlerts: z.array(
-        PredictiveAlertSchema.omit({audio: true})
-      ),
-    }),
+    schema: WeatherForecastOutputSchema,
   },
   model: 'googleai/gemini-2.5-flash',
   prompt: `You are a hyper-local weather expert for Indian agriculture. For the given location, provide a realistic and detailed weather forecast.
@@ -129,35 +115,9 @@ const getWeatherForecastFlow = ai.defineFlow(
       throw new Error('Failed to get weather data from the AI model.');
     }
 
-    if (!output.predictiveAlerts || output.predictiveAlerts.length === 0) {
-      return {
-        ...output,
-        predictiveAlerts: [],
-      };
-    }
-
-    // Generate audio for each predictive alert in a single batch
-    const ttsInput: TextToSpeechMultiInput = {
-      language: input.language,
-      segments: output.predictiveAlerts.map(alert => alert.description),
-    };
-    const audioResult = await textToSpeechMulti(ttsInput);
-
-    const alertsWithAudio = output.predictiveAlerts.map((alert, index) => {
-      const audioInfo = audioResult.segments[index];
-      return {
-        ...alert,
-        audio: {
-          url: audioResult.audio,
-          startTime: audioInfo.startTime,
-          endTime: audioInfo.endTime,
-        },
-      };
-    });
-
     return {
       ...output,
-      predictiveAlerts: alertsWithAudio,
+      predictiveAlerts: output.predictiveAlerts || [],
     };
   }
 );
