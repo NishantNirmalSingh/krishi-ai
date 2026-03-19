@@ -21,3 +21,56 @@ The weather module delivers more than just a standard forecast. It provides hype
 ## Benefits for Farmers
 
 KrishiAI is more than just an app; it's a partner in farming. By providing data-driven insights, it helps reduce the risks associated with pests, weather, and market volatility. It democratizes agricultural knowledge, making expert advice that was once out of reach available to any farmer with a smartphone. This leads to healthier crops, higher yields, reduced waste, and ultimately, a more stable and profitable farming business.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd krishi-ai
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running the Application
+
+To run the project in development mode:
+
+1. Start the Next.js application:
+   ```bash
+   npm run dev
+   ```
+
+2. In a separate terminal, start the Genkit AI flows:
+   ```bash
+   npm run genkit:dev
+   ```
+
+The application will be available at `http://localhost:3000`.
+
+### Building for Production
+
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+
+2. Start the production server:
+   ```bash
+   npm run start
+   ```
+
+### Additional Scripts
+
+- `npm run lint`: Run ESLint for code linting
+- `npm run typecheck`: Run TypeScript type checking
