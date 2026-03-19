@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A multi-segment text-to-speech AI agent.
@@ -118,11 +117,10 @@ const textToSpeechMultiFlow = ai.defineFlow(
     );
 
     const wavBase64 = await toWav(audioBuffer);
-    const timings =
-      output.message.content.find(p => !!p.timing)?.timing
-        ?.audioTimestamps || [];
+    
+    // In Genkit 1.x, timings are part of the content metadata
+    const timings = output.message.content.find(p => !!p.timing)?.timing?.audioTimestamps || [];
 
-    // The API might return one extra timing for the whole audio, so we slice it.
     const segmentTimings = timings.slice(0, segments.length).map(t => ({
       startTime: t.startTimeSec,
       endTime: t.endTimeSec,

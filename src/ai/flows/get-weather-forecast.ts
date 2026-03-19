@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview Fetches and translates hyper-local weather forecasts.
